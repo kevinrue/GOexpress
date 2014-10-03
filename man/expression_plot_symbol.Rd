@@ -21,7 +21,7 @@ associated index.
 \usage{
 expression_plot_symbol(
     gene_symbol, result, eSet, x_var, f=result$factor, subset=NULL,
-    index=0, xlab=x_var, ylab="log2(cpm)", ylim=c(NULL,NULL), 
+    index=0, xlab=x_var, ylab="log2(cpm)", ylim=range(exprs(eSet)), 
     col.palette="Accent",
     col=brewer.pal(n=length(levels(pData(eSet)[,f])), name=col.palette),
     level=0.95, titles=c(), title.size=2, axis.title.size=20,
@@ -75,9 +75,9 @@ expression_plot_symbol(
     }
     \item{ylim}{
     Numeric vector of length 2 specifying the lower and upper bounds of the
-    Y axis. Default is scaled to fit the plotted data. A good alternative is
-    to provide the full range of expression values in the dataset using
-    \code{range(exprs(eSet))}.
+    Y axis. Default is scaled to the full range of expression values in the 
+    expression dataset, to ease comparison of different genes. If set to
+    NULL, the axis will be scaled to fit the plotted data only.
     }
     \item{col.palette}{
     A valid \code{RColorBrewer} palette name to fetch the colormap from.

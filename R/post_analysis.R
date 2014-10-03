@@ -49,7 +49,8 @@ cluster_GO <- function(
 
 expression_plot <- function(
     gene_id, result, eSet, x_var, f=result$factor, subset=NULL,
-    xlab=x_var, ylab="log2(cpm)", ylim=c(NULL,NULL), col.palette="Accent",
+    xlab=x_var, ylab="log2(cpm)", ylim=range(exprs(eSet)),
+    col.palette="Accent",
     col=brewer.pal(n=length(levels(pData(eSet)[,f])), name=col.palette),
     level=0.95, title=NULL, title.size=2, axis.title.size=20, 
     axis.text.size=15, axis.text.angle=0,
@@ -119,7 +120,7 @@ expression_plot <- function(
 
 expression_plot_symbol <- function(
     gene_symbol, result, eSet, x_var, f=result$factor, subset=NULL,
-    index=0, xlab=x_var, ylab="log2(cpm)", ylim=c(NULL,NULL), 
+    index=0, xlab=x_var, ylab="log2(cpm)", ylim=range(exprs(eSet)), 
     col.palette="Accent",
     col=brewer.pal(n=length(levels(pData(eSet)[,f])), name=col.palette),
     level=0.95, titles=c(), title.size=2, axis.title.size=20,
@@ -291,7 +292,8 @@ expression_plot_symbol <- function(
 expression_profiles <- function(
     gene_id, result, eSet, x_var, seriesF, subset=NULL,
     colourF=result$factor, linetypeF=colourF, line.size=1.5,
-    xlab=x_var, ylab="log2(cpm)", ylim=c(NULL,NULL), col.palette="Accent",
+    xlab=x_var, ylab="log2(cpm)", ylim=range(exprs(eSet)),
+    col.palette="Accent",
     col=brewer.pal(n=length(levels(pData(eSet)[,colourF])),
                     name=col.palette),
     lty=1:length(levels(pData(eSet)[,linetypeF])),
@@ -381,7 +383,7 @@ expression_profiles <- function(
 expression_profiles_symbol <- function(
     gene_symbol, result, eSet, x_var, seriesF, subset=NULL,
     colourF=result$factor, linetypeF=colourF, line.size=1.5,
-    index=0, xlab=x_var, ylab="log2(cpm)", ylim=c(NULL,NULL),
+    index=0, xlab=x_var, ylab="log2(cpm)", ylim=range(exprs(eSet)),
     col.palette="Accent",
     col=brewer.pal(n=length(levels(pData(eSet)[,colourF])),
                     name=col.palette),
@@ -832,7 +834,7 @@ subEset <- function(eSet, subset=list()){
                 # in the phenodata
                 if(!v_filter %in% pData(eSet)[,f_filter]){
                     stop(v_filter,
-                         " is not a valid value of eSet$", f_filter)
+                        " is not a valid value of eSet$", f_filter)
                 }
             }
             # at this stage, column and values exist

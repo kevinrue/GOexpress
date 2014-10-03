@@ -1,3 +1,14 @@
+RELEASE 0.99.13:
+
+    UPDATED FEATURES:
+
+    * All expression plots were updated to a default ylim range corresponding
+    to the minimum and maximum expression values found in the entire 
+    ExpressionSet. This is meant to avoid mis-interpretation of the amplitude
+    of variation between sample groups, as suggested in the paper:
+    Rougier, N.P., Droettboom, M., and Bourne, P.E. (2014). Ten simple rules
+    for better figures. PLoS computational biology 10, e1003833.
+
 RELEASE 0.99.12:
 
     UPDATED FEATURES:

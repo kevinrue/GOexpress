@@ -11,7 +11,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
         # ncol: Number of columns of plots
         # nrow: Number of rows needed, calculated from # of cols
         layout <- matrix(seq(1, cols * ceiling(numPlots/cols)), byrow=TRUE,
-                         ncol=cols, nrow=ceiling(numPlots/cols))
+                            ncol=cols, nrow=ceiling(numPlots/cols))
     }
     
     if (numPlots==1) {
@@ -20,16 +20,25 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     } else {
         # Set up the page
         grid.newpage()
-        pushViewport(viewport(layout=grid.layout(nrow(layout),
-                                                 ncol(layout))))
+        pushViewport(
+            viewport(
+                layout=grid.layout(
+                    nrow(layout),
+                    ncol(layout)
+                    )
+                )
+            )
         
         # Make each plot, in the correct location
         for (i in 1:numPlots) {
             # Get the i,j matrix positions of the regions that contain this
             # subplot
             matchidx <- as.data.frame(which(layout == i, arr.ind=TRUE))
-            print(plots[[i]], vp=viewport(layout.pos.row=matchidx$row,
-                                          layout.pos.col=matchidx$col))
+            print(
+                plots[[i]], vp=viewport(
+                layout.pos.row=matchidx$row,
+                layout.pos.col=matchidx$col)
+                )
         }
     }
 }

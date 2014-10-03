@@ -16,7 +16,8 @@ valid grouping factor in the \code{phenodata}.
 \usage{
 expression_plot(
     gene_id, result, eSet, x_var, f=result$factor, subset=NULL,
-    xlab=x_var, ylab="log2(cpm)", ylim=c(NULL,NULL), col.palette="Accent",
+    xlab=x_var, ylab="log2(cpm)", ylim=range(exprs(eSet)),
+    col.palette="Accent",
     col=brewer.pal(n=length(levels(pData(eSet)[,f])), name=col.palette),
     level=0.95, title=NULL, title.size=2, axis.title.size=20, 
     axis.text.size=15, axis.text.angle=0,
@@ -64,9 +65,9 @@ expression_plot(
     }
     \item{ylim}{
     Numeric vector of length 2 specifying the lower and upper bounds of the
-    Y axis. Default is scaled to fit the plotted data. A good alternative is
-    to provide the full range of expression values in the dataset using
-    \code{range(exprs(eSet))}.
+    Y axis. Default is scaled to the full range of expression values in the 
+    expression dataset, to ease comparison of different genes. If set to
+    NULL, the axis will be scaled to fit the plotted data only.
     }
     \item{col.palette}{
     A valid \code{RColorBrewer} palette name to fetch the colormap from.

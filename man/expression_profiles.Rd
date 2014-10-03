@@ -18,7 +18,8 @@ in the \code{phenodata}.
 expression_profiles(
     gene_id, result, eSet, x_var, seriesF, subset=NULL,
     colourF=result$factor, linetypeF=colourF, line.size=1.5,
-    xlab=x_var, ylab="log2(cpm)", ylim=c(NULL,NULL), col.palette="Accent",
+    xlab=x_var, ylab="log2(cpm)", ylim=range(exprs(eSet)),
+    col.palette="Accent",
     col=brewer.pal(n=length(levels(pData(eSet)[,colourF])),
                     name=col.palette),
     lty=1:length(levels(pData(eSet)[,linetypeF])),
@@ -79,9 +80,9 @@ expression_profiles(
     }
     \item{ylim}{
     Numeric vector of length 2 specifying the lower and upper bounds of the
-    Y axis. Default is scaled to fit the plotted data. A good alternative is
-    to provide the full range of expression values in the dataset using
-    \code{range(exprs(eSet))}.
+    Y axis. Default is scaled to the full range of expression values in the 
+    expression dataset, to ease comparison of different genes. If set to
+    NULL, the axis will be scaled to fit the plotted data only.
     }
     \item{col.palette}{
     A valid \code{RColorBrewer} palette name to fetch the colormap from.
