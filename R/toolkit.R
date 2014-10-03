@@ -1,38 +1,60 @@
-subEset <- function(eSet, subset=list()){
-    # subset should be a list of factor names with the associated values
-    # to retain for that factor
-    if (!class(subset) == "list"){
-        stop("\"subset=\" argument should be a list.")
+# Code borrowed from the web to create a lattice of ggplot2 plots.
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+    # source:
+    # http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)
+    # Make a list from the ... arguments and plotlist
+    plots <- c(list(...), plotlist)
+    numPlots <- length(plots)
+    # If layout is NULL, then use 'cols' to determine layout
+    if (is.null(layout)) {
+        # Make the panel
+        # ncol: Number of columns of plots
+        # nrow: Number of rows needed, calculated from # of cols
+        layout <- matrix(seq(1, cols * ceiling(numPlots/cols)), byrow=TRUE,
+                         ncol=cols, nrow=ceiling(numPlots/cols))
     }
-    if (length(subset) > 0){
-        for (f_filter in names(subset)){
-            # Check that the name of the list item is a column name in
-            # the phenodata
-            if (!f_filter %in% colnames(pData(eSet))){
-                stop(f_filter, " is not a valid column in pData(eSet).")
-            }
-            if (length(subset[[f_filter]]) == 0){
-                stop("Fo value provided for filter ", f_filter)
-            }
-            for (v_filter in subset[[f_filter]]){
-                # Check that the value is an existing value 
-                # in the phenodata
-                if(!v_filter %in% pData(eSet)[,f_filter]){
-                    stop(v_filter,
-                         " is not a valid value of eSet$", f_filter)
-                }
-            }
-            # at this stage, column and values exist
-            # Subset the eSet to the
-            eSet <- eSet[,pData(eSet)[,f_filter] %in% subset[[f_filter]]]
-            # Update the factor levels
-            if ("factor" %in% class(pData(eSet)[,f_filter])){
-                pData(eSet)[,f_filter] = factor(pData(eSet)[,f_filter])
-            }
+    
+    if (numPlots==1) {
+        print(plots[[1]])
+        
+    } else {
+        # Set up the page
+        grid.newpage()
+        pushViewport(viewport(layout=grid.layout(nrow(layout),
+                                                 ncol(layout))))
+        
+        # Make each plot, in the correct location
+        for (i in 1:numPlots) {
+            # Get the i,j matrix positions of the regions that contain this
+            # subplot
+            matchidx <- as.data.frame(which(layout == i, arr.ind=TRUE))
+            print(plots[[i]], vp=viewport(layout.pos.row=matchidx$row,
+                                          layout.pos.col=matchidx$col))
         }
     }
-    else{
-        message("Empty list of filters given. Returning the original eSet")
+}
+
+# Splits a string of characters into multiple substrings, each less than 
+# a given number of characters. New line characters cannot be inserted within
+# words. Words are defined as surrounded by space characters only.
+string_Lsplit <- function (string, line.length){
+    # Get the (ordered) list of words
+    words <- strsplit(x=string, split=" ", )[[1]]
+    # Rebuild the original string, while inserting a newline everytime
+    # the limit is reached
+    # Start with empty title
+    newString <- words[1]
+    # Count of characters since latest newline
+    nc <- nchar(words[1])
+    for (word in words[2:length(words)]){
+        if (nc + nchar(word) > line.length){
+            newString <- paste(newString, word, sep="\n")
+            nc <- nchar(word)
+        }
+        else{
+            newString <- paste(newString, word, sep=" ")
+            nc <- nc + nchar(word) + 1 # for space character !
+        }
     }
-    return(eSet)
+    return(newString)
 }

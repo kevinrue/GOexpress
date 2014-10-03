@@ -29,29 +29,34 @@ Treatment, Timepoint, Animal).
 \value{
 \code{assayData} is a matrix of expression levels for 100 genes (rows)
 measured in 117 samples (columns).
-    \describe{
-    \item{\code{row.names}}{Ensembl gene identifiers (\emph{Bos taurus})}.
-    \item{\code{col.names}}{Sample identifiers}.
-    }
-
+\itemize{
+    \item{\code{rownames} are Ensembl gene identifiers of the
+    \emph{Bos taurus} species.}
+    \item{\code{colnames} are samples identifiers.}
+}
 
 \code{phenoData} is a data frame with 117 samples and 7 descriptive fields
-(e.g. experimental factors)
-    \describe{
-    \item{\code{row.names}}{Unique identifier. Here, sample name.}
-    \item{\code{File}}{Local filename where the RNAseq counts were obtained
-    from.}
-    \item{\code{Sample}}{Sample name.}
-    \item{\code{Animal}}{Identifier of animal corresponding to the biological
-    replicate.}
-    \item{\code{Treatment}}{Infection status of the sample (CN: Control,
-    MB: \emph{M. bovis}, TB: \emph{M. tuberculosis})}
-    \item{\code{Time}}{Time of measurement (as a factor).}
-    \item{\code{Group}}{Combination of Treatment and Time factors above.}
-    \item{\code{Timepoint}}{Time of measurement (as a numeric value). Useful
-    for time-series plotting. See function \code{expression_plot()}.}
+(e.g. experimental factors) in the columns listed below:
+    \itemize{
+    \item{\code{rownames} are unique identifiers. Here, sample names.}
+    \item{\code{File} contains local filenames where the RNAseq counts were
+    obtained from.}
+    \item{\code{Sample} contains individual sample name.}
+    \item{\code{Animal} contains the unique identifier of the animal
+    corresponding to the biological replicate, stored as a factor.}
+    \item{\code{Treatment} contains the infection status of the sample,
+    stored as a factor (CN: Control, MB: \emph{M. bovis}, TB:
+    \emph{M. tuberculosis})}
+    \item{\code{Time} contains the time of measurement in hours
+    post-infection,stored as a factor.}
+    \item{\code{Group} contains a combination of the Treatment and Time
+    factors above, stored as a factor itself.}
+    \item{\code{Timepoint} contains the time of measurement, stored as a
+    numeric value. This field is useful to use on the X-axis of expression
+    plots. See function \code{expression_plot()}.}
     }
 }
+
 \details{
 Gene expression was measured in poly-A purified strand-specific RNA libraries
 using the RNA-Sequencing Illumina(R) HiSeq(R) 2000 platform as paired-end 2 x

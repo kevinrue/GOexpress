@@ -49,7 +49,7 @@ cluster_GO <- function(
 
 expression_plot <- function(
     gene_id, result, eSet, x_var, f=result$factor, subset=NULL,
-    ylab="log2(cpm)", col.palette="Accent",
+    xlab=x_var, ylab="log2(cpm)", ylim=c(NULL,NULL), col.palette="Accent",
     col=brewer.pal(n=length(levels(pData(eSet)[,f])), name=col.palette),
     level=0.95, title=NULL, title.size=2, axis.title.size=20, 
     axis.text.size=15, axis.text.angle=0,
@@ -97,7 +97,7 @@ expression_plot <- function(
     gg <- ggplot(df) +
         geom_smooth(aes(x=X, y=Expression, group=Factor,
                                 color=Factor, fill=Factor), level=level) +
-        labs(title=title, x=x_var, y=ylab) +
+        labs(title=title, x=xlab, y=ylab) +
         theme(
             plot.title=element_text(
                             size=rel(title.size)),
@@ -109,13 +109,18 @@ expression_plot <- function(
             legend.key.size=unit(legend.key.size, "points")) +
         scale_colour_manual(values=col, name=f) + 
         scale_fill_manual(values=col, name=f)
+    # If a non-default ylim was given, apply it
+    if (!is.null(ylim)){
+        gg <- gg + scale_y_continuous(limits=ylim)
+    }
     # Return the plot
     return(gg)
 }
 
 expression_plot_symbol <- function(
     gene_symbol, result, eSet, x_var, f=result$factor, subset=NULL,
-    index=0, ylab="log2cpm", col.palette="Accent",
+    index=0, xlab=x_var, ylab="log2(cpm)", ylim=c(NULL,NULL), 
+    col.palette="Accent",
     col=brewer.pal(n=length(levels(pData(eSet)[,f])), name=col.palette),
     level=0.95, titles=c(), title.size=2, axis.title.size=20,
     axis.text.size=15, axis.text.angle=0,
@@ -224,8 +229,8 @@ expression_plot_symbol <- function(
                 plots[[i]] <- expression_plot(
                     gene_id=gene_ids_present[i],
                     eSet=eSet,
-                    x_var=x_var, result=result, f=f, ylab=ylab,
-                    col.palette=col.palette, col=col, level=level,
+                    x_var=x_var, result=result, f=f, xlab=xlab, ylab=ylab,
+                    ylim=ylim, col.palette=col.palette, col=col, level=level,
                     title=titles[i], title.size=title.size,
                     axis.title.size=axis.title.size,
                     axis.text.size=axis.text.size,
@@ -253,8 +258,8 @@ expression_plot_symbol <- function(
                 expression_plot(
                     gene_id=gene_ids_present[index],
                     eSet=eSet, x_var=x_var,
-                    result=result, f=f, ylab=ylab,
-                    col.palette=col.palette, col=col, level=level,
+                    result=result, f=f, xlab=xlab, ylab=ylab,
+                    ylim=ylim, col.palette=col.palette, col=col, level=level,
                     title=titles[index], title.size=title.size,
                     axis.title.size=axis.title.size,
                     axis.text.size=axis.text.size,
@@ -271,8 +276,8 @@ expression_plot_symbol <- function(
         cat("Plotting", gene_ids_present, fill=TRUE)
         expression_plot(
             gene_id=gene_ids_present,
-            eSet=eSet, x_var=x_var, 
-            result=result, f=f, ylab=ylab, col.palette=col.palette, col=col,
+            eSet=eSet, x_var=x_var, result=result, f=f, xlab=xlab, ylab=ylab,
+            ylim=ylim, col.palette=col.palette, col=col,
             level=level, title=titles, title.size=title.size,
             axis.title.size=axis.title.size,
             axis.text.size=axis.text.size,
@@ -286,7 +291,7 @@ expression_plot_symbol <- function(
 expression_profiles <- function(
     gene_id, result, eSet, x_var, seriesF, subset=NULL,
     colourF=result$factor, linetypeF=colourF, line.size=1.5,
-    ylab="log2(cpm)", col.palette="Accent",
+    xlab=x_var, ylab="log2(cpm)", ylim=c(NULL,NULL), col.palette="Accent",
     col=brewer.pal(n=length(levels(pData(eSet)[,colourF])),
                     name=col.palette),
     lty=1:length(levels(pData(eSet)[,linetypeF])),
@@ -352,7 +357,7 @@ expression_profiles <- function(
     gg <- ggplot(data=df) +
         geom_line(aes(x=X, y=Expression, group=Profile, linetype=LineType,
                     colour=Colour), size=line.size) +
-        labs(title=title, x=x_var, y=ylab) +
+        labs(title=title, x=xlab, y=ylab) +
         theme(
             plot.title=element_text(
                 size=rel(title.size)),
@@ -365,6 +370,10 @@ expression_profiles <- function(
             legend.key.size=unit(legend.key.size, "points")) +
         scale_colour_manual(values=col, name=colourF) + 
         scale_linetype_manual(values=lty, name=linetypeF)
+    # If a non-default ylim was given, apply it
+    if (!is.null(ylim)){
+        gg <- gg + scale_y_continuous(limits=ylim)
+    }
     # Return the plot
     return(gg)
 }
@@ -372,7 +381,8 @@ expression_profiles <- function(
 expression_profiles_symbol <- function(
     gene_symbol, result, eSet, x_var, seriesF, subset=NULL,
     colourF=result$factor, linetypeF=colourF, line.size=1.5,
-    index=0, ylab="log2(cpm)", col.palette="Accent",
+    index=0, xlab=x_var, ylab="log2(cpm)", ylim=c(NULL,NULL),
+    col.palette="Accent",
     col=brewer.pal(n=length(levels(pData(eSet)[,colourF])),
                     name=col.palette),
     lty=1:length(levels(pData(eSet)[,linetypeF])),
@@ -497,7 +507,8 @@ expression_profiles_symbol <- function(
                     gene_id=gene_ids_present[i], result=result, eSet=eSet,
                     x_var=x_var, seriesF=seriesF, colourF=colourF,
                     linetypeF=linetypeF, line.size=line.size,
-                    ylab=ylab, col.palette=col.palette,
+                    xlab=xlab, ylab=ylab, ylim=ylim,
+                    col.palette=col.palette,
                     col=col, lty=lty, title=titles[i], title.size=title.size,
                     axis.title.size=axis.title.size,
                     axis.text.size=axis.text.size,
@@ -526,7 +537,8 @@ expression_profiles_symbol <- function(
                     gene_id=gene_ids_present[index], result=result, eSet=eSet,
                     x_var=x_var, seriesF=seriesF, colourF=colourF,
                     linetypeF=linetypeF, line.size=line.size,
-                    ylab=ylab, col.palette=col.palette,
+                    xlab=xlab, ylab=ylab, ylim=ylim,
+                    col.palette=col.palette,
                     col=col, lty=lty, title=titles[i], title.size=title.size,
                     axis.title.size=axis.title.size,
                     axis.text.size=axis.text.size,
@@ -545,7 +557,8 @@ expression_profiles_symbol <- function(
             gene_id=gene_ids_present, result=result, eSet=eSet,
             x_var=x_var, seriesF=seriesF, colourF=colourF,
             linetypeF=linetypeF, line.size=line.size,
-            ylab=ylab, col.palette=col.palette,
+            xlab=xlab, ylab=ylab, ylim=ylim,
+            col.palette=col.palette,
             col=col, lty=lty, title=titles[i], title.size=title.size,
             axis.title.size=axis.title.size,
             axis.text.size=axis.text.size,
@@ -664,42 +677,6 @@ list_genes <- function(go_id, result, data.only=TRUE){
     }
     # return the list of gene_ids associated with it
     return(gene_ids)
-}
-
-# Code borrowed from the web to create a lattice of ggplot2 plots.
-multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-    # source:
-    # http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)
-    # Make a list from the ... arguments and plotlist
-    plots <- c(list(...), plotlist)
-    numPlots <- length(plots)
-    # If layout is NULL, then use 'cols' to determine layout
-    if (is.null(layout)) {
-        # Make the panel
-        # ncol: Number of columns of plots
-        # nrow: Number of rows needed, calculated from # of cols
-        layout <- matrix(seq(1, cols * ceiling(numPlots/cols)), byrow=TRUE,
-                        ncol=cols, nrow=ceiling(numPlots/cols))
-    }
-    
-    if (numPlots==1) {
-        print(plots[[1]])
-        
-    } else {
-        # Set up the page
-        grid.newpage()
-        pushViewport(viewport(layout=grid.layout(nrow(layout),
-                                                    ncol(layout))))
-        
-        # Make each plot, in the correct location
-        for (i in 1:numPlots) {
-            # Get the i,j matrix positions of the regions that contain this
-            # subplot
-            matchidx <- as.data.frame(which(layout == i, arr.ind=TRUE))
-            print(plots[[i]], vp=viewport(layout.pos.row=matchidx$row,
-                                            layout.pos.col=matchidx$col))
-        }
-    }
 }
 
 overlap_GO <- function(go_ids, result, filename=NULL, mar=rep(0.1, 4), ...){
@@ -834,29 +811,43 @@ rerank <- function(result, rank.by="rank"){
     return(result)
 }
 
-# Splits a string of characters into multiple substrings, each less than 
-# a given number of characters. New line characters cannot be inserted within
-# words. Words are defined as surrounded by space characters only.
-string_Lsplit <- function (string, line.length){
-    # Get the (ordered) list of words
-    words <- strsplit(x=string, split=" ", )[[1]]
-    # Rebuild the original string, while inserting a newline everytime
-    # the limit is reached
-    # Start with empty title
-    newString <- words[1]
-    # Count of characters since latest newline
-    nc <- nchar(words[1])
-    for (word in words[2:length(words)]){
-        if (nc + nchar(word) > line.length){
-            newString <- paste(newString, word, sep="\n")
-            nc <- nchar(word)
-        }
-        else{
-            newString <- paste(newString, word, sep=" ")
-            nc <- nc + nchar(word) + 1 # for space character !
+subEset <- function(eSet, subset=list()){
+    # subset should be a list of factor names with the associated values
+    # to retain for that factor
+    if (!class(subset) == "list"){
+        stop("\"subset=\" argument should be a list.")
+    }
+    if (length(subset) > 0){
+        for (f_filter in names(subset)){
+            # Check that the name of the list item is a column name in
+            # the phenodata
+            if (!f_filter %in% colnames(pData(eSet))){
+                stop(f_filter, " is not a valid column in pData(eSet).")
+            }
+            if (length(subset[[f_filter]]) == 0){
+                stop("Fo value provided for filter ", f_filter)
+            }
+            for (v_filter in subset[[f_filter]]){
+                # Check that the value is an existing value 
+                # in the phenodata
+                if(!v_filter %in% pData(eSet)[,f_filter]){
+                    stop(v_filter,
+                         " is not a valid value of eSet$", f_filter)
+                }
+            }
+            # at this stage, column and values exist
+            # Subset the eSet to the
+            eSet <- eSet[,pData(eSet)[,f_filter] %in% subset[[f_filter]]]
+            # Update the factor levels
+            if ("factor" %in% class(pData(eSet)[,f_filter])){
+                pData(eSet)[,f_filter] = factor(pData(eSet)[,f_filter])
+            }
         }
     }
-    return(newString)
+    else{
+        message("Empty list of filters given. Returning the original eSet")
+    }
+    return(eSet)
 }
 
 subset_scores <- function(result, ...){

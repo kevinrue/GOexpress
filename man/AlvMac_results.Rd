@@ -19,19 +19,24 @@ applied to the sample input data \code{data(AlvMac)}.
 
 \value{
     A list of 7 slots summarising the input and results of the analysis:
-    \describe{
-    \item{ GO }{A table ranking all GO terms related to genes in the
-    expression dataset based on the average ability of their related genes to
-    cluster the samples according to the predefined grouping factor.}
-    \item{ mapping }{The table mapping genes present in the dataset to GO
-    terms.}
-    \item{ genes }{A table ranking all genes present in the expression dataset
-    based on their ability to cluster the samples according to the predefined
-    grouping factor.}
-    \item{ factor }{"Treatment", the predefined grouping factor.}
-    \item{ method }{"randomForest", the statistical framework used.}
+    \itemize{
+    \item{\code{GO} contains a table ranking all GO terms related to genes in
+    the expression dataset based on the average ability of their related
+    genes to cluster the samples according to the predefined grouping
+    factor.}
+    \item{\code{mapping} contains the table mapping genes present in the
+    dataset to GO terms.}
+    \item{\code{genes} contains a table ranking all genes present in the
+    expression dataset based on their ability to cluster the samples
+    according to the predefined grouping factor (see 'factor' below).}
+    \item{\code{factor} contains the grouping factor analysed.}
+    \item{\code{method} contains the statistical framework used.}
+    \item{\code{ntree} contains number of trees built during the randomForest
+    analysis.}
+    \item{\code{mtry} contains the number of features randomly sampled as
+    candidates at each split in each tree built during the randomForest
+    analysis.}
     }
-
 }
 
 \section{Warning}{

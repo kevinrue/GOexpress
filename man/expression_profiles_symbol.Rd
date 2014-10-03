@@ -18,7 +18,8 @@ in the \code{phenodata}.
 expression_profiles_symbol(
     gene_symbol, result, eSet, x_var, seriesF, subset=NULL,
     colourF=result$factor, linetypeF=colourF, line.size=1.5,
-    index=0, ylab="log2(cpm)", col.palette="Accent",
+    index=0, xlab=x_var, ylab="log2(cpm)", ylim=c(NULL,NULL),
+    col.palette="Accent",
     col=brewer.pal(n=length(levels(pData(eSet)[,colourF])),
                     name=col.palette),
     lty=1:length(levels(pData(eSet)[,linetypeF])),
@@ -76,8 +77,17 @@ expression_profiles_symbol(
     with the gene name, \code{index=2} will plot the expression profile of
     the second feature identifier alone, for instance.
     }
+    \item{xlab}{
+    Title of the X-axis. Default is tha value of \code{x_var}.
+    }
     \item{ylab}{
     Title of the Y-axis. Default is "log2(cpm)".
+    }
+    \item{ylim}{
+    Numeric vector of length 2 specifying the lower and upper bounds of the
+    Y axis. Default is scaled to fit the plotted data. A good alternative is
+    to provide the full range of expression values in the dataset using
+    \code{range(exprs(eSet))}.
     }
     \item{col.palette}{
     A valid \code{RColorBrewer} palette name to fetch the colormap from.
@@ -132,7 +142,8 @@ that plotted on the X-axis. See below for an example on the training dataset.
 }
 
 \value{
-    The ggplot object.
+    The ggplot object, or NULL if multiple features are annotated
+    to the gene symbol.
 }
 
 \references{

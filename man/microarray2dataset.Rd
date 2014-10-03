@@ -18,22 +18,30 @@ corresponding species.
 \usage{data(microarray2dataset)}
 
 \value{
-    A data frame with 105 observations on the following 5 variables.
-    \describe{
-    \item{\code{dataset}}{BioMart species dataset.}
-    \item{\code{microarray}}{Microarray identifier in the Ensembl BioMart
-    dataset.}
-    \item{\code{sample}}{An example probeset of the microarray.}
-    \item{\code{prefix}}{The prefix pattern.}
-    \item{\code{unique}}{Whether the prefix pattern is unique to the
-    microarray.}
+    A data frame with 105 observations of the 5 variables described below:
+    \itemize{
+    \item{\code{dataset} contains species-specific biomaRt dataset names.}
+    \item{\code{microarray} contains microarray identifiers in the Ensembl
+    BioMart dataset described above.}
+    \item{\code{sample} contains an example probeset sampled from the
+    corresponding Ensembl BioMart dataset and microarray.}
+    \item{\code{prefix} a manually curated prefix pattern for the
+    corresponding Ensembl BioMart dataset and microarray. This pattern may or
+    may not be unique to the microarray in the BioMart database. Therefore
+    we encourage users to use the 'microarray' .....}
+    \item{\code{unique} contains a boolean value stating whether the prefix
+    pattern was found curated as unique to the microarray or not.}
     }
 }
 
 \details{
 All Agilent microarray share the same prefix pattern, making it very difficult
-to differentiate. Many affymetrix microarrays also share the same prefix
-pattern for several probesets.
+to differentiate. Many Affymetrix microarrays also share the same prefix
+pattern for several probesets. 
+
+The \code{dataset} and \code{microarray} arguments of the \code{GO_analyse}
+method are the best way to specify which BioMart information should be
+used to annotate the features in your expression dataset.
 }
 
 \source{

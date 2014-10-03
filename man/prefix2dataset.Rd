@@ -18,10 +18,10 @@ This table maps each known unique prefix to the corresponding species.
 \usage{data(prefix2dataset)}
 
 \value{
-    A data frame with 66 rows.
-    \describe{
-        \item{\code{prefix}}{Unique prefix.}
-        \item{\code{dataset}}{BioMart dataset.}
+    A data frame with 66 rows and 2 columns. The columns are described below:
+    \itemize{
+    \item{\code{prefix} contains unique prefixes.}
+    \item{\code{dataset} contains the corresponding biomaRt dataset name.}
     }
 }
 

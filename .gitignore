@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.Rbuildignore
+.gitignore
+*.Rproj
+*.pdf
+*.tex
+*.log
+*.synctex.gz
+*.toc
+*.tiff

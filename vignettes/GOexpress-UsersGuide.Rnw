@@ -116,9 +116,11 @@ project, develop and test their own feature(s), and finally generate a pull
 request to integrate it to the original repository
 (\texttt{https://github.com/kevinrue/GOexpress}).
 
-As for all Bioconductor packages, the Bioconductor developers mailing list is
-probably the best place to seek advice with a large and active community of
-Bioconductor users \texttt{http://www.bioconductor.org/help/mailing-list/}.
+As for all Bioconductor packages, the Bioconductor support site is the best
+place to seek advice with a large and active community of Bioconductor users.
+More detailed information is available at
+\texttt{http://www.bioconductor.org/help/support}.
+
 
 \subsection[Citing \texttt{GOexpress}]{Citing \texttt{GOexpress}}
 

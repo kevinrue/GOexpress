@@ -1,3 +1,25 @@
+RELEASE 0.99.12:
+
+    UPDATED FEATURES:
+
+    * All expression plots were given new arguments for more control: xlab
+    allows users to change the default title for the X-axis, ylim allows users
+    to override the lower and upper boundaries of the Y axis.
+
+    GENERAL UPDATES:
+
+    * Updated man pages AlvMac, AlvMac_results, microarray2dataset, and
+    prefix2dataset. Replaced the LaTeX describe statement by an itemise
+    statement to make the man page more readable in a terminal window.
+
+    * Moved functions between the post_analysis script and the toolkit
+    script. From now on, only functions accessible to the users should be
+    present in the post_analysis script, while toolkit should contain
+    method called internally.
+
+    * The User's Guide was updated to redirect the users to the new support
+    site for Bioconductor rather than the bioc-devel mailing list.
+
 RELEASE 0.99.11:
 
     NEW FEATURES:
