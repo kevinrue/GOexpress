@@ -106,6 +106,8 @@ Core elements:
     grouping factor.}
     \item{factor}{The predefined grouping factor.}
     \item{method}{The statistical framework used.}
+    \item{subset}{The filters used to run the analysis only on a subet of the
+    samples. NULL if no filter was applied.}
 
 Random Forest additional elements:
     \item{ntree}{Number of trees grown.}

@@ -1,3 +1,10 @@
+RELEASE 0.99.15:
+
+    GENERAL UPDATES:
+
+    * Updated man pages GO_analyse to describe the recently added subset
+    slot in the result variable.
+
 RELEASE 0.99.14:
 
     BUG FIXES:
