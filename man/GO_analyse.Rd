@@ -23,10 +23,11 @@ with tools allowing to visualise the statistics on a gene- and ontology-basis.
 }
 
 \usage{
-GO_analyse(eSet, f, biomart_dataset="",
-                    microarray="", method="randomForest", rank.by="rank",
-                    do.trace=100, ntree=1000,
-                    mtry=ceiling(2*sqrt(nrow(eSet))), ...)
+GO_analyse(
+    eSet, f, subset=NULL, biomart_dataset="", microarray="",
+    method="randomForest", rank.by="rank", do.trace=100, ntree=1000,
+    mtry=ceiling(2*sqrt(nrow(eSet))), 
+    ...)
 }
 
 \arguments{
@@ -42,6 +43,12 @@ GO_analyse(eSet, f, biomart_dataset="",
     \item{f}{
     A column name in \code{phenodata} used as the grouping factor for the
     analysis.
+    }
+    \item{subset}{
+    A named list to subset \code{eSet} for the analysis. Names must be
+    column names existing in colnames(pData(eSet)). Values must be vectors of
+    values existing in the corresponding column of pData(eSet). The original
+    ExpressionSet will be left unchanged.
     }
     \item{biomart_dataset}{
     The BioMart Ensembl dataset corresponding to the species studied.
@@ -147,11 +154,23 @@ One-way ANOVA does not have additional arguments.
 }
 
 \examples{
+# Load example data subset
+data(AlvMac)
+
+# Run the analysis on factor "Treatment",
+# considering only treatments "MB" and "TB" at time-point "48H"
+# Factor 'f' must be one of the column names in pData(targets)
+AlvMac_results <- GO_analyse(eSet=AlvMac, f="Treatment",
+    subset=list(Time=c("48H"), Treatment=c("MB", "TB")))
+
+\dontrun{
+# Syntax examples without actual data:
+
 # To force the use of the Ensembl BioMart for the human species, use:
-#GO_analyse(eSet, f, biomart_dataset = "hsapiens_gene_ensembl")
+GO_analyse(eSet, f, biomart_dataset = "hsapiens_gene_ensembl")
 
 # To force use of the bovine affy_bovine microarray annotations use:
-#GO_analyse(eSet, f, microarray = "affy_bovine")
+GO_analyse(eSet, f, microarray = "affy_bovine")
 
 # Valid Ensembl BioMart datasets are listed in the following variable
 data(prefix2dataset)
@@ -159,12 +178,17 @@ data(prefix2dataset)
 # Valid microarray= values are listed in the following variable
 data(microarray2dataset)
 
-# Load example data subset
-data(AlvMac)
 
-# Run the analysis on factor "Treatment"
+# Additional time-consuming example usages, can be run manually
+# with test data:
+
+# Run the analysis on factor "Treatment" including all samples
 # Factor must be one of the column names in pData(targets)
 AlvMac_results <- GO_analyse(eSet=AlvMac, f="Treatment")
+
+# Run the analysis on factor "Treatment" using ANOVA method
+AlvMac_results <- GO_analyse(eSet=AlvMac, f="Treatment", method="a")
+}
 }
 
 \keyword{ GOexpress }

@@ -1,3 +1,23 @@
+RELEASE 0.99.14:
+
+    BUG FIXES:
+
+    * The anova method of the GO_analyse method was broken since the
+    introduction of ExpressionSet, release 0.99.4.
+
+    UPDATED FEATURES:
+
+    * The subset argument was also added to the GO_analyse method. This allows
+    the identification of genes clustering a subset of groups, at a subset of
+    time-points, etc. while plotting the expression profile of the entire
+    dataset, if desired.
+
+    GENERAL UPDATES:
+
+    * Updated man pages GO_analyse to allow only one example to be run. This
+    saves time during CMD check, while making the man page more easily
+    readable.
+
 RELEASE 0.99.13:
 
     UPDATED FEATURES:

@@ -1,8 +1,9 @@
 
-GO_analyse <- function(eSet, f, biomart_dataset="",
-                        microarray="", method="randomForest", rank.by="rank",
-                        do.trace=100, ntree=1000,
-                        mtry=ceiling(2*sqrt(nrow(eSet))), ...){
+GO_analyse <- function(
+    eSet, f, subset=NULL, biomart_dataset="", microarray="",
+    method="randomForest", rank.by="rank", do.trace=100, ntree=1000,
+    mtry=ceiling(2*sqrt(nrow(eSet))), 
+    ...){
     # if less than 4 genes in data will cause mtry larger than number of genes
     # which is then impossible.
     # However, who uses a transcriptomics dataset of 4 genes?
@@ -19,6 +20,10 @@ GO_analyse <- function(eSet, f, biomart_dataset="",
     if (any(table(pData(eSet)[,f]) == 0)){
         stop("One level of pData(eSet)[,f] has no correspondig sample.
             Please remove that level.")
+    }
+    # Subset the data to the given values of the given factors, if existing
+    if (!is.null(subset)){
+        eSet <- subEset(eSet=eSet, subset=subset)
     }
     # If the user gave an invalid method name (allow specific abbreviations)
     if (!method %in% c("randomForest", "anova", "rf", "a")){
@@ -222,10 +227,10 @@ GO_analyse <- function(eSet, f, biomart_dataset="",
     else if (method %in% c("anova", "a")){
         # A vectorised calculation the F-value of an ANOVA used as score for
         # each gene
-        res <- data.frame("Score" = apply(X=eSet, MARGIN=1,
-                                        FUN=function(x){
-            oneway.test(formula=expr~group, data=cbind(
-                expr=x, group=pData(eSet)[,f]))$statistic}))
+        res <- data.frame(
+            "Score" = apply(X=exprs(eSet), MARGIN=1, FUN=function(x){
+                oneway.test(formula=expr~group, data=cbind(
+                    expr=x, group=pData(eSet)[,f]))$statistic}))
         # In the output variable, write the full method name
         method <- "anova"
     }
@@ -340,12 +345,18 @@ GO_analyse <- function(eSet, f, biomart_dataset="",
     }
     # Return the results of the analysis
     if (method %in% c("randomForest", "rf")){
-        return(list(GO=GO_scores, mapping=GO_genes, genes=genes_score,
-                    factor=f, method=method, ntree=ntree, mtry=mtry))
+        return(
+            list(
+                GO=GO_scores, mapping=GO_genes, genes=genes_score,
+                factor=f, method=method, subset=subset, ntree=ntree,
+                mtry=mtry)
+            )
     }
     else if (method %in% c("anova", "a")) {
-        return(list(GO=GO_scores, mapping=GO_genes, genes=genes_score,
-                    factor=f, method=method))
+        return(
+            list(
+                GO=GO_scores, mapping=GO_genes, genes=genes_score,
+                    factor=f, method=method, subset=subset))
     }
 }
 
