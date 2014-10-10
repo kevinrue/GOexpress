@@ -7,7 +7,8 @@
 \title{GOexpress: Visualise microarray and RNAseq data using gene ontology
 annotations}
 \author{Kévin Rue-Albrecht, Paul A. McGettigan, Belinda Hernández,\\
-Andrew Parnell, Stephen V. Gordon, and David E. MacHugh}
+David A. Magee, Nicolas C. Nalpas, Andrew C. Parnell,\\
+Stephen V. Gordon, and David E. MacHugh}
 
 
 \begin{document}
@@ -801,14 +802,15 @@ genes.
 
 Conception and development of the \texttt{GOexpress} package was carried out
 by KR-A with contributions by PAM, under the supervision of SVG and DEM.
+Experimental data used for testing was generated and analysed with the help of
+DAM and NC.
 Integration of the random forest statistical frameworks was advised by BH and
-AP. This User's Guide was prepared by KR-A, and edited by PAM, BH, AP, SVG,
-and DEM.
+AP. This User's Guide was prepared by KR-A, and edited by PAM, BH, DAM, NCN,
+AP, SVG, and DEM.
 
 \subsection[Acknowledgement]{Acknowledgments}
 
-Special thanks to Dr. David Magee for helpful advice on statistics, to Dr.
-Nicolas Nalpas and Dr. Kate Killick for testing and feedback. My thanks to the
+Special thanks to Dr. Kate Killick for testing and feedback. My thanks to the
 Bioconductor staff and in particular to Hervé Pagès for the helpful feedback
 which improved the standards of the code and documentation. Last but not
 least, thanks to the University College Dublin "OpenSequencing" and the
