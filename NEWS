@@ -1,4 +1,19 @@
+RELEASE 0.99.17:
+
+    BUG FIXES:
+
+    * NAs were introduced in the average score and rank of GO terms following
+    analysis of microarray data (ANOVA and randomForest) for GO terms without
+    associated features in the ExpressionSet. The problem was not found in any
+    case for analysis of RNA-Seq data. This was causing issues during the
+    subset_scores function and subsequent plots, such as main titles made of
+    multiple lines and NAs. GO terms without associated probesets are now
+    given average score of 0 and average rank equal to the maximum in the
+    dataset plus 1.
+
 RELEASE 0.99.16:
+
+    GENERAL UPDATES:
 
     * Included co-authors who participated in the generation and analysis of
     data used to test the package.

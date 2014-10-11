@@ -200,7 +200,7 @@ GO_analyse <- function(
     # Remove over 1,000 rows where the go_id is ""
     GO_genes <- GO_genes[GO_genes$go_id != "",]
     # Remove rows where the gene_id is "" (happens)
-    GO_genes <- GO_genes[GO_genes$gene_id != "",]
+    GO_genes <- GO_genes[GO_genes$gene_id != "",]    
     # Prepare a table of all the GO terms in BioMart (even if no gene is
     # annotated to it)
     cat("Fetching GO_terms description from BioMart ...", fill=TRUE)
@@ -309,19 +309,25 @@ GO_analyse <- function(
                                 FUN=length), y=GO_scores, by="go_id",
                     all.y=TRUE)
     colnames(GO_scores)[2] <- "total_count"
+    GO_scores[is.na(GO_scores$total_count), "total_count"] <- 0
     # Average score (denominator being the total of genes by GO term in
     # BioMart) being tested
     GO_scores <- merge(x=aggregate(Score~go_id, data=GO_gene_score_all,
                                 FUN=mean), y=GO_scores, by="go_id",
                         all.y=TRUE)
     colnames(GO_scores)[2] <- "ave_score"
+    GO_scores[is.na(GO_scores$ave_score), "ave_score"] <- 0
     ## Average rank (denominator being the total of genes by GO term in
     # BioMart) being tested
     # (+) robust for GO terms with several genes
-    GO_scores <- merge(x=aggregate(Rank~go_id, data=GO_gene_score_all,
-                                FUN=mean),
-                        y=GO_scores, by="go_id", all.y=TRUE)
-    colnames(GO_scores)[2] <- "ave_rank"    
+    GO_scores <- merge(
+        x=aggregate(Rank~go_id, data=GO_gene_score_all, FUN=mean),
+        y=GO_scores,
+        by="go_id",
+        all.y=TRUE)
+    colnames(GO_scores)[2] <- "ave_rank"
+    GO_scores[is.na(GO_scores$ave_rank), "ave_rank"] <- max(
+        GO_scores$ave_rank, na.rm=TRUE) + 1
     # Notes of other summary metrics tested:
     ## Sum: (-) biased toward general GO terms annotated for many thousands
     ## of genes (e.g. "protein binding")
