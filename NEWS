@@ -1,8 +1,9 @@
-RELEASE 0.99.17:
+CHANGES IN VERSION 0.99.17
+--------------------------
 
-    BUG FIXES:
+BUG FIXES
 
-    * NAs were introduced in the average score and rank of GO terms following
+    o NAs were introduced in the average score and rank of GO terms following
     analysis of microarray data (ANOVA and randomForest) for GO terms without
     associated features in the ExpressionSet. The problem was not found in any
     case for analysis of RNA-Seq data. This was causing issues during the
@@ -11,290 +12,307 @@ RELEASE 0.99.17:
     given average score of 0 and average rank equal to the maximum in the
     dataset plus 1.
 
-RELEASE 0.99.16:
+CHANGES IN VERSION 0.99.16
+--------------------------
 
-    GENERAL UPDATES:
+GENERAL UPDATES
 
-    * Included co-authors who participated in the generation and analysis of
+    o Included co-authors who participated in the generation and analysis of
     data used to test the package.
 
-RELEASE 0.99.15:
+CHANGES IN VERSION 0.99.15
+--------------------------
 
-    GENERAL UPDATES:
+GENERAL UPDATES
 
-    * Updated man pages GO_analyse to describe the recently added subset
+    o Updated man pages GO_analyse to describe the recently added subset
     slot in the result variable.
 
-RELEASE 0.99.14:
+CHANGES IN VERSION 0.99.14
+--------------------------
 
-    BUG FIXES:
+BUG FIXES
 
-    * The anova method of the GO_analyse method was broken since the
+    o The anova method of the GO_analyse method was broken since the
     introduction of ExpressionSet, release 0.99.4.
 
-    UPDATED FEATURES:
+UPDATED FEATURES
 
-    * The subset argument was also added to the GO_analyse method. This allows
+    o The subset argument was also added to the GO_analyse method. This allows
     the identification of genes clustering a subset of groups, at a subset of
     time-points, etc. while plotting the expression profile of the entire
     dataset, if desired.
 
-    GENERAL UPDATES:
+GENERAL UPDATES
 
-    * Updated man pages GO_analyse to allow only one example to be run. This
+    o Updated man pages GO_analyse to allow only one example to be run. This
     saves time during CMD check, while making the man page more easily
     readable.
 
-RELEASE 0.99.13:
+CHANGES IN VERSION 0.99.13
+--------------------------
 
-    UPDATED FEATURES:
+UPDATED FEATURES
 
-    * All expression plots were updated to a default ylim range corresponding
+    o All expression plots were updated to a default ylim range corresponding
     to the minimum and maximum expression values found in the entire 
     ExpressionSet. This is meant to avoid mis-interpretation of the amplitude
     of variation between sample groups, as suggested in the paper:
     Rougier, N.P., Droettboom, M., and Bourne, P.E. (2014). Ten simple rules
     for better figures. PLoS computational biology 10, e1003833.
 
-RELEASE 0.99.12:
+CHANGES IN VERSION 0.99.12
+--------------------------
 
-    UPDATED FEATURES:
+UPDATED FEATURES
 
-    * All expression plots were given new arguments for more control: xlab
+    o All expression plots were given new arguments for more control: xlab
     allows users to change the default title for the X-axis, ylim allows users
     to override the lower and upper boundaries of the Y axis.
 
-    GENERAL UPDATES:
+GENERAL UPDATES
 
-    * Updated man pages AlvMac, AlvMac_results, microarray2dataset, and
+    o Updated man pages AlvMac, AlvMac_results, microarray2dataset, and
     prefix2dataset. Replaced the LaTeX describe statement by an itemise
     statement to make the man page more readable in a terminal window.
 
-    * Moved functions between the post_analysis script and the toolkit
+    o Moved functions between the post_analysis script and the toolkit
     script. From now on, only functions accessible to the users should be
     present in the post_analysis script, while toolkit should contain
     method called internally.
 
-    * The User's Guide was updated to redirect the users to the new support
+    o The User's Guide was updated to redirect the users to the new support
     site for Bioconductor rather than the bioc-devel mailing list.
 
-RELEASE 0.99.11:
+CHANGES IN VERSION 0.99.11
+--------------------------
 
-    NEW FEATURES:
+NEW FEATURES
 
-    * The new subEset() method subsets an ExpressionSet given a list where
+    o The new subEset() method subsets an ExpressionSet given a list where
     item names are column names of the phenoData slots and item values are
     vectors of values corresponding to sample to retain (e.g.
     list(Time=c("2H", "6H")) will retain samples with value "2H" or "6H" in
     the "Time" column of the phenoData slot).
 
-    UPDATED FEATURES:
+UPDATED FEATURES
 
-    * All relevant visualisation methods have been added an argument to
+    o All relevant visualisation methods have been added an argument to
     subset samples to plot to those with a given set of values for a given
     column in the phenoData (uses the new function subEset described above).
 
-    * The example analysis results was renamed from "raw_results" to
+    o The example analysis results was renamed from "raw_results" to
     "AlvMac_results", so that it can now loaded running data(AlvMac_results).
     The new name is meant to be more specific to the package.
 
-RELEASE 0.99.10:
+CHANGES IN VERSION 0.99.10
+--------------------------
 
-    GENERAL UPDATES:
+GENERAL UPDATES
 
-    * Replaced \format by \value sections to the following man pages:
+    o Replaced \format by \value sections to the following man pages:
     AlvMac.Rd, microarray2dataset.Rd, prefix2dataset.Rd, raw_results.Rd
     to avoid having an empty value section, as recommended by the Bioconductor
     package tracker. Hopefully, it does not require a non-empty \format
     section as well...
 
-    * Restricted lines to less than 80 characters and indentation by multiple
-of four space characters.
+    o Restricted lines to less than 80 characters and indentation by multiple
+    of four space characters.
 
 
-RELEASE 0.99.9:
+CHANGES IN VERSION 0.99.9
+-------------------------
 
-    UPDATED FEATURES:
+UPDATED FEATURES
 
-    * all post analysis functions were given more sanity checks to verify
+    o all post analysis functions were given more sanity checks to verify
     that the "result" argument contains the required slots of a GO_analyse()
     output and the the arguments pointing at a phenotypic data column are
     valid column names.
 
-    BUG FIXES:
+BUG FIXES
 
-    * expression_plot_symbol and expression_profiles symbol used the default
+    o expression_plot_symbol and expression_profiles symbol used the default
     value of col.palette and colourF instead of forwarding the user-defined
     one to the expression_plot and expression_profiles functions.
 
-    GENERAL UPDATES:
+GENERAL UPDATES
 
-    * Added cross-reference in UsersGuide to point at examples of usages of
+    o Added cross-reference in UsersGuide to point at examples of usages of
     factor and numeric values for the expression plots
 
 
-RELEASE 0.99.8:
+CHANGES IN VERSION 0.99.8
+-------------------------
 
-    GENERAL UPDATES:
+GENERAL UPDATES
 
-    * Resaved R data files to reduced package disk size. No more WARNING in
-R CMD check.
+    o Resaved R data files to reduced package disk size. No more WARNING in
+    R CMD check.
 
-    GENERAL UPDATES:
+GENERAL UPDATES
 
-    # Removed reference to GitHub in the README file. The weblink is given
+    o Removed reference to GitHub in the README file. The weblink is given
     in the DESCRIPTION file anyway if users are interested.
 
 
-RELEASE 0.99.7:
+CHANGES IN VERSION 0.99.7
+--------------------------
 
-    UPDATED FEATURES:
+UPDATED FEATURES
 
-    * fixed a typo in the code of heatmap_GO which made it crash for any other
+    o fixed a typo in the code of heatmap_GO which made it crash for any other
     dataset than the example dataset.
 
-RELEASE 0.99.6:
+CHANGES IN VERSION 0.99.6
+-------------------------
 
-    UPDATED FEATURES:
+UPDATED FEATURES
 
-    * expression_profiles_symbol() method was missing the "index" argument to
-select the feature identifier to plot alone.
+    o expression_profiles_symbol() method was missing the "index" argument to select the feature identifier to plot alone.
 
 
-RELEASE 0.99.5:
+CHANGES IN VERSION 0.99.5
+-------------------------
 
-    NEW FEATURES:
+NEW FEATURES
 
-    * expression_profiles() method plots the expression profiles of individual
+    o expression_profiles() method plots the expression profiles of individual
     samples series, as opposed to grouped samples series handled by 
     expression_plot functions.
 
-    * expression_profiles_symbol() method plots the expression profiles of
+    o expression_profiles_symbol() method plots the expression profiles of
     individual samples series using a gene name instead of an Ensembl gene
     identifier.
 
-    UPDATED FEATURES:
+UPDATED FEATURES
     
-    * overlap_GO can print to screen, if filename argument is set to NULL 
+    o overlap_GO can print to screen, if filename argument is set to NULL 
     (Default).
 
-    * heatmap_GO, cluter_GO and plot_design can resize title font and wrap the
+    o heatmap_GO, cluter_GO and plot_design can resize title font and wrap the
     text on multiple lines.
 
-    * expression_plot and expression_plot_symbol can orient X axis labels at
+    o expression_plot and expression_plot_symbol can orient X axis labels at
     a given angle.
 
-    * replaced return(NULL) statement by stop() when no close match is found
+    o replaced return(NULL) statement by stop() when no close match is found
     to a gene name in the family of expression_plot functions.
 
-    GENERAL UPDATES:
+GENERAL UPDATES
 
-    * User's Guide updated.
+    o User's Guide updated.
 
-    * List of contributors updated in User's Guide and DESCRIPTION.
+    o List of contributors updated in User's Guide and DESCRIPTION.
 
 
-RELEASE 0.99.4:
+CHANGES IN VERSION 0.99.4
+-------------------------
 
-    UPDATED FEATURES:
+UPDATED FEATURES
     
-    * Use of ExpressionSet instead of numeric named matrix and
+    o Use of ExpressionSet instead of numeric named matrix and
     AnnotatedDataFrame. Better consistency with other Bioconductor packages.
 
-    GENERAL UPDATES:
+GENERAL UPDATES
 
-    * Implemented corrections requested following the Bioconductor review.
+    o Implemented corrections requested following the Bioconductor review.
     Includes typos, consistent terminology through the package code and
     metafiles, additional information in help files, no reference to GitHub
     as an alternate installation option, use of arrow signs instead of equal
     signs for value assignment.
     
-    * Restricted lines to 80 characters, and used 4-space tabulations.
+    o Restricted lines to 80 characters, and used 4-space tabulations.
 
-    * Corrected out-of-date documentation.
+    o Corrected out-of-date documentation.
 
 
-RELEASE 0.99.3:
+CHANGES IN VERSION 0.99.3
+-------------------------
 
-    UPDATED FEATURES:
+UPDATED FEATURES
     
-    * Control the size of the legend text in the two expression plot figures.
+    o Control the size of the legend text in the two expression plot figures.
     Updated help files accordingly.
     
-    * Updated vignette with new section "Statistics".
+    o Updated vignette with new section "Statistics".
     
-    * Complete cleaning of code files for lines shorter than 80 columns.
+    o Complete cleaning of code files for lines shorter than 80 columns.
     
-    * Cleanup of help files for lines shorter than 80 columns.
+    o Cleanup of help files for lines shorter than 80 columns.
     
-    * Enabled filtering of raw results on the average score of a GO term.
+    o Enabled filtering of raw results on the average score of a GO term.
 
-RELEASE 0.99.2:
+CHANGES IN VERSION 0.99.2
+-------------------------
 
-    UPDATED FEATURES:
+UPDATED FEATURES
     
-    * Metadata lines in the preamble of the Sweave file
+    o Metadata lines in the preamble of the Sweave file
 
 
-RELEASE 0.99.1:
+CHANGES IN VERSION 0.99.1:
 
-    UPDATED FEATURES:
+UPDATED FEATURES
     
-    * Sweave vignette implemented.
+    o Sweave vignette implemented.
     
-    * Replaced all message() statements by cat() to make Sweave
+    o Replaced all message() statements by cat() to make Sweave
     output the full message in the vignette.
     
-    * Updated a missed F into FALSE
+    o Updated a missed F into FALSE
     
-    * Updated an invalid biocViews (typo)
+    o Updated an invalid biocViews (typo)
     
-    * Date field added for a proper citation() method.
+    o Date field added for a proper citation() method.
 
-RELEASE 0.99.0:
+CHANGES IN VERSION 0.99.0
+-------------------------
 
-    UPDATED FEATURES:
+UPDATED FEATURES
     
-    * Replaced all cat() statements by message() to match the
+    o Replaced all cat() statements by message() to match the
     Biocondcutor guidelines.
 
 
-RELEASE 0.6.2:
+CHANGES IN VERSION 0.6.2
+------------------------
 
-    UPDATED FEATURES:
+UPDATED FEATURES
     
-    * Fixed typo in the example of the vignette of GO_anova().
+    o Fixed typo in the example of the vignette of GO_anova().
     
-    * Advice to use the subset_scores() function in the GO_anova()
+    o Advice to use the subset_scores() function in the GO_anova()
     vignette.
     
-    * Helpful warning message in the vignette of GO_anova() to make
+    o Helpful warning message in the vignette of GO_anova() to make
     sure that the experimental factor to analyse is actually formatted
     as a factor in the true R language meaning.
     
-    * Updated license to GPL (>= 3) instead of GPL-2.
+    o Updated license to GPL (>= 3) instead of GPL-2.
 
 
-RELEASE 0.6.1:
+CHANGES IN VERSION 0.6.1
+------------------------
 
-    NEW FEATURES:
+NEW FEATURES
     
-    * GOexpress now implements the randomForest framework to 
+    o GOexpress now implements the randomForest framework to 
     estimate the importance of each gene on the clustering of the samples
     according to the different levels of the desired factor (See section
     UPDATED FEATURES below for more details).
     
-    * rerank() function return a re-ordered version of the result
+    o rerank() function return a re-ordered version of the result
     variable given, ordered using either the rank or the score metrics.
     
-    * Sample data raw_result was added to provide an example output
+    o Sample data raw_result was added to provide an example output
     of the analysis, and also allow to test the visualisation functions
     on a readily available variable instead of having to run the analysis
     function everytime (would have killed the R CMD check duration).
     
-    UPDATED FEATURES:
+UPDATED FEATURES
     
-    * GO_analyse() default has been changed to a random forest 
+    o GO_analyse() default has been changed to a random forest 
     statistical framework. This framework has various advantages over the
     previous ANOVA approach; namely 1) the bootstrapping and re-sampling
     of gene subsets to measure the importance of each gene in predicting
@@ -305,7 +323,7 @@ RELEASE 0.6.1:
     randomForest deals implicitely with interactions in multifactorial
     experiments. 
     
-    * Genes are now initially ranked according to their rank and GO terms
+    o Genes are now initially ranked according to their rank and GO terms
     according to the average rank of their associated genes. Genes
     associated with a GO term but absent from the dataset are assigned a
     value of max(rank)+1 and a score of 0. Ties between genes are resolved
@@ -315,100 +333,107 @@ RELEASE 0.6.1:
     framework used, "score" may mean "importance" (randomForest) or
     "F.value" (ANOVA).
     
-    * More sanity checks at the start of some methods to ensure smooth
+    o More sanity checks at the start of some methods to ensure smooth
     execution of the downstream code and more helpful error messages.
     
-    * More synonyms allowed for subsetting and filtering of the result
+    o More synonyms allowed for subsetting and filtering of the result
     variable.
     
-    * list_genes() and table_genes() methods now allow to chose whether
+    o list_genes() and table_genes() methods now allow to chose whether
     to return all feature identifiers associated with a GO term, or only
     those also present in the expression dataset.
 
 
-RELEASE 0.5.5:
+CHANGES IN VERSION 0.5.5
+------------------------
 
-    UPDATED FEATURES:
+UPDATED FEATURES
     
-    * heatmap_GO() default colorscale has been changed to
+    o heatmap_GO() default colorscale has been changed to
     blue-white-red better suited to the representation of expression
     level. The previous colorscale green-black-red is now suggested if
     differential expression data is used (e.g. log2FC).
 
 
-RELEASE 0.5.4:
+CHANGES IN VERSION 0.5.4
+------------------------
 
-    NEW FEATURES:
+NEW FEATURES
     
-    * Sample data accessible with the data() method.
+    o Sample data accessible with the data() method.
 
 
-RELEASE 0.5.3:
+CHANGES IN VERSION 0.5.3
+------------------------
 
-    NEW FEATURES:
+NEW FEATURES
     
-    * Method overlap_GO() produces a Venn diagram showing the overlap
+    o Method overlap_GO() produces a Venn diagram showing the overlap
     of gene sets associated with two to five GO terms. The Venn diagram
     is saved in a TIFF image file.
 
 
-RELEASE 0.5.2:
+CHANGES IN VERSION 0.5.2
+------------------------
 
-    UPDATED FEATURES:
+UPDATED FEATURES
     
-    * Method heatmap_GO() updated to color-code the samples by levels
+    o Method heatmap_GO() updated to color-code the samples by levels
     of a factor, and a better colormap is used to represent the level of
     expression of genes.
 
 
-RELEASE 0.5.1:
+CHANGES IN VERSION 0.5.1
+------------------------
 
-    UPDATED FEATURES:
+UPDATED FEATURES
     
-    * Package renamed GOexpress after verifying that no other package
+    o Package renamed GOexpress after verifying that no other package
     on Bioconductor uses this name.
     
-    * Method GO_anova() renamed to GO_analyse() as other metrics than
+    o Method GO_anova() renamed to GO_analyse() as other metrics than
     ANOVA may be implemented in the future.
 
 
-RELEASE 0.4.1:
+CHANGES IN VERSION 0.4.1
+------------------------
 
-    NEW FEATURES:
+NEW FEATURES
     
-    * Supports microarray probeset identifiers as gene identifiers
+    o Supports microarray probeset identifiers as gene identifiers
     in the expression dataset.
     
-    * Argument "result=" is no more optional in all the post-analysis
+    o Argument "result=" is no more optional in all the post-analysis
     functions.
     
-    UPDATED FEATURES:
+UPDATED FEATURES
     
-    * expression_plot*() functions now dynamically adapt the colormap
+    o expression_ploto() functions now dynamically adapt the colormap
     to the number of groups of samples instead of three hard-coded colors
     used for the colormap.
 
 
-RELEASE 0.3.1:
+CHANGES IN VERSION 0.3.1
+------------------------
 
-    NEW FEATURES:
+NEW FEATURES
     
-    * expression_plot() plots the expression profile of the gene
+    o expression_plot() plots the expression profile of the gene
     corresponding to an Ensembl identifier, given valid variable name
     for the X-axis and a grouping factor for the Y-axis.
     
-    * expression_plot_symbol() plots the expression profile of the
+    o expression_plot_symbol() plots the expression profile of the
     gene(s) with the Ensembl identifier(s) corresponding to a gene
     symbol, given valid variable name for the X-axis and a grouping
     factor for the Y-axis.
     
-    * plot_design() plots the univariate effect of each level of each
+    o plot_design() plots the univariate effect of each level of each
     factor available in the AnnotatedDataFrame on the expression levels
     of genes associated with a GO term.
     
-    UPDATED FEATURES:
+UPDATED FEATURES
     
-    * The scoring function now uses the total count of genes associated
+    o The scoring function now uses the total count of genes associated
     with a GOterm instead of the count of genes in the dataset and 
     associated with the GO term. Genes absent from the expression dataset
     are assigned a F.value of 0, similarly to the genes with a non-
@@ -417,37 +442,39 @@ RELEASE 0.3.1:
     GO terms if the expression data was generated through objective
     filtering (e.g. filtering out lowly expressed genes).
     
-    * subset_scores() now also filters the $mapping and $anova slots
+    o subset_scores() now also filters the $mapping and $anova slots
     to retain only mappings and gene information related to the GO terms
     left in the $scores slot after filtering. This reduces significantly
     the memory space of the filtered variable, while the object containing
     the raw results of GO_anova() will still contain the full information
     fetched from the Ensembl BioMart server if the user wants it.
     
-    * ggplot2 and grid are now required for the proper installation of 
+    o ggplot2 and grid are now required for the proper installation of 
     anovaGO, even though these packages are only required for a subset
     of non-essential features in anovaGO. This way, all features in 
     anovaGO will be available as soon as the package is installed.
     
-    * Messages printed to the user during the executing of the funcions
+    o Messages printed to the user during the executing of the funcions
     were made as clear as possible, particularly when fetching information
     from the Ensembl BioMart server.
 
 
-RELEASE 0.2:
+CHANGES IN VERSION 0.2
+----------------------
 
-    UPDATED FEATURES:
+UPDATED FEATURES
     
-    * subset_scores() can now filter and keep only GO terms of a given
+    o subset_scores() can now filter and keep only GO terms of a given
     type, i.e. "Biological process", "Molecular function", or "Cellular
     Component".
 
 
-INITIAL RELEASE 0.1:
+CHANGES IN VERSION 0.1
+----------------------
 
-    OVERVIEW:
+OVERVIEW
     
-    This package was designed for the analysis of bioinformatics-related
+    o This package was designed for the analysis of bioinformatics-related
     data based on gene expression measurements. It requires 3 input
     values: (1) a gene-by-sample table providing the expression level
     of genes (rows) in each sample (columns), (2) an AnnotatedDataFrame
@@ -456,7 +483,7 @@ INITIAL RELEASE 0.1:
     grouping factor to investigate, which must be a valid column name
     in the AnnotatedDataFrame.
     
-    The analysis will identify all Gene Ontology (GO) terms represented
+    o The analysis will identify all Gene Ontology (GO) terms represented
     by at least one gene in the expression dataset. A one-way ANOVA
     will be performed on the grouping factor for each gene present in
     the expression dataset. Following multiple-testing correction, genes
@@ -464,7 +491,7 @@ INITIAL RELEASE 0.1:
     0. GO terms will be scored and ranked on the average F.value of
     associated genes.
     
-    Functions are provided to investigate and visualise the results of
+    o Functions are provided to investigate and visualise the results of
     the above analysis. The score table can be filtered for rows over
     given thresholds. The distribution of scores can be visualised. The
     quantiles of scores can be obtained. The genes associated with a
@@ -475,9 +502,9 @@ INITIAL RELEASE 0.1:
     drawn and customised.
     
     
-    FEATURES:
+FEATURES
     
-    * GO_anova() scores all Gene Ontology (GO) terms represented in
+    o GO_anova() scores all Gene Ontology (GO) terms represented in
     the dataset based on the ability of their associated genes to cluster
     samples according to a predefined grouping factor. It also returns
     the table used to map genes to GO terms, the table summarising the
@@ -485,31 +512,31 @@ INITIAL RELEASE 0.1:
     grouping factor used for ANOVA. Genes annotated to a GO term but
     absent from the expression dataset are ignored.
     
-    * get_mart_dataset() returns a connection to the appropriate BioMart
+    o get_mart_dataset() returns a connection to the appropriate BioMart
     dataset of the Ensembl server based on the gene name of the first gene in
     the expression dataset. The choice of the dataset can be overriden by the
     user if a valid BioMart Ensembl dataset is specified.
     
-    * subset_scores() filters the table of scored GO terms in the
+    o subset_scores() filters the table of scored GO terms in the
     output of GO_anova() and returns a list formatted identically to the 
     output of GO_anova() with the resulting filtered table of scores.
     
-    * hist_scores() plots the distribution of average F scores in the
+    o hist_scores() plots the distribution of average F scores in the
     output of GO_anova() or subset_scores().
     
-    * quantiles_scores() returns the quantile values corresponding
+    o quantiles_scores() returns the quantile values corresponding
     to defined percentiles.
     
-    * list_genes() returns the list of Ensembl gene identifiers
+    o list_genes() returns the list of Ensembl gene identifiers
     associated with a given GO term.
     
-    * table_genes() returns a table of information about the Ensembl
+    o table_genes() returns a table of information about the Ensembl
     gene identifiers associated with  a given GO term.
     
-    * cluster_GO() plots a hierarchical clustering of the samples
+    o cluster_GO() plots a hierarchical clustering of the samples
     based on the expression levels of genes associated with a given
     GO term.
     
-    * heatmap_GO() plots a heatmap with hierarchical clustering of
+    o heatmap_GO() plots a heatmap with hierarchical clustering of
     the samples and genes based on the expression levels of genes
     associated with a given GO term.
