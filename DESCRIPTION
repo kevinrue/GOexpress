@@ -1,7 +1,7 @@
 Package: GOexpress
 Title: Visualise microarray and RNAseq data using gene ontology annotations
-Version: 1.1.0
-Date: 2014-10-10
+Version: 1.1.1
+Date: 2014-10-17
 Authors@R: c(
     person(given="Kevin", family="Rue-Albrecht",
     role = c("aut", "cre"), email = "kevin.rue@ucdconnect.ie"),
@@ -15,7 +15,7 @@ Authors@R: c(
 Description: The package contains methods to visualise the expression levels
     of genes from a microarray or RNA-seq experiment and offers a clustering
     analysis to identify GO terms enriched in genes with expression levels
-    best clustering predefined two or more groups of samples. Annotations for
+    best clustering two or more predefined groups of samples. Annotations for
     the genes present in the expression dataset are obtained from Ensembl
     through the biomaRt package. The random forest framework is used to
     evaluate the ability of each gene to cluster samples according to the

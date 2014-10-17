@@ -1,3 +1,23 @@
+CHANGES IN VERSION 1.1.1
+--------------------------
+
+BUG FIXES:
+
+    o Ensembl BioMart has changed the column 'external_gene_id' to
+    'external_gene_name'. Renamed my biomaRt queries accordingly to prevent
+    GO_analyse() from crashing during the analysis step.
+
+    o Updated the AlvMac_results variable containing sample results annotated
+    with the deprecated 'external_gene_id'. It now includes the new
+    'external_gene_name'.
+
+GENERAL UPDATES:
+
+    o DESCRIPTION file minor correction.
+
+    o User Guide's chunk about installation using biocLite is not evaluated
+    anymore, as advised by Dan Tenenbaum.
+
 CHANGES IN VERSION 0.99.17
 --------------------------
 

@@ -266,7 +266,7 @@ GO_analyse <- function(
     if (microarray == ""){
         genes_score <-merge(x=res, all.x=TRUE,
                             y=getBM(attributes=c("ensembl_gene_id",
-                                                "external_gene_id",
+                                                "external_gene_name",
                                                 "description"),
                                     filters="ensembl_gene_id",
                                     values=rownames(res), mart=mart),
@@ -278,7 +278,7 @@ GO_analyse <- function(
         # Prepare a mapping table between feature identifiers and GO terms
         genes_score <- merge(x=res, all.x=TRUE, 
                             y=getBM(attributes=c(microarray,
-                                                "external_gene_id",
+                                                "external_gene_name",
                                                 "description"),
                                     filters=microarray,
                                     values=rownames(res), mart=mart),

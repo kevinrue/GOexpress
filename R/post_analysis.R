@@ -89,7 +89,7 @@ expression_plot <- function(
         eSet <- subEset(eSet=eSet, subset=subset)
     }
     # Build the title message from the combination of gene_id and gene_symbol
-    title <- paste(gene_id, " = ", result$genes[gene_id,]$external_gene_id)
+    title <- paste(gene_id, " = ", result$genes[gene_id, "external_gene_name"])
     # Assemble a data frame containing the necessary information for ggplot
     df <- data.frame(Expression=exprs(eSet)[gene_id,],
                     Factor=pData(eSet)[,f],
@@ -151,12 +151,12 @@ expression_plot_symbol <- function(
     cat("Fetching feature identifier(s) annotated to", gene_symbol, "...",
         fill=TRUE)
     mapping <- data.frame(gene_id=rownames(result$genes), 
-                        external_gene_id=result$genes$external_gene_id,
+                        external_gene_name=result$genes$external_gene_name,
                         stringsAsFactors=FALSE)
     # if the gene name is absent from the mapping table
-    if(!gene_symbol %in% mapping$external_gene_id){
+    if(!gene_symbol %in% mapping$external_gene_name){
         # suggest close matches if any
-        matches <- agrep(pattern=gene_symbol, x=mapping$external_gene_id,
+        matches <- agrep(pattern=gene_symbol, x=mapping$external_gene_name,
                         fixed=TRUE, value=TRUE)
         # if we do have one or more close matches to the symbol
         if (length(matches) > 0){
@@ -174,7 +174,7 @@ expression_plot_symbol <- function(
     # At this stage we know the gene symbol has at least one corresponding
     # feature identifier in the Ensembl BioMart, fetch all identifier(s)
     # corresponding to that gene symbol
-    gene_ids <- mapping[mapping$external_gene_id == gene_symbol, "gene_id"]
+    gene_ids <- mapping[mapping$external_gene_name == gene_symbol, "gene_id"]
     # However, we still don't know how many of those identifiers are present
     # in the expression dataset. Remove the feature identifiers absent from
     # our dataset as we cannot plot them
@@ -348,7 +348,7 @@ expression_profiles <- function(
         eSet <- subEset(eSet=eSet, subset=subset)
     }
     # Build the title message from the combination of gene_id and gene_symbol
-    title <- paste(gene_id, " = ", result$genes[gene_id,]$external_gene_id)
+    title <- paste(gene_id, " = ", result$genes[gene_id, "external_gene_name"])
     # Assemble a data frame containing the necessary information for ggplot
     df <- data.frame(Expression=exprs(eSet)[gene_id,],
                     X=pData(eSet)[,x_var],
@@ -429,12 +429,12 @@ expression_profiles_symbol <- function(
     cat("Fetching feature identifier(s) annotated to", gene_symbol, "...",
         fill=TRUE)
     mapping <- data.frame(gene_id=rownames(result$genes), 
-                            external_gene_id=result$genes$external_gene_id,
+                            external_gene_name=result$genes$external_gene_name,
                             stringsAsFactors=FALSE)
     # if the gene name is absent from the mapping table
-    if(!gene_symbol %in% mapping$external_gene_id){
+    if(!gene_symbol %in% mapping$external_gene_name){
         # suggest close matches if any
-        matches <- agrep(pattern=gene_symbol, x=mapping$external_gene_id,
+        matches <- agrep(pattern=gene_symbol, x=mapping$external_gene_name,
                             fixed=TRUE, value=TRUE)
         # if we do have one or more close matches to the symbol
         if (length(matches) > 0){
@@ -452,7 +452,7 @@ expression_profiles_symbol <- function(
     # At this stage we know the gene symbol has at least one corresponding
     # feature identifier in the Ensembl BioMart, fetch all identifier(s)
     # corresponding to that gene symbol
-    gene_ids <- mapping[mapping$external_gene_id == gene_symbol, "gene_id"]
+    gene_ids <- mapping[mapping$external_gene_name == gene_symbol, "gene_id"]
     # However, we still don't know how many of those identifiers are present
     # in the expression dataset. Remove the feature identifiers absent from
     # our dataset as we cannot plot them
@@ -615,7 +615,7 @@ heatmap_GO <- function(
     sample_labels <- pData(eSet)[,f]
     # Columns are features, label them by identifier or name
     if (gene_names){
-        gene_labels <- result$genes[gene_ids,]$external_gene_id
+        gene_labels <- result$genes[gene_ids, "external_gene_name"]
     }
     else{
         gene_labels <- gene_ids

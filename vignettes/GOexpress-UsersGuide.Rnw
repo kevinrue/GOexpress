@@ -87,7 +87,7 @@ further details.
 Installing \texttt{GOexpress} should be as easy as running the two lines
 below:
 
-<<>>=
+<<eval=FALSE>>=
 source("http://bioconductor.org/biocLite.R")
 biocLite("GOexpress")
 @
