@@ -121,8 +121,8 @@ expression_plot_symbol(
 }
 
 \value{
-    The ggplot object, or NULL if multiple features are annotated
-    to the gene symbol.
+    The ggplot object, or the vector of feature identifiers if multiple
+    features are annotated to the gene symbol.
 }
 
 \references{

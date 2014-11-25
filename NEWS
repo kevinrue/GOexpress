@@ -1,3 +1,58 @@
+CHANGES IN VERSION 1.1.3
+--------------------------
+
+NEW FEATURES:
+
+    o Included private function used to generate the prefix2dataset table.
+
+    o Included private function used to generate the microarray2dataset table.
+
+    o GO_analyse states the number of gene features in the given dataset that
+    were found in the BioMart dataset. This allows the user to interrupt the
+    script if a suspiciously low number of mapped features suggests an
+    incorrect BioMart dataset was used.
+
+UPDATED FEATURES:
+
+    o Updated the prefix2dataset table. Three more species
+    ("Chlorocebus sabaeus", "Papio anubis" , and "Poecilia formosa"), and two
+    more columns ("species" and "sample").
+
+    o Updated the microarray2dataset table. Probeset patterns are now hard
+    coded in the package, but dynamically defined as unique to a platform
+    (or not) by the function building the microarray2dataset table. Species
+    without microarray platforms were also included in the table with NA
+    values. Code was added in the GO_analyse method to ignore those before
+    trying to resolve the origin of the expression data, if not specified
+    by the user.
+
+    o Renamed column "prefix" to "pattern" in microarray2dataset table.
+
+    o Disabled manual check of C. elegans and D. melanogaster, as the
+    automated detection is doing the exact same thing. Only S. cerevisiae
+    requires a manual check of the "Y" prefix instead of the automatically
+    extracted "Y[:LETTERS:]{2}" pattern.
+
+    o Methods expression_plot_symbol and expression_profiles_symbol now
+    return the list of gene feature identifiers instead of NULL when multiple
+    plots are produced. That may be confusing as they return the list of close
+    matches when an invalid gene symbol was given, and they return the ggplot
+    when obly one plot is produced.
+
+GENERAL UPDATES:
+
+    o Code layout. Lines of code over 80 characters were split around
+    brackets and commas to use the built-in indentation defaulted to 4 space
+    characters. Plus, this made the code more readable in many cases.
+
+CHANGES IN VERSION 1.1.2
+--------------------------
+
+GENERAL UPDATES:
+
+    o DESCRIPTION file minor correction: Inappropriate "Metagenomics"
+    biocView removed.
+
 CHANGES IN VERSION 1.1.1
 --------------------------
 
@@ -189,7 +244,8 @@ CHANGES IN VERSION 0.99.6
 
 UPDATED FEATURES
 
-    o expression_profiles_symbol() method was missing the "index" argument to select the feature identifier to plot alone.
+    o expression_profiles_symbol() method was missing the "index" argument to
+    select the feature identifier to plot alone.
 
 
 CHANGES IN VERSION 0.99.5

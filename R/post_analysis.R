@@ -58,8 +58,13 @@ expression_plot <- function(
     # if the feature identifier is absent from the dataset
     if (!gene_id %in% rownames(eSet)){
         # suggest close matches if any
-        matches <- agrep(pattern=gene_id, x=rownames(eSet),
-                        max.distance=1, fixed=TRUE, value=TRUE)
+        matches <- agrep(
+            pattern=gene_id,
+            x=rownames(eSet),
+            max.distance=1,
+            fixed=TRUE,
+            value=TRUE
+            )
         if (length(matches) > 0){
             cat(gene_id, "not found in dataset. Did you mean:", fill=TRUE)
             return(matches)
@@ -89,25 +94,33 @@ expression_plot <- function(
         eSet <- subEset(eSet=eSet, subset=subset)
     }
     # Build the title message from the combination of gene_id and gene_symbol
-    title <- paste(gene_id, " = ", result$genes[gene_id, "external_gene_name"])
+    title <- paste(
+        gene_id,
+        " = ",
+        result$genes[gene_id, "external_gene_name"]
+        )
     # Assemble a data frame containing the necessary information for ggplot
-    df <- data.frame(Expression=exprs(eSet)[gene_id,],
-                    Factor=pData(eSet)[,f],
-                    X=pData(eSet)[,x_var])
+    df <- data.frame(
+        Expression=exprs(eSet)[gene_id,],
+        Factor=pData(eSet)[,f],
+        X=pData(eSet)[,x_var]
+        )
     # Generate the plot
     gg <- ggplot(df) +
-        geom_smooth(aes(x=X, y=Expression, group=Factor,
-                                color=Factor, fill=Factor), level=level) +
+        geom_smooth(
+            aes(x=X, y=Expression, group=Factor, color=Factor, fill=Factor),
+            level=level
+            ) +
         labs(title=title, x=xlab, y=ylab) +
         theme(
-            plot.title=element_text(
-                            size=rel(title.size)),
+            plot.title=element_text(size=rel(title.size)),
             axis.title=element_text(size=axis.title.size),
             axis.text=element_text(size=axis.text.size),
             axis.text.x=element_text(angle=axis.text.angle),
             legend.text=element_text(size=legend.text.size),
             legend.title=element_text(size=legend.title.size),
-            legend.key.size=unit(legend.key.size, "points")) +
+            legend.key.size=unit(legend.key.size, "points")
+            ) +
         scale_colour_manual(values=col, name=f) + 
         scale_fill_manual(values=col, name=f)
     # If a non-default ylim was given, apply it
@@ -148,16 +161,23 @@ expression_plot_symbol <- function(
     # the GO_analyse result provided contains the annotation of each feature
     # identifier
     # present in the dataset to a gene name, if any
-    cat("Fetching feature identifier(s) annotated to", gene_symbol, "...",
-        fill=TRUE)
-    mapping <- data.frame(gene_id=rownames(result$genes), 
-                        external_gene_name=result$genes$external_gene_name,
-                        stringsAsFactors=FALSE)
+    cat(
+        "Fetching feature identifier(s) annotated to", gene_symbol, "...",
+        fill=TRUE
+        )
+    mapping <- data.frame(
+        gene_id=rownames(result$genes), 
+        external_gene_name=result$genes$external_gene_name,
+        stringsAsFactors=FALSE
+        )
     # if the gene name is absent from the mapping table
     if(!gene_symbol %in% mapping$external_gene_name){
         # suggest close matches if any
-        matches <- agrep(pattern=gene_symbol, x=mapping$external_gene_name,
-                        fixed=TRUE, value=TRUE)
+        matches <- agrep(
+            pattern=gene_symbol,
+            x=mapping$external_gene_name,
+            fixed=TRUE, value=TRUE
+            )
         # if we do have one or more close matches to the symbol
         if (length(matches) > 0){
             # list them to the user for help and stop the function
@@ -167,8 +187,12 @@ expression_plot_symbol <- function(
         # if we don't have close matches in the dataset, tell the user and
         # stop the function
         else{
-            stop(paste(gene_symbol,
-                        "not found in dataset. No close match either."))
+            stop(
+                paste(
+                    gene_symbol,
+                    "not found in dataset. No close match either."
+                    )
+                )
         }
     }
     # At this stage we know the gene symbol has at least one corresponding
@@ -181,9 +205,11 @@ expression_plot_symbol <- function(
     gene_ids_present <- gene_ids[gene_ids %in% rownames(eSet)]
     # If none of the feature identifiers are present in the dataset
     if (length(gene_ids_present) == 0){
-        cat("Feature identifiers were found for", gene_symbol, "\n",
+        cat(
+            "Feature identifiers were found for", gene_symbol, "\n",
             "but none of them were found in the expression dataset.\n",
-            "Feature identifiers were:")
+            "Feature identifiers were:"
+            )
         return(gene_ids)
     }
     # At this stage we are finally sure that at least one of the feature
@@ -202,9 +228,11 @@ expression_plot_symbol <- function(
         # if the number of titles does not match the number of plots
         if(length(titles) != length(gene_ids_present)){
             # return an error and stop
-            stop("The number of titles (", length(titles),
-                    ") does not match the number of plots (",
-                    length(gene_ids_present), ").")
+            stop(
+                "The number of titles (", length(titles),
+                ") does not match the number of plots (",
+                length(gene_ids_present), ")."
+                )
         }
     }
     # If there are strictly more than 1 gene id associated with the gene
@@ -218,8 +246,10 @@ expression_plot_symbol <- function(
         # the function will plot all Ensembl ids in a lattice
         if (index==0){
             # A first time user might not know that how to plot a single plot
-            cat("Use argument \"index=1\" to plot the first gene id alone,",
-                "and so on.", fill=TRUE)
+            cat(
+                "Use argument \"index=1\" to plot the first gene id alone,",
+                "and so on.", fill=TRUE
+                )
             # Prepare a grid to plot multiple graphs while optimising the
             # number of columns and rows
             columns <- ceiling(sqrt(length(gene_ids_present)))
@@ -238,11 +268,13 @@ expression_plot_symbol <- function(
                     axis.text.angle=axis.text.angle,
                     legend.text.size=legend.text.size,
                     legend.title.size=legend.title.size,
-                    legend.key.size=legend.key.size)
+                    legend.key.size=legend.key.size
+                    )
             }
             # Plot all the graphs in the optimised lattice, using the
             # feature-based plotting function
             multiplot(plotlist=plots, cols=columns)
+            return(gene_ids_present)
         }
         # If the user gave a non-zero index
         else{
@@ -267,7 +299,8 @@ expression_plot_symbol <- function(
                     axis.text.angle=axis.text.angle,
                     legend.text.size=legend.text.size,
                     legend.title.size=legend.title.size,
-                    legend.key.size=legend.key.size)
+                    legend.key.size=legend.key.size
+                    )
             }
         }
     }
@@ -285,7 +318,8 @@ expression_plot_symbol <- function(
             axis.text.angle=axis.text.angle,
             legend.text.size=legend.text.size,
             legend.title.size=legend.title.size,
-            legend.key.size=legend.key.size)
+            legend.key.size=legend.key.size
+            )
     }
 }
 
@@ -294,8 +328,9 @@ expression_profiles <- function(
     colourF=result$factor, linetypeF=colourF, line.size=1.5,
     xlab=x_var, ylab="log2(cpm)", ylim=range(exprs(eSet)),
     col.palette="Accent",
-    col=brewer.pal(n=length(levels(pData(eSet)[,colourF])),
-                    name=col.palette),
+    col=brewer.pal(
+        n=length(levels(pData(eSet)[,colourF])),
+        name=col.palette),
     lty=1:length(levels(pData(eSet)[,linetypeF])),
     title=NULL, title.size=2, axis.title.size=20,
     axis.text.size=15, axis.text.angle=0,
@@ -304,8 +339,10 @@ expression_profiles <- function(
     # if the feature identifier is absent from the dataset
     if (!gene_id %in% rownames(eSet)){
         # suggest close matches if any
-        matches <- agrep(pattern=gene_id, x=rownames(eSet),
-                            max.distance=1, fixed=TRUE, value=TRUE)
+        matches <- agrep(
+            pattern=gene_id, x=rownames(eSet), max.distance=1,
+            fixed=TRUE, value=TRUE
+            )
         if (length(matches) > 0){
             cat(gene_id, "not found in dataset. Did you mean:", fill=TRUE)
             return(matches)
@@ -348,28 +385,40 @@ expression_profiles <- function(
         eSet <- subEset(eSet=eSet, subset=subset)
     }
     # Build the title message from the combination of gene_id and gene_symbol
-    title <- paste(gene_id, " = ", result$genes[gene_id, "external_gene_name"])
+    title <- paste(
+        gene_id,
+        " = ",
+        result$genes[gene_id, "external_gene_name"]
+        )
     # Assemble a data frame containing the necessary information for ggplot
-    df <- data.frame(Expression=exprs(eSet)[gene_id,],
-                    X=pData(eSet)[,x_var],
-                    Profile=pData(eSet)[,seriesF],
-                    LineType=pData(eSet)[,linetypeF],
-                    Colour=pData(eSet)[,colourF])
+    df <- data.frame(
+        Expression=exprs(eSet)[gene_id,],
+        X=pData(eSet)[,x_var],
+        Profile=pData(eSet)[,seriesF],
+        LineType=pData(eSet)[,linetypeF],
+        Colour=pData(eSet)[,colourF]
+        )
     # Generate the plot
     gg <- ggplot(data=df) +
-        geom_line(aes(x=X, y=Expression, group=Profile, linetype=LineType,
-                    colour=Colour), size=line.size) +
+        geom_line(
+            aes(x=X,
+                y=Expression,
+                group=Profile,
+                linetype=LineType,
+                colour=Colour
+                ),
+            size=line.size) +
         labs(title=title, x=xlab, y=ylab) +
         theme(
-            plot.title=element_text(
-                size=rel(title.size)),
+            plot.title=element_text(size=rel(title.size)),
             axis.title=element_text(size=axis.title.size),
             axis.text=element_text(size=axis.text.size),
             axis.text.x=element_text(angle=axis.text.angle),
             legend.text=element_text(size=legend.text.size), 
             legend.title=element_text(size=legend.title.size),
             plot.title=element_text(size=rel(2)),
-            legend.key.size=unit(legend.key.size, "points")) +
+            legend.key.size=unit(legend.key.size, "points")
+            ) +
         scale_colour_manual(values=col, name=colourF) + 
         scale_linetype_manual(values=lty, name=linetypeF)
     # If a non-default ylim was given, apply it
@@ -385,8 +434,8 @@ expression_profiles_symbol <- function(
     colourF=result$factor, linetypeF=colourF, line.size=1.5,
     index=0, xlab=x_var, ylab="log2(cpm)", ylim=range(exprs(eSet)),
     col.palette="Accent",
-    col=brewer.pal(n=length(levels(pData(eSet)[,colourF])),
-                    name=col.palette),
+    col=brewer.pal(
+        n=length(levels(pData(eSet)[,colourF])), name=col.palette),
     lty=1:length(levels(pData(eSet)[,linetypeF])),
     titles=c(), title.size=2, axis.title.size=20,
     axis.text.size=15, axis.text.angle=0,
@@ -426,16 +475,21 @@ expression_profiles_symbol <- function(
     }
     # the GO_analyse result provided contains the annotation of each feature
     # identifier present in the dataset to a gene name, if any
-    cat("Fetching feature identifier(s) annotated to", gene_symbol, "...",
-        fill=TRUE)
-    mapping <- data.frame(gene_id=rownames(result$genes), 
-                            external_gene_name=result$genes$external_gene_name,
-                            stringsAsFactors=FALSE)
+    cat(
+        "Fetching feature identifier(s) annotated to", gene_symbol, "...",
+        fill=TRUE
+        )
+    mapping <- data.frame(
+        gene_id=rownames(result$genes),
+        external_gene_name=result$genes$external_gene_name,
+        stringsAsFactors=FALSE
+        )
     # if the gene name is absent from the mapping table
     if(!gene_symbol %in% mapping$external_gene_name){
         # suggest close matches if any
-        matches <- agrep(pattern=gene_symbol, x=mapping$external_gene_name,
-                            fixed=TRUE, value=TRUE)
+        matches <- agrep(
+            pattern=gene_symbol, x=mapping$external_gene_name,
+            fixed=TRUE, value=TRUE)
         # if we do have one or more close matches to the symbol
         if (length(matches) > 0){
             # list them to the user for help and stop the function
@@ -445,8 +499,12 @@ expression_profiles_symbol <- function(
         # if we don't have close matches in the dataset, tell the user and
         # stop the function
         else{
-            stop(paste(gene_symbol,
-                        "not found in dataset. No close match either."))
+            stop(
+                paste(
+                    gene_symbol,
+                    "not found in dataset. No close match either."
+                    )
+                )
         }
     }
     # At this stage we know the gene symbol has at least one corresponding
@@ -459,10 +517,14 @@ expression_profiles_symbol <- function(
     gene_ids_present <- gene_ids[gene_ids %in% rownames(eSet)]
     # If none of the feature identifiers are present in the dataset
     if (length(gene_ids_present) == 0){
-        cat("Feature identifiers were found for", gene_symbol, "\n",
+        cat(
+            "Feature identifiers were found for", gene_symbol, "\n",
             "but none of them were found in the expression dataset.\n",
-            "Feature identifiers were:")
-        return(gene_ids)
+            "Feature identifiers were:"
+            )
+        print(gene_ids)
+        # return the number of plots printed
+        return(0)
     }
     # At this stage we are finally sure that at least one of the feature
     # identifiers corresponding to the gene name are also present in the
@@ -480,9 +542,11 @@ expression_profiles_symbol <- function(
         # if the number of titles does not match the number of plots
         if(length(titles) != length(gene_ids_present)){
             # return an error and stop
-            stop("The number of titles (", length(titles),
-                    ") does not match the number of plots (",
-                    length(gene_ids_present), ").")
+            stop(
+                "The number of titles (", length(titles),
+                ") does not match the number of plots (",
+                length(gene_ids_present), ")."
+                )
         }
     }
     # If there are strictly more than 1 gene id associated with the gene
@@ -496,8 +560,10 @@ expression_profiles_symbol <- function(
         # the function will plot all Ensembl ids in a lattice
         if (index==0){
             # A first time user might not know that how to plot a single plot
-            cat("Use argument \"index=1\" to plot the first gene id alone,",
-                "and so on.", fill=TRUE)
+            cat(
+                "Use argument \"index=1\" to plot the first gene id alone,",
+                "and so on.", fill=TRUE
+                )
             # Prepare a grid to plot multiple graphs while optimising the
             # number of columns and rows
             columns <- ceiling(sqrt(length(gene_ids_present)))
@@ -517,11 +583,13 @@ expression_profiles_symbol <- function(
                     axis.text.angle=axis.text.angle,
                     legend.title.size=legend.title.size,
                     legend.text.size=legend.text.size,
-                    legend.key.size=legend.key.size)
+                    legend.key.size=legend.key.size
+                    )
             }
             # Plot all the graphs in the optimised lattice, using the
             # feature-based plotting function
             multiplot(plotlist=plots, cols=columns)
+            return(gene_ids_present)
         }
         # If the user gave a non-zero index
         else{
@@ -547,7 +615,8 @@ expression_profiles_symbol <- function(
                     axis.text.angle=axis.text.angle,
                     legend.title.size=legend.title.size,
                     legend.text.size=legend.text.size,
-                    legend.key.size=legend.key.size)
+                    legend.key.size=legend.key.size
+                    )
             }
         }
     }
@@ -567,7 +636,8 @@ expression_profiles_symbol <- function(
             axis.text.angle=axis.text.angle,
             legend.title.size=legend.title.size,
             legend.text.size=legend.text.size,
-            legend.key.size=legend.key.size)
+            legend.key.size=legend.key.size
+            )
     }
 }
 
@@ -577,8 +647,9 @@ heatmap_GO <- function(
     cex.main=1, trace="none", expr.col=bluered(75), 
     row.col.palette="Accent",
     row.col=c(),
-    main=paste(go_id, result$GO[result$GO$go_id == go_id,
-                                "name_1006"]),
+    main=paste(
+        go_id, result$GO[result$GO$go_id == go_id,"name_1006"]
+        ),
     main.Lsplit=NULL,
     ...){
     # if the result provided does not contain the slots required for this
@@ -590,7 +661,7 @@ heatmap_GO <- function(
     # If the GO identifier is not present in the results
     if (! go_id %in% result$GO$go_id){
         # Return an error and stop
-        stop("\"go_id=\" argument is not a valid factor in pData(eSet).")
+        stop("\"go_id=\" argument is not a valid GO term id in \"result=\".")
     }
     
     # Subset the data to the given values of the given factors, if existing
@@ -604,8 +675,10 @@ heatmap_GO <- function(
     # subsetted ExpressionSet, or rather use the row.col.palette 
     # argument to provide the palette, rather than the array of colors
     if (length(row.col) != ncol(eSet)){
-        row.col <- brewer.pal(n = length(unique(pData(eSet)[,f])),
-                                name = row.col.palette)
+        row.col <- brewer.pal(
+            n = length(unique(pData(eSet)[,f])),
+            name = row.col.palette
+            )
     }
     # Fetch the list of genes associated with the go_id
     gene_ids <- list_genes(go_id=go_id, result=result, data.only=TRUE)
@@ -639,15 +712,19 @@ heatmap_GO <- function(
     # Change the font size of the title
     par(cex.main=cex.main)
     # Plot the heatmap of the data
-    heatmap.2(genes_expr, labRow=sample_labels, labCol=gene_labels,
-                scale=scale, cexCol=cexCol, cexRow=cexRow, main=main,
-                trace=trace, RowSideColors=samples.col, col=expr.col, ...)
+    heatmap.2(
+        genes_expr, labRow=sample_labels, labCol=gene_labels,
+        scale=scale, cexCol=cexCol, cexRow=cexRow, main=main,
+        trace=trace, RowSideColors=samples.col, col=expr.col,
+        ...)
 }
 
 hist_scores <- function(
     result,
-    main=paste("Distribution of average scores in",
-                deparse(substitute(result))), xlab="Average score", ...){
+    main=paste(
+        "Distribution of average scores in",
+        deparse(substitute(result))), xlab="Average score",
+    ...){
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("GO") %in% names(result))){
@@ -705,8 +782,9 @@ overlap_GO <- function(go_ids, result, filename=NULL, mar=rep(0.1, 4), ...){
         gene_sets[[index]] <- list_genes(go_id=go_ids[[index]], result=result)
     }
     # generate the venn diagram (potentially to a file)
-    venn <- venn.diagram(x=gene_sets, filename=filename,
-                            category.names=go_ids, mar=mar, ...)
+    venn <- venn.diagram(
+        x=gene_sets, filename=filename, category.names=go_ids, mar=mar,
+        ...)
     # If no filename was given
     if (is.null(filename)){
         # Erases the current window if any
@@ -744,12 +822,15 @@ plot_design <- function(
     # Fetch the list of genes associated with the go_id
     # If the user gave the output of a GO_analyse command as result=
     # that list contains the mapping between feature and GO_id
-    gene_ids_present <- list_genes(go_id=go_id, result=result,
-                                    data.only=TRUE)
+    gene_ids_present <- list_genes(
+        go_id=go_id, result=result, data.only=TRUE
+        )
     GO_name <- result$GO[result$GO$go_id == go_id, "name_1006"]
     # Prepare a temporary data frame plot.design-friendly
-    df <- data.frame(t(exprs(eSet)[gene_ids_present,]),
-                        pData(eSet)[,factors])
+    df <- data.frame(
+        t(exprs(eSet)[gene_ids_present,]),
+        pData(eSet)[,factors]
+        )
     # If no custom title was given
     if (main == ""){
         # Generate a smart one (careful: the same title will be used for all
@@ -772,8 +853,9 @@ plot_design <- function(
     plot.design(df, main=main, ...)
 }
 
-quantiles_scores <- function(result, probs=c(0.9, 0.95, 0.99, 0.999, 0.9999),
-                            quartiles=FALSE){
+quantiles_scores <- function(
+    result, probs=c(0.9, 0.95, 0.99, 0.999, 0.9999), quartiles=FALSE
+    ){
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("GO") %in% names(result))){
@@ -804,8 +886,11 @@ rerank <- function(result, rank.by="rank"){
     }
     else if (rank.by == "score") {
         result$GO <- result$GO[order(result$GO$ave_score, decreasing=TRUE),]
-        result$genes <- result$genes[order(
-            result$genes$Score, decreasing=TRUE),]
+        result$genes <- result$genes[
+            order(
+                result$genes$Score, decreasing=TRUE
+                ),
+            ]
     }
     else{
         stop("Invalid ranking method: ", rank.by)
@@ -833,8 +918,11 @@ subEset <- function(eSet, subset=list()){
                 # Check that the value is an existing value 
                 # in the phenodata
                 if(!v_filter %in% pData(eSet)[,f_filter]){
-                    stop(v_filter,
-                        " is not a valid value of eSet$", f_filter)
+                    stop(
+                        v_filter,
+                        " is not a valid value of eSet$",
+                        f_filter
+                        )
                 }
             }
             # at this stage, column and values exist
@@ -904,10 +992,12 @@ subset_scores <- function(result, ...){
                     "cellular_component"
             }
             else{
-                stop("Valid values for filter ", filter, " are ",
-                        "\"biological_process\", \"BP\",",
-                        "\"molecular_function\", \"MF\",",
-                        "\"cellular_component\", and\"CC\".")
+                stop(
+                    "Valid values for filter ", filter, " are ",
+                    "\"biological_process\", \"BP\",",
+                    "\"molecular_function\", \"MF\",",
+                    "\"cellular_component\", and\"CC\"."
+                    )
             }
         }
         ## other filter names cause an error
@@ -924,12 +1014,14 @@ subset_scores <- function(result, ...){
     result$GO <- result$GO[filtered$merge,]
     ## Subset the gene/GO mapping to keep only the GO terms left in the score
     ## table
-    result$mapping <- result$mapping[result$mapping$go_id %in%
-                                            result$GO$go_id,]
+    result$mapping <- result$mapping[
+        result$mapping$go_id %in% result$GO$go_id,
+        ]
     ## Subset the anova table to keep only the genes annotated to the genes
     ## left in the mapping table
-    result$genes <- result$genes[rownames(result$genes) %in%
-                                    result$mapping$gene_id,]
+    result$genes <- result$genes[
+        rownames(result$genes) %in% result$mapping$gene_id,
+        ]
     return(result)
 }
 

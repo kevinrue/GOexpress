@@ -10,16 +10,20 @@ GO_analyse <- function(
     if (nrow(eSet) < 4 && method %in% c("randomForest","rf")){
         stop("Too few genes in dataset: ", nrow(eSet))
     }
+    # If the user gave an invalid factor name
+    if (!f %in% colnames(pData(eSet))){
+        stop("Invalid factor name (absent from phenoData): ", f)
+    }
     # The random forest requires the factor (f) to be an actual R factor
     if (!any(class(pData(eSet)[,f]) == "factor")){
         stop("pData(eSet)[,f] must be an actual R factor.
-            See help(factor)")
+    See help(factor)")
     }
     # The random forest requires all levels of the factor to have at least one
     # sample, otherwise it crashes
     if (any(table(pData(eSet)[,f]) == 0)){
         stop("One level of pData(eSet)[,f] has no correspondig sample.
-            Please remove that level.")
+    Please remove that level.")
     }
     # Subset the data to the given values of the given factors, if existing
     if (!is.null(subset)){
@@ -33,10 +37,10 @@ GO_analyse <- function(
     if (!rank.by %in% c("rank","score")){
         stop("Invalid ranking method: ", rank.by)
     }
-    # If the user gave an invalid factor name
-    if (!f %in% colnames(pData(eSet))){
-        stop("Invalid factor name: ", f)
-    }
+    # Remove rows with NA is the microarray2dataset table. Those rows
+    # correspond to datasets (species) without any microarray
+    microarray2dataset.clean <- microarray2dataset[
+        !is.na(microarray2dataset$unique),]
     # if the user did not give a dataset name
     if (biomart_dataset == ""){
         # if the user did not give a microarray value
@@ -44,8 +48,10 @@ GO_analyse <- function(
             # automatically detect both
             # fetch the first gene id in the given expression dataset
             sample_gene <- rownames(eSet)[1]
-            cat("First feature identifier in dataset:", sample_gene,
-                fill=TRUE)
+            cat(
+                "First feature identifier in dataset:", sample_gene,
+                fill=TRUE
+                )
             # Try to find an appropriate biomaRt Ensembl dataset from the gene
             # prefix
             mart <- mart_from_ensembl(sample_gene)
@@ -53,18 +59,25 @@ GO_analyse <- function(
             if (!class(mart) == "Mart"){
                 # Try to find an appropriate biomaRt microarray dataset from
                 # the gene prefix
-                microarray_match <- microarray_from_probeset(sample_gene)
+                microarray_match <- microarray_from_probeset(
+                    sample_gene,
+                    microarray2dataset.clean)
                 # if the gene id has an identifiable microarray gene id prefix
                 if (!is.null(nrow(microarray_match))){
                     # connect to biomart and set the microarray variable
                     cat("Looks like microarray data.", fill=TRUE)
-                    cat("Loading detected dataset", microarray_match$dataset,
-                        " for detected microarray",
-                        microarray_match$microarray, "...", fill=TRUE)
+                    cat(
+                        "Loading detected dataset",
+                        microarray_match$dataset,
+                        "for detected microarray",
+                        microarray_match$microarray, "...", fill=TRUE
+                        )
                     microarray <- microarray_match$microarray
                     biomart_dataset <- microarray_match$dataset
-                    mart <- useMart(biomart="ensembl",
-                                    dataset=biomart_dataset)
+                    mart <- useMart(
+                        biomart="ensembl",
+                        dataset=biomart_dataset
+                        )
                 }
                 # if the gene id does not have an identifiable microarray gene
                 # id prefix
@@ -82,33 +95,47 @@ GO_analyse <- function(
         # if the user gave a microarray name
         else{
             # check if it exists
-            if (!microarray %in% microarray2dataset$microarray){
+            if (!microarray %in% microarray2dataset.clean$microarray){
                 stop("Invalid microarray value. See data(microarray2dataset)")
             }
             # if it is unique to a dataset (some microarray have the same
             # column name
-            if(sum(microarray2dataset$microarray == microarray) == 1){
-                biomart_dataset <- microarray2dataset[
-                    microarray2dataset$microarray == microarray, "dataset"]
-                cat("Loading requested microarray", microarray,
+            if(sum(microarray2dataset.clean$microarray == microarray) == 1){
+                biomart_dataset <- microarray2dataset.clean[
+                    microarray2dataset.clean$microarray == microarray,
+                    "dataset"]
+                cat(
+                    "Loading requested microarray", microarray,
                     "from detected dataset", biomart_dataset, "...",
-                    fill=TRUE)
-                mart <- useMart(biomart="ensembl",
-                                dataset=biomart_dataset)
+                    fill=TRUE
+                    )
+                mart <- useMart(
+                    biomart="ensembl",
+                    dataset=biomart_dataset)
                 # Leave microarray to the current valid value
             }
             # if the microarray does not exist in the dataset
-            else if(sum(microarray2dataset$microarray == microarray) == 0){
-                stop("Microarray name not recognised. ",
-                        "See data(microarray2dataset).")
+            else if(
+                sum(
+                    microarray2dataset.clean$microarray == microarray
+                    ) == 0){
+                stop(
+                    "Microarray name not recognised. ",
+                    "See data(microarray2dataset)."
+                    )
             }
             # if the microarray name exists in multiple datasets
             else{
                 cat("Multiple datasets possible:", fill=TRUE)
-                print(microarray2dataset[microarray2dataset$microarray ==
-                    microarray, c("dataset", "microarray")])
-                stop("Cannot guess dataset. ",
-                        "Please use \"biomart_dataset=\" argument.")
+                print(
+                    microarray2dataset.clean[
+                    microarray2dataset.clean$microarray == microarray,
+                    c("dataset", "microarray")]
+                    )
+                stop(
+                    "Cannot guess dataset. ",
+                    "Please use \"biomart_dataset=\" argument."
+                    )
             }
             }
     }
@@ -124,21 +151,31 @@ GO_analyse <- function(
             # Check if looks like microarray
             # fetch the first gene id in the given expression dataset
             sample_gene <- rownames(eSet)[1]
-            cat("First feature identifier in dataset:", sample_gene,
-                fill=TRUE)
-            microarray_match <- microarray_from_probeset(sample_gene)
+            cat(
+                "First feature identifier in dataset:",
+                sample_gene,
+                fill=TRUE
+                )
+            microarray_match <- microarray_from_probeset(
+                sample_gene,
+                microarray2dataset.clean
+                )
             # if the data matches a known microarray pattern
             if (!is.null(nrow(microarray_match))){
                 # connect to biomart and set the microarray variable
                 cat("Looks like microarray data.", fill=TRUE)
                 # if the dataset/microarray pair exists
                 if (microarray_match$dataset == biomart_dataset){
-                    cat("Loading annotations for detected microarray",
+                    cat(
+                        "Loading annotations for detected microarray",
                         microarray_match$microarray,
                         "for requested dataset", biomart_dataset, "...",
-                        fill=TRUE)
-                    mart <- useMart(biomart="ensembl",
-                                            dataset=biomart_dataset)
+                        fill=TRUE
+                        )
+                    mart <- useMart(
+                        biomart="ensembl",
+                        dataset=biomart_dataset
+                        )
                     microarray <- microarray_match$microarray
                     print(mart)
                 }
@@ -146,7 +183,8 @@ GO_analyse <- function(
                 else{
                     # The dataset exists, the data matches a microarray
                     # but not a microarray of the dataset
-                    cat("Detected microarray", microarray_match$microarray,
+                    cat(
+                        "Detected microarray", microarray_match$microarray,
                         "inexisting in requested dataset", biomart_dataset,
                         ". Possible datasets are:", fill=TRUE)
                     return(microarray_match)
@@ -154,29 +192,39 @@ GO_analyse <- function(
             }
             # if the data does not match a microarray pattern
             else{
-                cat(sample_gene,
+                cat(
+                    sample_gene,
                     "feature identifier in expression data cannot",
                     "be resolved to a microarray. Assuming Ensembl gene",
-                    "identifiers.", fill=TRUE)
+                    "identifiers.",
+                    fill=TRUE)
             }
             # If it does not look like microarray
             # assume it is Ensembl annotations
             # therefore do nothing more
             # in both cases load the requested mart dataset
-            cat("Loading requested dataset", biomart_dataset, "...",
-                fill=TRUE)
+            cat(
+                "Loading requested dataset", biomart_dataset, "...",
+                fill=TRUE
+                )
             mart <- useMart(biomart="ensembl", dataset=biomart_dataset)
             }
         # if the user gave a microarray name
         else{
             # Check that the pair dataset/microarray exists
-            if (!biomart_dataset %in% microarray2dataset[
-                microarray2dataset$microarray == microarray, "dataset"]){
-                stop("There is no microarray ", microarray, " in dataset ",
-                    biomart_dataset)
+            if (!biomart_dataset %in% microarray2dataset.clean[
+                microarray2dataset.clean$microarray == microarray,
+                "dataset"]){
+                stop(
+                    "There is no microarray ", microarray,
+                    " in dataset ", biomart_dataset
+                    )
             }
-            cat("Loading requested microarray", microarray,
-                "from requested biomart dataset", biomart_dataset, fill=TRUE)
+            cat(
+                "Loading requested microarray", microarray,
+                "from requested biomart dataset", biomart_dataset,
+                fill=TRUE
+                )
             mart <- useMart(biomart="ensembl", dataset=biomart_dataset)
         }
     }
@@ -184,10 +232,12 @@ GO_analyse <- function(
     # if working with Ensembl gene identifiers
     if (microarray == ""){
         # Prepare a mapping table between gene identifiers and GO terms
-        cat("Fetching ensembl_gene_id/go_id mappings from BioMart ...",
+        cat(
+            "Fetching ensembl_gene_id/go_id mappings from BioMart ...",
             fill=TRUE)
-        GO_genes <- getBM(attributes=c("ensembl_gene_id", "go_id"),
-                        mart=mart)
+        GO_genes <- getBM(
+            attributes=c("ensembl_gene_id", "go_id"),
+            mart=mart)
     }
     # if working with microarray probesets
     else{
@@ -201,12 +251,20 @@ GO_analyse <- function(
     GO_genes <- GO_genes[GO_genes$go_id != "",]
     # Remove rows where the gene_id is "" (happens)
     GO_genes <- GO_genes[GO_genes$gene_id != "",]    
+    # Print how many features are present in the map
+    cat(
+        length(intersect(rownames(eSet), unique(GO_genes$gene_id))),
+        "features from ExpressionSet found in the mapping table.",
+        fill=TRUE
+        )
+    
     # Prepare a table of all the GO terms in BioMart (even if no gene is
     # annotated to it)
     cat("Fetching GO_terms description from BioMart ...", fill=TRUE)
-    all_GO <- getBM(attributes=c("go_id", "name_1006",
-                                "namespace_1003"),
-                    mart=mart)
+    all_GO <- getBM(
+        attributes=c("go_id", "name_1006", "namespace_1003"),
+        mart=mart
+        )
     # Remove the GO terms which is ""
     all_GO <- all_GO[all_GO$go_id != "",]
     # Run the analysis with the desired method
@@ -215,9 +273,10 @@ GO_analyse <- function(
     if (method %in% c("randomForest", "rf")){
         ## Similarly to the previous anova procedure (see below)
         # Run the randomForest algorithm
-        rf <- randomForest(x=t(exprs(eSet)), y=pData(eSet)[,f],
-                        importance=TRUE, do.trace=do.trace,
-                        ntree=ntree, mtry=mtry, ...)
+        rf <- randomForest(
+            x=t(exprs(eSet)), y=pData(eSet)[,f], importance=TRUE,
+            do.trace=do.trace, ntree=ntree, mtry=mtry,
+            ...)
         # Save the importance value used as score for each gene in a
         # data.frame
         res <- data.frame("Score" = importance(rf)[,"MeanDecreaseGini"])
@@ -228,9 +287,19 @@ GO_analyse <- function(
         # A vectorised calculation the F-value of an ANOVA used as score for
         # each gene
         res <- data.frame(
-            "Score" = apply(X=exprs(eSet), MARGIN=1, FUN=function(x){
-                oneway.test(formula=expr~group, data=cbind(
-                    expr=x, group=pData(eSet)[,f]))$statistic}))
+            "Score" = apply(
+                X=exprs(eSet),
+                MARGIN=1,
+                FUN=function(x){
+                    oneway.test(
+                        formula=expr~group,
+                        data = cbind(
+                            expr=x, group=pData(eSet)[,f]
+                            )
+                        )$statistic
+                    }
+                )
+            )
         # In the output variable, write the full method name
         method <- "anova"
     }
@@ -245,8 +314,9 @@ GO_analyse <- function(
     # even if not in the dataset (genes absent are given score of 0 and rank
     # of max(rank)+1)
     # Merge GO/gene mapping with randomForest results
-    GO_gene_score_all <- merge(x=GO_genes, y=res, by.x="gene_id",
-                            by.y="row.names", all.x=TRUE)
+    GO_gene_score_all <- merge(
+        x=GO_genes, y=res, by.x="gene_id", by.y="row.names", all.x=TRUE
+        )
     # Replace NAs (genes absent from dataset but present in biomaRt) by 0
     # (minimal valid value)
     GO_gene_score_all[is.na(GO_gene_score_all$Score), "Score"] <- 0
@@ -257,33 +327,45 @@ GO_analyse <- function(
     # - Second, merge the tables keeping only the genes present in the dataset
     # This will be used to count how many genes are present in dataset for
     # each GO term
-    GO_gene_score_data <- merge(x=GO_genes, y=res, by.x="gene_id",
-                                by.y="row.names")
+    GO_gene_score_data <- merge(
+        x=GO_genes, y=res, by.x="gene_id", by.y="row.names")
     # Results can now be summarised by aggregating rows with same GOterm
     # Appends gene annotations to rows of res
     cat("Fetching gene description from BioMart ...", fill=TRUE)
     #    if working with Ensembl gene identifiers
     if (microarray == ""){
-        genes_score <-merge(x=res, all.x=TRUE,
-                            y=getBM(attributes=c("ensembl_gene_id",
-                                                "external_gene_name",
-                                                "description"),
-                                    filters="ensembl_gene_id",
-                                    values=rownames(res), mart=mart),
-                            by.x="row.names",
-                            by.y="ensembl_gene_id")
+        genes_score <-merge(
+            x=res, all.x=TRUE,
+            y=getBM(
+                attributes=c(
+                    "ensembl_gene_id",
+                    "external_gene_name",
+                    "description"
+                    ),
+                filters="ensembl_gene_id",
+                values=rownames(res), mart=mart),
+            by.x="row.names",
+            by.y="ensembl_gene_id"
+            )
     }
     # if working with microarray probesets
     else{
         # Prepare a mapping table between feature identifiers and GO terms
-        genes_score <- merge(x=res, all.x=TRUE, 
-                            y=getBM(attributes=c(microarray,
-                                                "external_gene_name",
-                                                "description"),
-                                    filters=microarray,
-                                    values=rownames(res), mart=mart),
-                            by.x="row.names",
-                            by.y=microarray)
+        genes_score <- merge(
+            x=res,
+            all.x=TRUE, 
+            y=getBM(
+                attributes=c(
+                    microarray,
+                    "external_gene_name",
+                    "description"
+                    ),
+                filters=microarray,
+                values=rownames(res),
+                mart=mart),
+            by.x="row.names",
+            by.y=microarray
+            )
         # In the case of microarray, probesets can be annotated to multiple
         # gene symbols. For each probeset, keep only the first row (we're
         # losing one possible annotation here). But otherwise, we will not be
@@ -298,36 +380,62 @@ GO_analyse <- function(
     genes_score$Row.names <- NULL
     cat("Merging score into result table ...", fill=TRUE)
     # Total number of genes in the dataset annotated to each GO term
-    GO_scores <- merge(x=aggregate(gene_id~go_id, data=GO_gene_score_data,
-                                FUN=length), y=all_GO, by="go_id",
-                        all.y=TRUE)
+    GO_scores <- merge(
+        x=aggregate(
+            gene_id~go_id,
+            data=GO_gene_score_data,
+            FUN=length
+            ),
+        y=all_GO,
+        by="go_id",
+        all.y=TRUE
+        )
     colnames(GO_scores)[2] <- "data_count"
     GO_scores[is.na(GO_scores$data_count), "data_count"] <- 0
     # Total number of genes annotated to each GO term in BioMart (not
     # necessarily in dataset)
-    GO_scores <- merge(x=aggregate(Score~go_id, data=GO_gene_score_all,
-                                FUN=length), y=GO_scores, by="go_id",
-                    all.y=TRUE)
+    GO_scores <- merge(
+        x=aggregate(
+            Score~go_id,
+            data=GO_gene_score_all,
+            FUN=length
+            ),
+        y=GO_scores,
+        by="go_id",
+        all.y=TRUE)
     colnames(GO_scores)[2] <- "total_count"
     GO_scores[is.na(GO_scores$total_count), "total_count"] <- 0
     # Average score (denominator being the total of genes by GO term in
     # BioMart) being tested
-    GO_scores <- merge(x=aggregate(Score~go_id, data=GO_gene_score_all,
-                                FUN=mean), y=GO_scores, by="go_id",
-                        all.y=TRUE)
+    GO_scores <- merge(
+        x=aggregate(
+            Score~go_id,
+            data=GO_gene_score_all,
+            FUN=mean
+            ),
+        y=GO_scores,
+        by="go_id",
+        all.y=TRUE
+        )
     colnames(GO_scores)[2] <- "ave_score"
     GO_scores[is.na(GO_scores$ave_score), "ave_score"] <- 0
     ## Average rank (denominator being the total of genes by GO term in
     # BioMart) being tested
     # (+) robust for GO terms with several genes
     GO_scores <- merge(
-        x=aggregate(Rank~go_id, data=GO_gene_score_all, FUN=mean),
+        x=aggregate(
+            Rank~go_id,
+            data=GO_gene_score_all,
+            FUN=mean
+            ),
         y=GO_scores,
         by="go_id",
-        all.y=TRUE)
+        all.y=TRUE
+        )
     colnames(GO_scores)[2] <- "ave_rank"
     GO_scores[is.na(GO_scores$ave_rank), "ave_rank"] <- max(
-        GO_scores$ave_rank, na.rm=TRUE) + 1
+        GO_scores$ave_rank, na.rm=TRUE
+        ) + 1
     # Notes of other summary metrics tested:
     ## Sum: (-) biased toward general GO terms annotated for many thousands
     ## of genes (e.g. "protein binding")
@@ -353,16 +461,28 @@ GO_analyse <- function(
     if (method %in% c("randomForest", "rf")){
         return(
             list(
-                GO=GO_scores, mapping=GO_genes, genes=genes_score,
-                factor=f, method=method, subset=subset, ntree=ntree,
-                mtry=mtry)
+                GO=GO_scores,
+                mapping=GO_genes,
+                genes=genes_score,
+                factor=f,
+                method=method,
+                subset=subset,
+                ntree=ntree,
+                mtry=mtry
+                )
             )
     }
     else if (method %in% c("anova", "a")) {
         return(
             list(
-                GO=GO_scores, mapping=GO_genes, genes=genes_score,
-                    factor=f, method=method, subset=subset))
+                GO=GO_scores,
+                mapping=GO_genes,
+                genes=genes_score,
+                factor=f,
+                method=method,
+                subset=subset
+                )
+            )
     }
 }
 
@@ -377,9 +497,11 @@ mart_from_ensembl <- function(sample_gene){
         if (prefix %in% prefix2dataset$prefix){
             # load the corresponding biomart dataset
             cat("Looks like Ensembl gene identifier.", fill=TRUE)
-            cat("Loading detected dataset",
+            cat(
+                "Loading detected dataset",
                 prefix2dataset[prefix2dataset$prefix == prefix,]$dataset,
-                "...", fill=TRUE)
+                "...", fill=TRUE
+                )
             return(useMart(
                 biomart="ensembl",
                 dataset=prefix2dataset[
@@ -388,27 +510,12 @@ mart_from_ensembl <- function(sample_gene){
         }
         # Otherwise return FALSE
         else{
-            cat("Did not recognise a valid Ensembl gene identifier.",
-                fill=TRUE)
+            cat(
+                "Did not recognise a valid Ensembl gene identifier.",
+                fill=TRUE
+                )
             return(FALSE)
         }
-    }
-    # If the gene id starts with "WBgene"
-    else if (length(grep(pattern="^WBGene", x=sample_gene))) {
-        # load the corresponding biomart dataset
-        cat("Looks like Ensembl gene identifier.", fill=TRUE)
-        cat("Loading detected dataset celegans_gene_ensembl ...", fill=TRUE)
-        return(useMart(biomart="ensembl",
-                        dataset="celegans_gene_ensembl"))
-    }
-    # If the gene id starts with "FBgn"
-    else if (length(grep(pattern="^FBgn", x=sample_gene))) {
-        # load the corresponding biomart dataset
-        cat("Looks like Ensembl gene identifier.", fill=TRUE)
-        cat("Loading detected dataset dmelanogaster_gene_ensembl ...",
-            fill=TRUE)
-        return(useMart(biomart="ensembl",
-                        dataset="dmelanogaster_gene_ensembl"))
     }
     # If the gene id starts with "Y"
     else if (length(grep(pattern="^Y", x=sample_gene))) {
@@ -416,8 +523,12 @@ mart_from_ensembl <- function(sample_gene){
         cat("Looks like Ensembl gene identifier.", fill=TRUE)
         cat("Loading detected dataset scerevisiae_gene_ensembl ...",
             fill=TRUE)
-        return(useMart(biomart="ensembl",
-                        dataset="scerevisiae_gene_ensembl"))
+        return(
+            useMart(
+                biomart="ensembl",
+                dataset="scerevisiae_gene_ensembl"
+                )
+            )
     }
     # If the gene id does not match any known Ensembl gene id prefix, return
     # an error and stop
@@ -427,43 +538,54 @@ mart_from_ensembl <- function(sample_gene){
     }
 }
 
-microarray_from_probeset <- function(sample_gene){
+microarray_from_probeset <- function(sample_gene, microarray2dataset.clean){
     matches <- c()
-    # For each pattern thought to be unique to a microarray
-    for (pattern in microarray2dataset$prefix[microarray2dataset$unique]){
+    # For each pattern manually curated as unique to a microarray
+    for (pattern in microarray2dataset.clean$pattern[
+        microarray2dataset.clean$unique]){
         # if the pattern matches the sample gene
-        if (length(grep(pattern=pattern, x=sample_gene))){
+        if (length(which(grep(pattern=pattern, x=sample_gene) == 1))){
             # add the pattern to a vector 
             matches <- c(matches, pattern)
         }
     }
-    # if the vector length is at least 1 (unlikely to ever be more than 1 if
-    # patterns do not overlap)
+    # if the vector length is at least 1 (patterns were designed to not
+    # overlap, so the length cannot be more than 1 here)
     if (length(matches)){
         # return (dataset, microarray) to the main function to build mapping
         # tables
-        return(microarray2dataset[microarray2dataset$prefix == matches[1],
-                                    c("dataset","microarray")])
+        return(
+            microarray2dataset.clean[
+                microarray2dataset.clean$pattern == matches[1],
+                c("dataset","microarray")
+                ]
+            )
     }
     # If the sample gene was not recognised in the unique ones,
     # check whether it may be an ambiguous probeset identifier
-    # For each unique pattern known to be found in multiple microarrays
+    # For each pattern manually curated as found in multiple microarrays
     for (pattern in unique(
-        microarray2dataset$prefix[!microarray2dataset$unique])
+        microarray2dataset.clean$pattern[!microarray2dataset.clean$unique])
         ){
         # if the pattern matches the sample gene
-        if (length(grep(pattern=pattern, x=sample_gene))){
-            # add the pattern to a vector 
+        if (length(which(grep(pattern=pattern, x=sample_gene) == 1))){
+            # add the pattern to a vecto riap
             matches <- c(matches, pattern)
         }
     }
     # if vector contains at least 1 pattern
     if (length(matches)){
         # print sample, first pattern, and list of possible microarray
-        cat(sample_gene, "matches pattern", matches[1],
-            "found in multiple microarrays:", fill=TRUE)
-        print(microarray2dataset[microarray2dataset$prefix == matches[1], 
-                c("dataset","microarray")], row.names=FALSE)
+        cat(
+            sample_gene, "matches pattern", matches[1],
+            "found in multiple microarrays:", fill=TRUE
+            )
+        print(
+            microarray2dataset.clean[
+                microarray2dataset.clean$pattern == matches[1], 
+                c("dataset","microarray")
+                ],
+            row.names=FALSE)
         return(FALSE)
     }
     # if no known microarray pattern matches, return FALSE

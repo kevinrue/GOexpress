@@ -142,8 +142,8 @@ that plotted on the X-axis. See below for an example on the training dataset.
 }
 
 \value{
-    The ggplot object, or NULL if multiple features are annotated
-    to the gene symbol.
+    The ggplot object, or the vector of feature identifiers if multiple
+    features are annotated to the gene symbol.
 }
 
 \references{
