@@ -6,13 +6,13 @@ cluster_GO <- function(
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("factor","GO") %in% names(result))){
-        stop("\"result=\" argument misses required slots.
+        stop("'result=' argument misses required slots.
     Is it a GO_analyse() output?")
     }
     # If the GO identifier is not present in the results
     if (! go_id %in% result$GO$go_id){
         # Return an error and stop
-        stop("\"go_id=\" argument is not a valid factor in pData(eSet).")
+        stop(go_id, " was not found in result$mapping$go_id.")
     }
     # Subset the data to the given values of the given factors, if existing
     if (!is.null(subset)){
@@ -76,18 +76,18 @@ expression_plot <- function(
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("factor","genes") %in% names(result))){
-        stop("\"result=\" argument misses required slots.
+        stop("'result=' argument misses required slots.
     Is it a GO_analyse() output?")
     }
     # If the X variable requested does not exist in the sample annotations
     if (! x_var %in% colnames(pData(eSet))){
         # Return an error and stop
-        stop("\"x_var=\" argument is not a valid factor in pData(eSet).")
+        stop("x_var: ", x_var, " is not an existing column in pData(eSet).")
     }
     # If the factor requested does not exist in the sample annotations
     if (! f %in% colnames(pData(eSet))){
         # Return an error and stop
-        stop("\"f=\" argument is not a valid factor in pData(eSet).")
+        stop("f: ", f, " is not an existing column in pData(eSet).")
     }
     # Subset the data to the given values of the given factors, if existing
     if (!is.null(subset)){
@@ -142,17 +142,17 @@ expression_plot_symbol <- function(
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("factor","genes") %in% names(result))){
-        stop("\"result=\" argument misses required slots.
+        stop("'result=' argument misses required slots.
     Is it a GO_analyse() output?")
     }
     # 
     # If the X variable requested does not exist in the sample annotations
     if (! x_var %in% colnames(pData(eSet))){
-        stop("\"x_var=\" argument is not a valid factor in pData(eSet).")
+        stop("x_var: ", x_var, " is not an existing column in pData(eSet).")
     }
     # If the factor requested does not exist in the sample annotations
     if (! f %in% colnames(pData(eSet))){
-        stop("\"f=\" argument is not a valid factor in pData(eSet).")
+        stop("f: ", f, " is not an existing column in pData(eSet).")
     }
     # Subset the data to the given values of the given factors, if existing
     if (!is.null(subset)){
@@ -247,7 +247,7 @@ expression_plot_symbol <- function(
         if (index==0){
             # A first time user might not know that how to plot a single plot
             cat(
-                "Use argument \"index=1\" to plot the first gene id alone,",
+                "Use argument 'index=1' to plot the first gene id alone,",
                 "and so on.", fill=TRUE
                 )
             # Prepare a grid to plot multiple graphs while optimising the
@@ -354,31 +354,40 @@ expression_profiles <- function(
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("factor","genes") %in% names(result))){
-        stop("\"result=\" argument misses required slots.
+        stop("'result=' argument misses required slots.
     Is it a GO_analyse() output?")
     }
     # If the X variable requested does not exist in the sample annotations
     if (! x_var %in% colnames(pData(eSet))){
         # Return an error and stop
-        stop("\"x_var=\" argument is not a valid factor in pData(eSet).")
+        stop("x_var: ", x_var, " is not an existing column in pData(eSet).")
     }
     # If the series factor requested does not exist in the sample
     # annotations
     if (! seriesF %in% colnames(pData(eSet))){
         # Return an error and stop
-        stop("\"seriesF=\" argument is not a valid factor in pData(eSet).")
+        stop(
+            "seriesF: ", seriesF,
+            " is not an existing column in pData(eSet)."
+            )
     }
     # If the colour factor requested does not exist in the sample
     # annotations
     if (! colourF %in% colnames(pData(eSet))){
         # Return an error and stop
-        stop("\"colourF=\" argument is not a valid factor in pData(eSet).")
+        stop(
+            "colourF: ", colourF,
+            " is not an existing column in pData(eSet)."
+            )
     }
     # If the linetype factor requested does not exist in the sample
     # annotations
     if (! linetypeF %in% colnames(pData(eSet))){
         # Return an error and stop
-        stop("\"linetypeF=\" argument is not a valid factor in pData(eSet).")
+        stop(
+            "linetypeF: ", linetypeF,
+            " is not an existing column in pData(eSet)."
+            )
     }
     # Subset the data to the given values of the given factors, if existing
     if (!is.null(subset)){
@@ -444,30 +453,39 @@ expression_profiles_symbol <- function(
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("factor","genes") %in% names(result))){
-        stop("\"result=\" argument misses required slots.
+        stop("'result=' argument misses required slots.
     Is it a GO_analyse() output?")
     }
     # If the X variable requested does not exist in the sample annotations
     if (! x_var %in% colnames(pData(eSet))){
-        stop("\"x_var=\" argument is not a valid factor in pData(eSet).")
+        stop("x_var: ", x_var, " is not an existing column in pData(eSet).")
     }
     # If the series factor requested does not exist in the sample
     # annotations
     if (! seriesF %in% colnames(pData(eSet))){
         # Return an error and stop
-        stop("\"seriesF=\" argument is not a valid factor in pData(eSet).")
+        stop(
+            "seriesF: ", seriesF,
+            " is not an existing column in pData(eSet)."
+            )
     }
     # If the colour factor requested does not exist in the sample
     # annotations
     if (! colourF %in% colnames(pData(eSet))){
         # Return an error and stop
-        stop("\"colourF=\" argument is not a valid factor in pData(eSet).")
+        stop(
+            "colourF: ", colourF,
+            " is not an existing column in pData(eSet)."
+            )
     }
     # If the linetype factor requested does not exist in the sample
     # annotations
     if (! linetypeF %in% colnames(pData(eSet))){
         # Return an error and stop
-        stop("\"linetypeF=\" argument is not a valid factor in pData(eSet).")
+        stop(
+            "linetypeF: ", linetypeF,
+            " is not an existing column in pData(eSet)."
+            )
     }
     # Subset the data to the given values of the given factors, if existing
     if (!is.null(subset)){
@@ -561,7 +579,7 @@ expression_profiles_symbol <- function(
         if (index==0){
             # A first time user might not know that how to plot a single plot
             cat(
-                "Use argument \"index=1\" to plot the first gene id alone,",
+                "Use argument 'index=1' to plot the first gene id alone,",
                 "and so on.", fill=TRUE
                 )
             # Prepare a grid to plot multiple graphs while optimising the
@@ -655,13 +673,13 @@ heatmap_GO <- function(
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("factor","GO","genes") %in% names(result))){
-        stop("\"result=\" argument misses required slots.
+        stop("'result=' argument misses required slots.
     Is it a GO_analyse() output?")
     }
     # If the GO identifier is not present in the results
     if (! go_id %in% result$GO$go_id){
         # Return an error and stop
-        stop("\"go_id=\" argument is not a valid GO term id in \"result=\".")
+        stop("go_id: ", go_id, " was not found in result$mapping$go_id.")
     }
     
     # Subset the data to the given values of the given factors, if existing
@@ -728,7 +746,7 @@ hist_scores <- function(
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("GO") %in% names(result))){
-        stop("\"result=\" argument misses required slots.
+        stop("'result=' argument misses required slots.
     Is it a GO_analyse() output?")
     }
     hist(result$GO$ave_score, main=main, xlab=xlab, ...)
@@ -738,13 +756,13 @@ list_genes <- function(go_id, result, data.only=TRUE){
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("mapping","genes") %in% names(result))){
-        stop("\"result=\" argument misses required slots.
+        stop("'result=' argument misses required slots.
     Is it a GO_analyse() output?")
     }
     # If the go_id requested is not present in the dataset
     if (!go_id %in% result$mapping$go_id){
         # return an error and stop
-        stop(go_id, "is not a valid go_id in the dataset.")
+        stop("go_id: ", go_id, " was not found in result$mapping$go_id.")
     }
     # List of gene_ids annotated to the GO term
     gene_ids <- result$mapping[result$mapping$go_id == go_id,"gene_id"]
@@ -762,12 +780,12 @@ overlap_GO <- function(go_ids, result, filename=NULL, mar=rep(0.1, 4), ...){
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("GO") %in% names(result))){
-        stop("\"result=\" argument misses required slots.
+        stop("'result=' argument misses required slots.
     Is it a GO_analyse() output?")
     }
     # Check that all GO terms are present in the result variable
     if (!all(go_ids %in% result$GO$go_id)){
-        stop("Some go_id(s) are absent from the result variable.")
+        stop("Some go_id(s) do not exist in result$GO$go_id.")
     }
     # Check that 2-5 GO terms are given, otherwise venn.diagram would crash
     if (length(go_ids) > 5){
@@ -800,13 +818,13 @@ plot_design <- function(
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("GO") %in% names(result))){
-        stop("\"result=\" argument misses required slots.
+        stop("'result=' argument misses required slots.
     Is it a GO_analyse() output?")
     }
     # If the GO identifier is not present in the results
     if (! go_id %in% result$GO$go_id){
         # Return an error and stop
-        stop("\"go_id=\" argument is not a valid factor in pData(eSet).")
+        stop("go_id: ", go_id, " was not found in result$GO$go_id.")
     }
     # if the user changed the default value
     # check that all given factors exist in colnames(eSet)
@@ -815,7 +833,7 @@ plot_design <- function(
             if (!f %in% colnames(pData(eSet))){
                 # Otherwise, stop and return which of them is not a valid
                 # factor name
-                stop(f, " is not a valid factor name in colnames(eSet).")
+                stop(f, " is not an existing column in pData(eSet).")
             }
         } 
     }
@@ -859,7 +877,7 @@ quantiles_scores <- function(
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("GO") %in% names(result))){
-        stop("\"result=\" argument misses required slots.
+        stop("'result=' argument misses required slots.
     Is it a GO_analyse() output?")
     }
     # If user changes to "quartiles=TRUE" then the following will be true
@@ -876,7 +894,7 @@ rerank <- function(result, rank.by="rank"){
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("GO","genes") %in% names(result))){
-        stop("\"result=\" argument misses required slots.
+        stop("'result=' argument misses required slots.
     Is it a GO_analyse() output?")
     }
     # Reorder the GO and gene tables accordin to the user's choice
@@ -902,7 +920,7 @@ subEset <- function(eSet, subset=list()){
     # subset should be a list of factor names with the associated values
     # to retain for that factor
     if (!class(subset) == "list"){
-        stop("\"subset=\" argument should be a list.")
+        stop("'subset=' argument should be a list.")
     }
     if (length(subset) > 0){
         for (f_filter in names(subset)){
@@ -912,7 +930,7 @@ subEset <- function(eSet, subset=list()){
                 stop(f_filter, " is not a valid column in pData(eSet).")
             }
             if (length(subset[[f_filter]]) == 0){
-                stop("Fo value provided for filter ", f_filter)
+                stop("No value provided for filter ", f_filter)
             }
             for (v_filter in subset[[f_filter]]){
                 # Check that the value is an existing value 
@@ -944,7 +962,7 @@ subset_scores <- function(result, ...){
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("GO", "mapping", "genes") %in% names(result))){
-        stop("\"result=\" argument misses required slots.
+        stop("'result=' argument misses required slots.
     Is it a GO_analyse() output?")
     }
     # Save the list of filter and value for easier referencing
@@ -994,9 +1012,9 @@ subset_scores <- function(result, ...){
             else{
                 stop(
                     "Valid values for filter ", filter, " are ",
-                    "\"biological_process\", \"BP\",",
-                    "\"molecular_function\", \"MF\",",
-                    "\"cellular_component\", and\"CC\"."
+                    "'biological_process', 'BP',",
+                    "'molecular_function', 'MF',",
+                    "'cellular_component', and'CC'."
                     )
             }
         }
@@ -1029,13 +1047,13 @@ table_genes <- function(go_id, result, data.only=FALSE){
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("mapping","genes") %in% names(result))){
-        stop("\"result=\" argument misses required slots.
+        stop("'result=' argument misses required slots.
     Is it a GO_analyse() output?")
     }
     # If the go_id requested is not present in the dataset
     if (!go_id %in% result$mapping$go_id){
         # return an error and stop
-        stop(go_id, "is not a valid go_id in the dataset.")
+        stop("go_id: ", go_id, " was not found in result$mapping$go_id.")
     }
     # Otherwise fetch the list of gene_ids associated with it
     gene_ids <- list_genes(go_id=go_id, result=result, data.only=data.only)

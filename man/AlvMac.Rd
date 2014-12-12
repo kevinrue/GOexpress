@@ -7,6 +7,7 @@
 \title{
 Sample data from a RNAseq experiment.
 }
+
 \description{
 An example \code{ExpressionSet} including expression data and phenotypic
 information about the samples.

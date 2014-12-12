@@ -1,3 +1,60 @@
+CHANGES IN VERSION 1.1.4
+--------------------------
+
+NEW FEATURES:
+
+    o Custom annotations can be provided to the GO_analyse function using
+    three new arguments: "GO_genes", "all_GO", and "all_genes". See below for
+    individual description.
+
+    o The GO_genes argument allows the user to provide associations between
+    feature identifiers in the ExpressionSet and gene ontology identifiers.
+    This will skip all calls to the Ensembl BioMart server. Consequently, we
+    recommend the use of the "all_GO" and "all_genes" arguments whenever
+    "GO_genes" is used. Otherwise, some downstream functions may not work.
+    For instance, the expression_plot, expression_profiles, and heatmap_GO
+    function can be used to generate plots,although lacking gene and gene
+    ontology names. See below for more details.
+
+    o The all_GO argument allows the user to provide the name and namespace
+    ("biological_process", "molecular_function", or "cellular_component")
+    corresponding to gene ontology identifiers. This enables subsequent
+    filtering of result tables by namespace, and annotation of heatmaps with
+    the name of the gene ontology.
+
+    o The all_genes argument allows the user to provide the name and
+    description corresponding to feature identifiers in the ExpressionSet.
+    This enables annotation of expression plots with the gene name associated
+    with the feature.
+
+UPDATED FEATURES:
+
+    o In the GO_analyse function, the eSet argument is now formally checked
+    to be of class ExpressionSet prior to any calculation. If not, the
+    function returns an appropriate error message.
+
+    o The error messages caused when the user gives a name that does not exist
+    in the phenoData slot of the ExpressionSet were updated to use the word
+    "column", rather than "factor".
+
+GENERAL UPDATES:
+
+    o Updated the help page for function GO_analyse to describe the new 
+    features described above and provide a code example.
+
+    o Used the BiocStyle package to format the vignette.
+
+    o Added a new section in the vignette to document the new features
+    described above.
+
+    o Added a new section in the vignette to mention the creation of shiny
+    applications using the output of GOexpress. Included a screenshot of
+    a shiny application developed from the original AlvMac dataset.
+
+    o Added a new section in the vignette to highlight the availability of
+    a "subset" argument to avoid the need for additional ExpressionSet objects
+    to analyse or visualise subsets of samples.
+
 CHANGES IN VERSION 1.1.3
 --------------------------
 
