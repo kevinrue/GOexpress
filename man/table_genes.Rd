@@ -14,7 +14,7 @@ associated gene name, and description.
 }
 
 \usage{
-table_genes(go_id, result, data.only=FALSE)
+table_genes(go_id, result, data.only=FALSE, order.by='rank')
 }
 
 \arguments{
@@ -28,6 +28,13 @@ table_genes(go_id, result, data.only=FALSE)
     Whether to return only the feature identifiers present in the given
     dataset or alternatively returns all feature identifiers associated with
     the GO term in the Ensembl BioMart.
+    }
+    \item{order.by}{
+    The metric or name to order the output table. Default is increasing
+    'rank', which corresponds to decreasing score. Valid values are
+    'rank' (increasing) equivalent to 'score' (decreasing), 'gene_id',
+    'name', equivalent to 'external_gene_name' and 'external_gene_id'.
+    Text ranking in alphabetical order.
     }
 }
 
@@ -51,6 +58,9 @@ data(AlvMac_results)
 # Table of result for genes associated with the GO term
 # "toll-like receptor 4 signaling pathway"
 table_genes(result=AlvMac_results, go_id="GO:0034142")
+
+# ordered by gene name
+table_genes(result=AlvMac_results, go_id="GO:0034142", order.by='name')
 }
 
 \keyword{ GOexpress }

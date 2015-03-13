@@ -48,14 +48,15 @@ hist_scores(result,
 }
 
 \examples{
-# load the sample output data
-data(AlvMac_results)
+# load the sample output data with p.values computed
+data(AlvMac_results.pVal)
 
 # Histogram of scores (labelled with counts)
 hist_scores(result=AlvMac_results, breaks=20, labels=TRUE)
 
-# filter for Biological Processes associated with 10+ genes
-filtered_results <- subset_scores(result=AlvMac_results, total_count=5,
+# filter for Biological Processes associated with 5+ genes and <=0.05 P-value
+filtered_results <- subset_scores(
+    result=AlvMac_results.pVal, total_count=5, p.val=0.05,
     namespace="BP")
 
 # Histogram of scores (labelled with counts)

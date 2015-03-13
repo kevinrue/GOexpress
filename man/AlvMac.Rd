@@ -85,12 +85,14 @@ normalised library size.
 
 To generate this test data subset, we extracted 100 genes from the original
 dataset of 12,121 genes. All 7 genes associated with the GO term "GO:0034142"
-(i.e. "toll-like receptor 4 signaling pathway") were kept, plus another random
-93 random genes, making a total of 100 genes measured in 117 samples. Samples
-include all 10 biological replicates collected at four different time-points,
-see \code{data(targets)}. The TLR4 pathway was found in the full dataset as
-the top-ranking biological pathway discriminating the different mycobacterial
-infections (unpublished observations).
+(i.e. "toll-like receptor 4 signaling pathway") present in the original
+full-size filtered-normalised dataset were kept,  all 3 Ensembl
+gene identifiers annotated to the gene symbol 'RPL36A', and finally another
+random 90 random genes, making a total of 100 genes measured in 117 samples.
+Samples include all 10 biological replicates collected at four different
+time-points, see \code{data(targets)}. The TLR4 pathway was found in the full
+dataset as the top-ranking biological pathway discriminating the different
+mycobacterial infections (unpublished observations).
 }
 
 \source{
@@ -114,10 +116,10 @@ AlvMac[1:5, 1:5]
 pData(AlvMac)
 
 # Phenotypic information about factor "Group"
-pData(AlvMac)$Group
+AlvMac$Group
 
 # Conversion of a factor to a character vector
-as.character(pData(AlvMac)$Group)
+as.character(AlvMac$Group)
 
 # Number of samples (rows) and annotations (columns)
 dim(pData(AlvMac))

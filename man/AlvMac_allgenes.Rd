@@ -17,13 +17,13 @@ example \code{ExpressionSet}.
 \usage{data("AlvMac_allgenes")}
 
 \value{
-  A data frame detailing information about the 100 gene features present in
-  the \code{AlvMac} example \code{ExpressionSet}:
-  \itemize{
+    A data frame detailing information about the 100 gene features present in
+    the \code{AlvMac} example \code{ExpressionSet}:
+    \itemize{
     \item{\code{gene_id}}{ are Ensembl gene identifiers.}
     \item{\code{external_gene_name}}{ contains the corresponding gene name.}
     \item{\code{description}}{ contains the corresponding description.}
-  }
+    }
 }
 
 \details{
@@ -35,7 +35,8 @@ See the help page of the \code{GO_analyse} function for an example usage.
 
 \source{
 These annotations were obtained from the Ensembl BioMart server using the
-\code{biomaRt} package on 10-Dec-2014.
+\code{biomaRt} package to access the Ensembl release 75 
+\url{http://feb2014.archive.ensembl.org}.
 }
 
 \examples{

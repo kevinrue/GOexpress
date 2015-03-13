@@ -1,21 +1,24 @@
-\name{AlvMac_results}
+\name{AlvMac_results.pVal}
 
-\alias{AlvMac_results}
+\alias{AlvMac_results.pVal}
 
 \docType{data}
 
 \title{
-Sample output from the \code{GO_analyse()} function on an RNAseq experiment.
+Sample output from the \code{pValue_GO()} function on an RNAseq experiment.
 }
 
 \description{
 This variable may be used to test the filtering and visualisation methods
-implemented in the package. It contains the output of the command
-\code{AlvMac_results = GO_analyse(eSet=AlvMac, f="Treatment")}
-applied to the toy input data \code{AlvMac}.
+implemented in the package. It contains the output of 
+successively applying the commands
+\code{AlvMac_results = GO_analyse(eSet=AlvMac, f="Treatment")} and
+\code{AlvMac_results.pVal = pValue_GO(AlvMac_results, N=100,
+ranked.by=result$rank.by, rank.by='P')} to the toy input data \code{AlvMac}.
 }
 
-\usage{data(AlvMac_results)}
+\usage{data("AlvMac_results.pVal")}
+
 
 \value{
     A list of 9 slots summarising the input and results of the analysis:
@@ -39,6 +42,8 @@ applied to the toy input data \code{AlvMac}.
     \item{\code{mtry} contains the number of features randomly sampled as
     candidates at each split in each tree built during the randomForest
     analysis.}
+    \item{\code{p.iterations} contains the number of permutations performed
+    to compute the P-value in the \code{GO} slot.}
     }
 }
 
@@ -52,15 +57,15 @@ To produce reproducible results, use the \code{set.seed()} function prior
 to running any randomising or sampling function.
 }
 
+
 \source{
     Source data are part of a publication in review.
 }
 
 \examples{
-data(AlvMac_results)
-str(AlvMac_results)
-head(AlvMac_results$GO, n=20)
-head(AlvMac_results$GO$genes, n=20)
+data(AlvMac_results.pVal)
+str(AlvMac_results.pVal)
+head(AlvMac_results.pVal, n=20)
 }
 
 \keyword{datasets}

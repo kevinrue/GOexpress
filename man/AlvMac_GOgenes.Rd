@@ -17,12 +17,12 @@ ontology identifiers, compatible with the \code{AlvMac} example
 \usage{data("AlvMac_GOgenes")}
 
 \value{
-  A data frame with 188,237 associations between the following 2 variables.
-  \itemize{
+    A data frame with 191,614 associations between the following 2 variables.
+    \itemize{
     \item{\code{gene_id}}{ are Ensembl gene identifiers of the
     \emph{Bos taurus} species.}
     \item{\code{go_id}}{ are gene ontology identifiers.}
-  }
+    }
 }
 
 \details{
@@ -45,7 +45,8 @@ See the help page of the \code{GO_analyse} function for an example usage.
 
 \source{
 These annotations were obtained from the Ensembl BioMart server using the
-\code{biomaRt} package on 10-Dec-2014.
+\code{biomaRt} package to access the Ensembl release 75 
+\url{http://feb2014.archive.ensembl.org}.
 }
 
 \examples{

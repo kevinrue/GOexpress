@@ -52,8 +52,13 @@ data(AlvMac)
 
 # Subset it to only samples of "CN" and "MB" treatments, and also only "2H",
 # "6H", and "24H" time-points
-sub.AlvMac <- subEset(eSet=AlvMac, subset=list(Treatment=c("CN","MB"),
-                        Time=c("2H","6H")))
+sub.AlvMac <- subEset(
+    eSet=AlvMac,
+    subset=list(
+        Treatment=c("CN","MB"),
+        Time=c("2H","6H")
+        )
+    )
 }
 
 \keyword{ GOexpress }

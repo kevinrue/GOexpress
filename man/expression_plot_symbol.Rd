@@ -159,18 +159,23 @@ Kevin Rue-Albrecht
 data(AlvMac_results)
 
 # Expression by gene identifier (TNIP3)
-expression_plot_symbol(gene_symbol="PIK3AP1", eSet=AlvMac, x_var="Timepoint",
-                        result=AlvMac_results)
+expression_plot_symbol(
+    gene_symbol="PIK3AP1",
+    result=AlvMac_results, eSet=AlvMac, x_var="Timepoint"
+    )
 
 # Same gene, plotted by animal and grouped by treatment (merging time points)
-expression_plot_symbol(gene_symbol="PIK3AP1", eSet=AlvMac, x_var="Animal",
-                        result=AlvMac_results,
-                        f="Treatment")
+expression_plot_symbol(
+    gene_symbol="PIK3AP1",
+    result=AlvMac_results, eSet=AlvMac, x_var="Animal",
+    f="Treatment"
+    )
 
 # Same gene, plotted by animal and grouped by time-point (merging treatments)
-expression_plot_symbol(gene_symbol="PIK3AP1", eSet=AlvMac, x_var="Animal",
-                        result=AlvMac_results,
-                        f="Time")
+expression_plot_symbol(
+    gene_symbol="PIK3AP1",
+    result=AlvMac_results, eSet=AlvMac, x_var="Animal",
+    f="Time")
 }
 
 \keyword{ GOexpress }

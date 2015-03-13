@@ -1,3 +1,94 @@
+CHANGES IN VERSION 1.1.6
+--------------------------
+
+BUG FIXES:
+
+    o overlap_GO() was crashing for 3-group Venn diagrams, except if the
+    VennDiagram was loaded manually loaded in the workspace using 
+    libray(VennDiagram). The function will now run seemlessly without that
+    manual step, as loading GOexpress will immediately load VennDiagram
+    in the workspace (stated as a dependency in the DESCRIPTION file).
+
+NEW FEATURES:
+
+    o New function pValue_GO() allows calculation of P-value for each
+    ontology using permutation of genes labels. This allows users to estimate
+    the chance of seeing a GO term reach a particular rank (or score).
+    Features a fancy progres bar shamelessly adapted from StackOverflow.
+
+    o heatmap_GO now semi-autmoatically resizes the bottom and right margins
+    to accomodate large gene and sample labels, respectively. The user may
+    control those margins using the "margins" argument of the function.
+
+    o heatmap_GO default call now shows the gene feature identifier for those
+    missing an annotated gene name, when gene names are requested (also
+    the default).
+
+    o A rank.by slot is now created by the GO_analyse() function in the result
+    object to state the metric used to order the result tables.
+
+    o a filters.GO slot stating the filters and cutoffs applied to the result
+    object is now created or updated by successive uses of the subset_scores()
+    function. Warnings and notes are displayed if conflicting filters and
+    cutoffs are applied on a previously filtered result object.
+
+    o rerank() function now supports re-ordering by P-value. Note that this
+    is only applicable to the output of the pValue_GO() function mentioned
+    above.
+
+    o rerank() function now updates the rank.by slot of the result object
+    to state the current ordering metric.
+
+    o subset_scores() function now allows filtering by P-value. Note that this
+    is only applicable to the output of the pValue_GO() function mentioned
+    above.
+
+    o Backward compatibility with Ensembl annotation releases 75 and earlier,
+    which used 'external_gene_id', which was renamed to 'external_gene_name'
+    in releases 76 and later.
+
+    o table_genes() function defaults to sorting genes by decreasing score
+    (equivalent to increasing rank). Gene feature name or identifier are
+    supported alternative filters for sorting.
+
+
+UPDATED FEATURES:
+
+    o Allow user to override row_labels in heatmap_GO. This way, the 
+    color-coding of the sample can be kept, while better description of the
+    samples can be used to label them, instead of the phenodata values.
+
+    o In heatmap_GO(), if the labRow argument is of length 1, it is assumed to
+    be the name of a column in the phenoData slot. Useful to re-label
+    subsetted ExpressionSet objects.
+
+GENERAL UPDATES:
+
+    o Updated the AlvMac training dataset to include 'RPL36A' an example
+    of multiple Ensembl gene identifier annotated to the same gene name.
+
+    o Updated the AlvMac example custom annotations to match the updated
+    dataset.
+
+    o Updated the example AlvMac_results to match the updated dataset.
+
+    o Set the random seed prior to running the GO_analyse() example in 
+    the vignette. Hopefully, this should allow reproducible testing by the
+    users.
+
+    o In User Guide, load package before loading the attached data.
+
+    o In User Guide, new sections and examples dealing with the re-labelling
+    of heatmap samples, the use of P-values, the re-ranking and subsetting
+    of results using P-values. New sub-sections for clarity. Emphasis on
+    the use and generation of local annotation, rather than use of current
+    online Ensembl annotation release.
+
+    o No more code connecting to the Ensembl server in any the help files
+    and User Guide.
+
+    o Help pages examples with more consistent indentation of code.
+
 CHANGES IN VERSION 1.1.5
 --------------------------
 

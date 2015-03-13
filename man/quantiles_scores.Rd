@@ -48,11 +48,12 @@ quantiles_scores(result, probs=c(0.9, 0.95, 0.99, 0.999, 0.9999),
 }
 
 \examples{
-# load the sample output data
-data(AlvMac_results)
+# load the sample output data with p.values computed
+data(AlvMac_results.pVal)
 
-# filter for Biological Processes associated with 10+ genes
-filtered_results <- subset_scores(result=AlvMac_results, total_count=5,
+# filter for Biological Processes associated with 5+ genes and <=0.05 P-value
+filtered_results <- subset_scores(
+    result=AlvMac_results.pVal, total_count=5, p.val=0.05,
     namespace="BP")
 
 # Quantiles of scores

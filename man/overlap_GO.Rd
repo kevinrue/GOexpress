@@ -57,15 +57,17 @@ overlap_GO(go_ids, result, filename=NULL, mar=rep(0.1, 4), ...)
 }
 
 \examples{
-# load the sample output data
-data(AlvMac_results)
+# load the sample output data with p.values computed
+data(AlvMac_results.pVal)
 
-# filter for Biological Processes associated with 10+ genes
-filtered_results <- subset_scores(result=AlvMac_results, total_count=5,
+# filter for Biological Processes associated with 5+ genes and <=0.05 P-value
+filtered_results <- subset_scores(
+    result=AlvMac_results.pVal, total_count=5, p.val=0.05,
     namespace="BP")
 
 # Venn diagram of overlapping genes between top 5 GO terms
-overlap_GO(go_ids=head(filtered_results$GO$go_id, n=5),
+overlap_GO(
+    go_ids=head(filtered_results$GO$go_id, n=5),
     result=filtered_results, filename="VennDiagram.tiff")
 }
 

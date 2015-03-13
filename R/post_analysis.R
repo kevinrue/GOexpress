@@ -661,7 +661,9 @@ expression_profiles_symbol <- function(
 
 heatmap_GO <- function(
     go_id, result, eSet, f=result$factor, subset=NULL, gene_names=TRUE,
+    NA.names=FALSE, margins=c(7 ,5),
     scale="none", cexCol=1.2, cexRow=0.5, 
+    labRow=NULL,
     cex.main=1, trace="none", expr.col=bluered(75), 
     row.col.palette="Accent",
     row.col=c(),
@@ -681,13 +683,12 @@ heatmap_GO <- function(
         # Return an error and stop
         stop("go_id: ", go_id, " was not found in result$mapping$go_id.")
     }
-    
     # Subset the data to the given values of the given factors, if existing
     if (!is.null(subset)){
         eSet <- subEset(eSet=eSet, subset=subset)
     }
     # Also update the RowSideColors of the heatmap.2 to a shorter vector
-    # becaue the number of samples has been reduced
+    # because the number of samples has been reduced
     # NOTE: if the user wants to provide his own color array he should
     # either give the exact number of colors as he expects in the
     # subsetted ExpressionSet, or rather use the row.col.palette 
@@ -702,14 +703,40 @@ heatmap_GO <- function(
     gene_ids <- list_genes(go_id=go_id, result=result, data.only=TRUE)
     # Fetch and format the expression data for those genes
     genes_expr <- t(exprs(eSet)[gene_ids,])
-    # Rows are samples, label them according to the user's choson factor
-    sample_labels <- pData(eSet)[,f]
+    # Rows are samples, if the user didn't provide custom labels
+    if (is.null(labRow)){
+        # label them according to the user's choson factor
+        labRow <- pData(eSet)[,f]
+    }
+    else{
+        # If the user provided row labels, they have to match the number of
+        # sample
+        # except if length is 1, then assume it is a factor from phenoData
+        if (length(labRow) == 1){
+            labRow = pData(eSet)[,labRow]
+        }
+        else if (length(labRow) != ncol(eSet)){
+            stop(
+                "The number of custom row labels provided (",
+                length(labRow),
+                ") does not match the number of samples (",
+                ncol(eSet), ".")
+        }
+    }
     # Columns are features, label them by identifier or name
     if (gene_names){
         gene_labels <- result$genes[gene_ids, "external_gene_name"]
+        # Default: if sopme feature identifiers have no associated gene name
+        # fill the blanks with the feature identifier
+        if (any(gene_labels == '') & !NA.names){
+            gene_labels[gene_labels == ''] <- gene_ids[gene_labels == '']
+            margins=c(13,5)
+        }
+        # if the user prefers to leave blank gene names, do nothing
     }
     else{
         gene_labels <- gene_ids
+        margins=c(13,5)
     }
     # If requested, split the main title to lines with fewer than a given
     # count of characters, while respecting space-separated words
@@ -731,7 +758,7 @@ heatmap_GO <- function(
     par(cex.main=cex.main)
     # Plot the heatmap of the data
     heatmap.2(
-        genes_expr, labRow=sample_labels, labCol=gene_labels,
+        genes_expr, labRow=labRow, labCol=gene_labels,
         scale=scale, cexCol=cexCol, cexRow=cexRow, main=main,
         trace=trace, RowSideColors=samples.col, col=expr.col,
         ...)
@@ -871,6 +898,140 @@ plot_design <- function(
     plot.design(df, main=main, ...)
 }
 
+pValue_GO = function(result, N=1000, ranked.by=result$rank.by, rank.by='P')
+    {
+    if(length(ranked.by) != 1){
+        stop('Invalid ranked.by argument. Choose one ranking mathod.')
+    }
+    if(length(rank.by) != 1){
+        stop('Invalid rank.by argument. Choose one ranking mathod.')
+    }
+    if (! ranked.by %in% c('Rank','Score','rank','score')){
+        stop('Invalid ranked.by argument. See man page for details.')
+    }
+    if (ranked.by == 'rank'){
+        ranked.by <- 'Rank'
+    }
+    if (ranked.by == 'score'){
+        ranked.by <- 'Score'
+    }
+    if (! rank.by %in% c('Rank','Score','rank','score','p','P', 'p.val')){
+        stop('Invalid ranked.by argument. See man page for details.')
+    }
+    if (rank.by == 'rank'){
+        ranked.by <- 'Rank'
+    }
+    else if (rank.by == 'score'){
+        ranked.by <- 'Score'
+    }
+    else if(rank.by %in% c('p', 'P')){
+        rank.by <- 'p.val'
+    }
+    # Create a reference copy of the ontology scores
+    real.go <- result$GO[,c('go_id', 'ave_rank', 'ave_score')]
+    # Prepare a counter for p-value
+    real.go$p.count <- 0
+    # Fetch all the genes with expression data and their rank/score
+    random.genes <- result$genes[,c('Score', 'Rank')]
+    # Add the annotated genes absent from the expression data with 0 score
+    # and max rank (just like in GO_analyse)
+    all.annotated.genes <- unique(result$mapping$gene_id)
+    NA.genes <- all.annotated.genes[
+        ! all.annotated.genes %in% rownames(random.genes)
+        ]
+    random.genes <- rbind(
+        random.genes,
+        data.frame(
+            row.names = NA.genes,
+            Score=rep(0, length(NA.genes)),
+            Rank=rep(max(random.genes$Rank)+1, length(NA.genes))))
+    # For each iteration
+    for(i in 1:N){
+        # Progress bar
+        progress.bar(x = i, max = N)
+        # Randomise the gene order using the latest shuffled copy,
+        # alternatively re-use the original copy every time?)
+        rownames(random.genes) <- sample(
+            x = rownames(random.genes),
+            size = nrow(random.genes),
+            replace = F) # replace = F is default, but let's be clear
+        # Merge the randomised genes with the table of ontologies
+        random.genes2GO <- merge(
+            x = random.genes, y = result[['mapping']],
+            by.x = 'row.names', by.y = 'gene_id',
+            all.y = T, sort = F)
+        # compute the new average rank/score
+        if(ranked.by == 'Rank'){
+            # Replace NAs (annotated genes without expression data)
+            # by max rank + 1
+            random.genes2GO$Rank[is.na(random.genes2GO$Rank)] <-
+                max(random.genes2GO$Rank, na.rm = T) + 1
+            # Calculate the randomised average rank
+            random.aveRank <- aggregate(
+                Rank ~ go_id, data = random.genes2GO, FUN = mean
+                )
+            # Combine the real and randomised results for comparison
+            # (ignore ontologies with 0 terms,
+            # these will be given p-value of 1 later)
+            compare.aveRanks <- merge(
+                x = real.go, y = random.aveRank,
+                by = 'go_id', sort = F,
+                all = F) # all=F is default, but let's be clear
+            # get the list of genes where random is better than real
+            worst.GO <- compare.aveRanks$go_id[
+                compare.aveRanks$Rank <= compare.aveRanks$ave_rank
+                ]
+            # for all the above, add 1 to the p.count
+            real.go$p.count[real.go$go_id %in% worst.GO] <-
+                real.go$p.count[real.go$go_id %in% worst.GO] + 1     
+        } else if(ranked.by == 'Score'){
+            # Replace NAs (annotated genes without expression data) by score 0
+            random.genes2GO$Score[is.na(random.genes2GO$Score)] <- 0
+            # Calculate the randomised average rank
+            random.aveScore <- aggregate(
+                Score ~ go_id, data = random.genes2GO, FUN = mean
+                )
+            # Combine the real and randomised results for comparison
+            # (ignore ontologies with 0 terms,
+            # these will be given p-value of 1 later)
+            compare.aveScore <- merge(
+                x = real.go, y = random.aveScore,
+                by = 'go_id', sort = F,
+                all = F) # all=F is default, but let's be clear
+            # get the list of ontologies where random is better than real
+            worst.GO <- compare.aveScore$go_id[
+                compare.aveScore$Score <= random.aveScore$ave_score
+                ]
+            # for all the above, add 1 to the p.count
+            real.go$p.count[real.go$go_id %in% worst.GO] <-
+                real.go$p.count[real.go$go_id %in% worst.GO] + 1     
+        }
+    }
+    # Divide the total p.count by the number of iterations (1)
+    real.go$p.val <- real.go$p.count / N
+    # Keep only the go_id and p.val columns for merging with the GO table
+    real.go <- real.go[,c('go_id', 'p.val')]
+    # Merge the p.val column with the GO table of the GO_analyse output
+    GO.new <- merge(
+        x = result$GO, y = real.go,
+        by = 'go_id', all.x = T, sort = F)
+    # Set the p-value to 1 for ontologies not annotated with any gene
+    GO.new$p.val[!GO.new$go_id %in% unique(result$mapping$go_id)] <- 1
+    # reorder columns
+    GO.new <- GO.new[,c(
+        "go_id","ave_rank","ave_score","total_count","data_count","p.val",
+        "name_1006","namespace_1003")]
+    # Replace the GO table in the GO_analyse output
+    result$GO <- GO.new
+    # Use the rerank function to reorder according to user choice
+    result <- rerank(result=result, rank.by=rank.by)
+    # Add/update a slot in the GO_analyse output that states the number of
+    # iterations used to compute the p-value
+    result$p.iterations <- N
+    # return the update GO_analyse output
+    return(result)
+}
+
 quantiles_scores <- function(
     result, probs=c(0.9, 0.95, 0.99, 0.999, 0.9999), quartiles=FALSE
     ){
@@ -890,29 +1051,41 @@ quantiles_scores <- function(
     }
 }
 
-rerank <- function(result, rank.by="rank"){
+rerank <- function(result, rank.by = 'rank'){
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("GO","genes") %in% names(result))){
         stop("'result=' argument misses required slots.
     Is it a GO_analyse() output?")
     }
+    # If p-value filter was requested, check that the p.value step was indeed
+    # performed
+    if ('p.val' %in% rank.by){
+        if (! 'p.val' %in% colnames(result$GO)){
+            stop('"p.val" column absent from result$GO.
+    Is it a pValue_GO() output?')
+        }
+    }
     # Reorder the GO and gene tables accordin to the user's choice
     if (rank.by == "rank"){
         result$GO <- result$GO[order(result$GO$ave_rank),]
         result$genes <- result$genes[order(result$genes$Rank),]
     }
-    else if (rank.by == "score") {
+    else if (rank.by == "score"){
         result$GO <- result$GO[order(result$GO$ave_score, decreasing=TRUE),]
         result$genes <- result$genes[
             order(
                 result$genes$Score, decreasing=TRUE
                 ),
             ]
+    } else if (rank.by == "p.val"){
+        result$GO <- result$GO[order(result$GO$p.val),]
     }
     else{
         stop("Invalid ranking method: ", rank.by)
     }
+    # update the rank.by slot
+    result$rank.by <- rank.by
     return(result)
 }
 
@@ -948,7 +1121,7 @@ subEset <- function(eSet, subset=list()){
             eSet <- eSet[,pData(eSet)[,f_filter] %in% subset[[f_filter]]]
             # Update the factor levels
             if ("factor" %in% class(pData(eSet)[,f_filter])){
-                pData(eSet)[,f_filter] = factor(pData(eSet)[,f_filter])
+                pData(eSet)[,f_filter] <- factor(pData(eSet)[,f_filter])
             }
         }
     }
@@ -961,53 +1134,137 @@ subEset <- function(eSet, subset=list()){
 subset_scores <- function(result, ...){
     # if the result provided does not contain the slots required for this
     # function
-    if (! all(c("GO", "mapping", "genes") %in% names(result))){
+    if (! all(c('GO', 'mapping', 'genes') %in% names(result))){
         stop("'result=' argument misses required slots.
     Is it a GO_analyse() output?")
     }
     # Save the list of filter and value for easier referencing
     filters <- list(...)
+    # If p-value filter was requested, check that the p.value step was indeed
+    # performed
+    if ('p.val' %in% names(filters)){
+        if (! 'p.val' %in% colnames(result$GO)){
+            stop('"p.val" column absent from result$GO.
+    Is it a pValue_GO() output?')
+        }
+    }
+    # Deal with supported synonyms
+    names(filters) <- replace(
+        names(filters), names(filters) == 'data', 'data_count')
+    names(filters) <- replace(
+        names(filters), names(filters) == 'total', 'total_count')
+    names(filters) <- replace(
+        names(filters), names(filters) == 'rank', 'ave_rank')
+    names(filters) <- replace(
+        names(filters), names(filters) == 'score', 'ave_score')
+    names(filters) <- replace(
+        names(filters), names(filters) == 'namespace', 'namespace_1003')
+    names(filters) <- replace(
+        names(filters), names(filters) == 'P', 'p.val')
+    names(filters) <- replace(
+        names(filters), names(filters) == 'p', 'p.val')
+    # Create/update a "filter.GO" slot in the result object
+    if (is.null(result$filters.GO)){
+        result$filters.GO <- list()
+    }
     # prepares a table where the filtering results will be saved
     filtered <- data.frame(row.names=result$GO$go_id)
-    # For each filter
-    for (filter in names(list(...))){
+    # For each filter (careful about the direction of testing)
+    for (filter in names(filters)){
         # Save the filter status of each row for this filter
-        ## Filter on the total count of genes associated with the GO term
-        if (filter %in% c("total_count", "total")){
-            #cat(filter, "equal or more than", filters[[filter]], fill=TRUE)
-            filtered[,filter] <- result$GO[,"total_count"] >= filters[filter]
+        # Also: warn the user if applying conflicting filters to a previously
+        # filtered object
+        # All filters for superiror/equal values
+        if (filter %in% c('total_count', 'data_count', 'ave_score')){
+            # If the filter was not applied yet, add it
+            if (!filter %in% names(result$filters.GO)){
+                result$filters.GO[[filter]] <- filters[[filter]]
+            }
+            # If the filter was applied already on the result object
+            else{
+                # if the result object was already filtered for an
+                # equal or larger value
+                if (result$filters.GO[[filter]] >= filters[[filter]]){
+                    warning(
+                        'result object was already filter for an equal or ',
+                        'higher cutoff of filter ', filter, ': ',
+                        result$filters.GO[[filter]], '. Ignoring filter.'
+                        )
+                    next
+                }
+                # if filtering for a higher value than previously
+                else{
+                    # update the filter
+                    result$filters.GO[[filter]] <- filters[[filter]]
+                }
+            }
+            filtered[,filter] <- result$GO[,filter] >= filters[[filter]]
         }
-        ## Filter on the count of genes in the dataset associated with the GO
-        ## term
-        else if (filter %in% c("data_count", "data")){
-            #cat(filter, "equal or more than", filters[[filter]], fill=TRUE)
-            filtered[,filter] <- result$GO[,"data_count"] >= filters[filter]
-        }
-        ## Filters on the average rank of the genes associated to the GO term
-        else if (filter %in% c("ave_rank")){
-            #cat(filter, "equal or lower than", filters[[filter]], fill=TRUE)
-            filtered[,filter] <- result$GO[,filter] <= filters[filter]
-        }
-        ## Filters on the average score of the genes associated to the GO term
-        else if (filter %in% c("ave_score")){
-            #cat(filter, "equal or lower than", filters[[filter]], fill=TRUE)
-            filtered[,filter] <- result$GO[,filter] >= filters[filter]
+        # All filters for superiror/equal values
+        else if (filter %in% c('ave_rank', 'p.val')){
+            # If the filter was not applied yet, add it
+            if (!filter %in% names(result$filters.GO)){
+                result$filters.GO[[filter]] <- filters[[filter]]
+            }
+            # If the filter was applied already on the result object
+            else{
+                # if the result object was already filtered for an
+                # equal or lower value
+                if (result$filters.GO[[filter]] <= filters[[filter]]){
+                    warning(
+                        'result object was already filter for an equal or ',
+                        'lower cutoff of filter ', filter, ': ',
+                        result$filters.GO[[filter]], '. Ignoring filter.'
+                        )
+                    next
+                }
+                # if filtering for a lower value than previously
+                else{
+                    # update the filter
+                    result$filters.GO[[filter]] <- filters[[filter]]
+                }
+            }
+            filtered[,filter] <- result$GO[,filter] <= filters[[filter]]
         }
         ## Filters on the namespace of the GO term
-        else if (filter %in% c("namespace_1003", "namespace")){
-            #cat(filter, "equal to", filters[[filter]], fill=TRUE)
+        else if (filter == 'namespace_1003'){
+            # If the filter was not applied yet, add it
+            if (!filter %in% names(result$filters.GO)){
+                result$filters.GO[[filter]] <- filters[[filter]]
+            }
+            # If the filter was applied already on the result object
+            else{
+                # if filtering for the same ontology
+                if (result$filters.GO[[filter]] == filters[[filter]]){
+                    # ignore the 
+                    note(
+                        'result object was already filter for the same',
+                        'namespace.'
+                        )
+                    next
+                }
+                # if filtering for a different ontology:
+                # the new one is not present anyway
+                else{
+                    stop(
+                        'result object was already filter for a different ',
+                        'namespace: ', result$filters.GO[[filter]],
+                        '. No more data for namespace: ', filters[[filter]]
+                        )
+                }
+            }
             # GO namespace filtering should offer shortcuts
-            if (filters[filter] %in% c("biological_process", "BP")){
+            if (filters[[filter]] %in% c('biological_process', 'BP')){
                 filtered[,filter] <- result$GO$namespace_1003 ==
-                    "biological_process"
+                    'biological_process'
             }
-            else if (filters[filter] %in% c("molecular_function", "MF")){
+            else if (filters[[filter]] %in% c('molecular_function', 'MF')){
                 filtered[,filter] <- result$GO$namespace_1003 ==
-                    "molecular_function"
+                    'molecular_function'
             }
-            else if (filters[filter] %in% c("cellular_component", "CC")){
+            else if (filters[[filter]] %in% c('cellular_component', 'CC')){
                 filtered[,filter] <- result$GO$namespace_1003 ==
-                    "cellular_component"
+                    'cellular_component'
             }
             else{
                 stop(
@@ -1043,7 +1300,7 @@ subset_scores <- function(result, ...){
     return(result)
 }
 
-table_genes <- function(go_id, result, data.only=FALSE){
+table_genes <- function(go_id, result, data.only=FALSE, order.by='rank'){
     # if the result provided does not contain the slots required for this
     # function
     if (! all(c("mapping","genes") %in% names(result))){
@@ -1063,6 +1320,19 @@ table_genes <- function(go_id, result, data.only=FALSE){
     # Those do not have analysis results and therefore return NA
     # Leave NAs for the results, but put their name again as the row name
     rownames(res_table) <- gene_ids
+    # Sorting
+    if (order.by %in% c('rank', 'score')){
+        res_table <- res_table[order(res_table$Rank),]
+    }
+    else if (order.by == 'gene_id'){
+        res_table <- res_table[order(rownames(res_table)),]
+    }
+    else if (
+        order.by %in%
+            c('name', 'external_gene_name','external_gene_id')
+        ){
+        res_table <- res_table[order(res_table$external_gene_name),]
+    }
     # Return the information for all those genes
     return(res_table)
 }

@@ -15,12 +15,15 @@ levels of those genes in a heatmap.
 \usage{
 heatmap_GO(
     go_id, result, eSet, f=result$factor, subset=NULL, gene_names=TRUE,
+    NA.names=FALSE, margins=c(7 ,5),
     scale="none", cexCol=1.2, cexRow=0.5, 
+    labRow=NULL,
     cex.main=1, trace="none", expr.col=bluered(75), 
     row.col.palette="Accent",
     row.col=c(),
-    main=paste(go_id, result$GO[result$GO$go_id == go_id,
-                                "name_1006"]),
+    main=paste(
+        go_id, result$GO[result$GO$go_id == go_id,"name_1006"]
+        ),
     main.Lsplit=NULL,
     ...)
 }
@@ -55,6 +58,18 @@ heatmap_GO(
     name. If FALSE, labels the genes by their feature identifier in the
     expression dataset (i.e. Ensembl gene identifier or microarray probeset).
     }
+    \item{NA.names}{
+    A boolean value. Default is TRUE. If labelling genes by their associated
+    gene name (see argument \code{gene_names}), whether to display the
+    gene feature identifier for gene features without associated gene name.
+    }
+    \item{margins}{
+    A numeric vector of length 2 specifying the number of lines of margins to
+    apply for the bottom and right margins, respectively.
+    Defaults are 7 (bottom) and 5 (right), if only gene names are present,
+    or 13 (bottom) and 5 (right) if any gene feature identifier is present.
+    See \code{heatmap.2()}.
+    }
     \item{scale}{
     Character indicating if the values should be centered and scaled in either
     the row direction or the column direction, or none. Default is "none".
@@ -63,6 +78,12 @@ heatmap_GO(
     \item{cexCol, cexRow}{
     Positive numbers, used as cex.axis in for the row or column axis labeling.
     Defaults are 1.2 and 1, respectively. See \code{heatmap.2()}.
+    }
+    \item{labRow}{
+    A character vector of names to re-label the rows (samples).
+    If vector of length 1, it is assumed to be a column name in the
+    \code{phenoData} slot. Default are the values of the factor \code{f}.
+    See \code{heatmap.2()}. 
     }
     \item{cex.main}{
     Scaling factor of the main title font size. Default is 1. We suggest to 
@@ -133,8 +154,10 @@ heatmap_GO(go_id="GO:0034142", result=AlvMac_results, eSet=AlvMac, cexRow=1)
 # Change the color-coding to green-black-red gradient (more appropriate for
 # differential expression values)
 library(gplots)
-heatmap_GO(go_id="GO:0034142", result=AlvMac_results, eSet=AlvMac,
-    expr.col=greenred(75))
+heatmap_GO(
+    go_id="GO:0034142", result=AlvMac_results, eSet=AlvMac,
+    expr.col=greenred(75)
+    )
 }
 
 \keyword{ GOexpress }

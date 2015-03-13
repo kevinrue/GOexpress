@@ -83,7 +83,7 @@ GO_analyse(
     }
     \item{rank.by}{
     Either of "rank" or "score" to chose the metric used to order the gene and
-    GO term result tables.
+    GO term result tables. Default to 'rank'.
     }
     \item{do.trace}{
     Only used if method="randomForest". If set to TRUE, gives a more verbose
@@ -163,6 +163,8 @@ Core elements:
     \item{method}{The statistical framework used.}
     \item{subset}{The filters used to run the analysis only on a subet of the
     samples. NULL if no filter was applied.}
+    \item{rank.by}{The metric used to rank order the genes and gene
+    ontologies.}
 
 Random Forest additional elements:
     \item{ntree}{Number of trees grown.}
@@ -184,6 +186,10 @@ One-way ANOVA does not have additional arguments.
     filter out GO terms with fewer than 5+ genes associated with it. Indeed,
     those GO terms are more sensitive to outlier genes as they were scored on
     the average of a handful of genes.
+    
+    Additionally, the \code{pValue_GO} function may be used to generate
+    a permutation-based P-value indicating the chance of seeing each GO term
+    reaching an equal or higher rank -- or score -- by chance.
 }
 
 \author{
@@ -205,6 +211,7 @@ One-way ANOVA does not have additional arguments.
 \seealso{
     Methods
     \code{\link[GOexpress:subset_scores]{subset_scores}},
+    \code{\link[GOexpress:pValue_GO]{pValue_GO}},
     \code{\link[biomaRt:getBM]{getBM}},
     \code{\link[randomForest:randomForest]{randomForest}}, 
     and \code{\link[stats:oneway.test]{oneway.test}}.
@@ -221,7 +228,7 @@ data(AlvMac_allGO)
 # Run the analysis on factor "Treatment",
 # considering only treatments "MB" and "TB" at time-point "48H"
 # using a local copy of annotations obtained from the Ensembl BioMart server
-AlvMac_results <- GO_analyse(
+AlvMac_results <- GO_analyse(  
     eSet=AlvMac, f="Treatment",
     subset=list(Time=c("48H"), Treatment=c("MB", "TB")),
     GO_genes=AlvMac_GOgenes, all_genes=AlvMac_allgenes, all_GO=AlvMac_allGO

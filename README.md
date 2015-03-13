@@ -9,7 +9,7 @@ This package was designed for the analysis of bioinformatics
 data based on gene expression measurements. It requires two input
 values:
 
-1. an ExpressionSet containing assaData and phenoData. The assayData slot
+1. an ExpressionSet containing assayData and phenoData. The assayData slot
 should be a gene-by-sample matrix providing the expression level
 of genes (rows) in each sample (columns). Row names are expected to be
 either Ensembl gene identifiers or probeset identifiers present in
@@ -22,18 +22,19 @@ in the actual meaning of the R language).
 valid column name in the phenoData.
 
 The analysis scores all Gene Ontology (GO) terms represented
-in the BioMart dataset of the species studied. A random forest
-(one-way ANOVA is also available) is generated on the 
-grouping factor for each gene present in the expression dataset. Genes
-associated with the GO term in the BioMart but absent from the dataset
-are assigned a score of 0 and a rank of number(genes)+1. GO terms are
-scored and ranked on the average rank (alternatively, score) of
-associated genes. Note that to compute the average, the denominator used is
-the total number of genes associated with the GO term, even those absent from
-the dataset.
+in the gene annotations  provided, or semi-automatically retrieved from the
+current Ensembl annotation release, using the biomaRt package. In the default
+approach, the random forest framework is used to evaluate the ability of each
+gene feature in the ExpressionSet to cluster groups of samples according
+to a known experimental factor. Notably, genes
+associated with the GO term in the annotations but absent from the dataset
+are assigned a score of 0 and a rank equal to the number of gene features in
+the ExpressionSet plus one. GO terms are scored and ranked on the average rank
+(alternatively, score) of all associated genes (including those absent from
+the ExpressionSet).
 
 Functions are provided to investigate and visualise the results of
-the above analysis. The score table can be filtered for GO terms over
+the above analysis. The score table can be filtered for GO terms passing
 given thresholds. The distribution of scores can be visualised. The
 quantiles of scores can be obtained. The genes associated with a
 given GO term can be listed, with or without descriptive information.
@@ -54,13 +55,18 @@ score.
 * Support expression data based on Ensembl gene identifiers and
 microarray probeset identifiers.
 
+* Suppots custom annotations for gene identifiers not automatically supported.
+
 * GO_analyse() scores all Gene Ontology (GO) terms represented in
 the dataset based on the estimated average ability of their associated
 genes to cluster samples according to a predefined grouping factor. It
 also returns the table used to map genes to GO terms, the table
-summarising the statistics for each gene, and finally the specified
-grouping factor analysed. Additional information specific to each statistical
-framework may be returned.
+summarising the statistics for each gene, and finally the essential parameters
+of the analysis performed, for reproducibility. Additional information
+specific to each statistical framework are included in the output object.
+
+* pValue_GO() computes permutation-based P-values assessing the significance
+of GO term ranking, which may subsequently be used for filtering.
 
 * subset_scores() filters output of GO_analyse() for GO terms passing
 desired filters and returns a list formatted identically to the 
@@ -117,3 +123,9 @@ score.
 * subEset() allows to subset an ExpressionSet to only the samples with
 a particular set of values in given columns of their phenotypic data (e.g.
 only samples from "2H" and "6H" in their "Time" information).
+
+* An example of the main input and output objects is included with the
+package.
+
+* A User's Guide is included, and presents a typical workflow using the
+included example input objects.

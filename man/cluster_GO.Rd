@@ -96,11 +96,14 @@ cluster_GO(
 data(AlvMac_results)
 
 # Hierarchical clustering of samples based on the same GO term
-cluster_GO(go_id="GO:0034142", result=AlvMac_results, eSet=AlvMac, cex=0.7)
+cluster_GO(
+    go_id="GO:0034142", result=AlvMac_results, eSet=AlvMac, cex=0.7
+    )
 
 # Re-label sample by another factor
-cluster_GO(go_id="GO:0034142", result=AlvMac_results, eSet=AlvMac, cex=0.7,
-            f="Group")
+cluster_GO(
+    go_id="GO:0034142", result=AlvMac_results, eSet=AlvMac, cex=0.7, f="Group"
+    )
 
 }
 

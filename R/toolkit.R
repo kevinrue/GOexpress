@@ -129,6 +129,18 @@ prefix2dataset.build <- function(){
     return(p2d.table)
 }
 
+# Adapted from
+# http://stackoverflow.com/questions/21886682/
+# is-there-a-way-to-update-existing-text-in-the-r-console
+progress.bar <- function (x, max = 100) {
+    percent <- x / max * 100
+    cat(sprintf('\r[%-50s] %d of %d',
+                paste(rep('=', percent / 2), collapse = ''),
+                x, max))
+    if (x == max)
+        cat('\n')
+}
+
 # Function called in prefix2dataset.build sapply statement to fetch
 # a sample Ensemblgene identifier given a 
 sampleEnsemblGeneId <- function(dataset, curl=getCurlHandle()){

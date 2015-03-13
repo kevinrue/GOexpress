@@ -12,7 +12,7 @@ Reorder the ranked tables of GO terms and genes either by increasing
 }
 
 \usage{
-rerank(result, rank.by = "rank")
+rerank(result, rank.by = 'rank')
 }
 
 \arguments{
@@ -21,7 +21,9 @@ rerank(result, rank.by = "rank")
     \code{subset_scores()}.
     }
     \item{rank.by}{
-    Either of "rank" or "score"; the metric to rank the GO terms and genes by.
+    Either of 'rank', 'score' or 'p.val'; the metric to rank the GO terms and
+    genes. Note that 'pval' is only applicable on the output of the
+    \code{pValue_GO()} function. See details for breaking ties.
     }
 }
 
@@ -34,12 +36,17 @@ rerank(result, rank.by = "rank")
     Kevin Rue-Albrecht
 }
 
+\details{
+Taking an example, to rank GO terms by P-value and break ties by average
+rank, rerank first by 'rank', and then rerank the resulting object by 'p.val'.
+}
+
 \note{
 The name reorder() was not used to avoid conflict with package \code{stats}.
 }
 
 \seealso{
-    Method \code{\link[GOexpress:GO_analyse]{GO_analyse}}.
+Method \code{\link[GOexpress:GO_analyse]{GO_analyse}}.
 }
 
 \examples{
@@ -48,6 +55,16 @@ data(AlvMac_results)
 
 # Re-rank the GO terms and genes based on the actual score instead of the rank
 reranked.byScore <- rerank(result=AlvMac_results, rank.by="score")
+
+# load the sample output data with p.values computed
+data(AlvMac_results.pVal)
+
+# To rank by P-value, while breaking the ties by ave_rank,
+# rank first by ave_rank
+reranked.byRank <- rerank(result=AlvMac_results.pVal, rank.by="rank")
+# rank the result by P-value
+reranked.pVal_rank <- rerank(result=reranked.byRank, rank.by="p.val")
+
 }
 
 \keyword{ GOexpress }
