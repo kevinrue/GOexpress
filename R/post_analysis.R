@@ -944,7 +944,7 @@ pValue_GO = function(result, N=1000, ranked.by=result$rank.by, rank.by='P')
         data.frame(
             row.names = NA.genes,
             Score=rep(0, length(NA.genes)),
-            Rank=rep(max(random.genes$Rank)+1, length(NA.genes))))
+            Rank=rep(nrow(random.genes)+1, length(NA.genes))))
     # For each iteration
     for(i in 1:N){
         # Progress bar

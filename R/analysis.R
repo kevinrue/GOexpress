@@ -406,8 +406,8 @@ GO_analyse <- function(
     # - First merge the tables while keeping all gene/GO mappings, even for
     # genes absent of the dataset. This will allow average F values to be
     # calculated on the basis of all ensembl genes annotated to the GO term,
-    # even if not in the dataset (genes absent are given score of 0 and rank
-    # of max(rank)+1)
+    # even if not in the dataset (genes absent will be given score of 0 and
+    # rank of (number of genes in eSet + 1)
     # Merge GO/gene mapping with randomForest results
     GO_gene_score_all <- merge(
         x=GO_genes, y=res, by.x="gene_id", by.y="row.names", all.x=TRUE
@@ -418,7 +418,7 @@ GO_analyse <- function(
     # In addition, all genes absent from the dataset are assigned a value =
     # 1 + (the maximum rank of the genes in the dataset)
     GO_gene_score_all[is.na(GO_gene_score_all$Rank), "Rank"] <-
-        max(res$Rank) + 1
+        nrow(eSet) + 1
     # - Second, merge the tables keeping only the genes present in the dataset
     # This will be used to count how many genes are present in dataset for
     # each GO term
@@ -572,6 +572,7 @@ GO_analyse <- function(
         all.y=TRUE
         )
     colnames(GO_scores)[2] <- "ave_rank"
+    # Any GO term without associated gene (NA value) is givne worst rank + 1
     GO_scores[is.na(GO_scores$ave_rank), "ave_rank"] <- max(
         GO_scores$ave_rank, na.rm=TRUE
         ) + 1

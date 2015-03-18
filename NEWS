@@ -1,3 +1,15 @@
+CHANGES IN VERSION 1.1.7
+--------------------------
+
+BUG FIXES:
+
+    o Changed the rank of annotated features absent from the given
+    ExpressionSet to (number of features in ExpressionSet + 1) instead of
+    max(rank) + 1 to match the documentation, and desired behaviour. This
+    follows the logic of giving the same rank R to N tied-scored features,
+    while the next feature receives a rank of R + N.
+
+
 CHANGES IN VERSION 1.1.6
 --------------------------
 
