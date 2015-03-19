@@ -1204,7 +1204,7 @@ Since the early beginning, \Biocpkg{GOexpress} has grown from constructive
 feedback, and I would like to thank a number of colleagues and scientists from
 all backgrounds who contributed each in their own way to the present version
 and features of the package. 
-Special thanks to Dr. Paul Cormican, Simone Coughland, Dr. Karsten Hokamp,
+Special thanks to Dr. Paul Cormican, Simone Coughlan, Dr. Karsten Hokamp,
 and an unknown reviewer for feedback leading to some features. 
 Sincere thanks to Dr. Kate Killick for testing on human data and feedback. 
 My thanks to the \Bioconductor{} staff and in particular to Hervé Pagès for
