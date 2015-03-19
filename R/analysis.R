@@ -259,7 +259,7 @@ GO_analyse <- function(
     if (!is.null(GO_genes)){
         if (!all(colnames(GO_genes) == c("gene_id", "go_id"))){
             stop(
-                "Column names of custom GO_genes must be",
+                "Column names of custom GO_genes must be ",
                 "c(\"gene_id\", \"go_id\")"
                 )
         }
