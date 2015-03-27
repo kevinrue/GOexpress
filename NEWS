@@ -1,3 +1,11 @@
+CHANGES IN VERSION 1.1.10
+--------------------------
+
+BUG FIX:
+
+    o margins argument in heatmap_GO() was not used in the call to heatmap.2()
+
+
 CHANGES IN VERSION 1.1.9
 --------------------------
 

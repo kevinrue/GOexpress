@@ -761,7 +761,7 @@ heatmap_GO <- function(
         genes_expr, labRow=labRow, labCol=gene_labels,
         scale=scale, cexCol=cexCol, cexRow=cexRow, main=main,
         trace=trace, RowSideColors=samples.col, col=expr.col,
-        ...)
+        margins = margins, ...)
 }
 
 hist_scores <- function(
