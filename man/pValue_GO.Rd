@@ -9,7 +9,9 @@ Permutes the rank of genes processed by \code{GO_analyse()} to compute
 a P-value for each ontology
 }
 \usage{
-pValue_GO(result, N=1000, ranked.by=result$rank.by, rank.by='P')
+pValue_GO(
+    result, N=1000, ranked.by=result$rank.by, rank.by='P',
+    FUN.GO=result$FUN.GO)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -27,6 +29,13 @@ pValue_GO(result, N=1000, ranked.by=result$rank.by, rank.by='P')
     \item{rank.by}{
     Either of 'rank', 'score', or 'p.val'. The metric used to order the GO
     terms after computing of the P-value. Default to 'p.val'.
+    }
+    \item{FUN.GO}{
+    Function to summarise the score and rank of all feature associated with
+    each gene ontology. Logically, default is the function used in the call
+    to \code{GO_analyse}. If using
+    "lambda-like" (anonymous) functions, these must take a list of numeric
+    values as an input, and return a single numeric value as an output.
     }
 }
 \details{

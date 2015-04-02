@@ -1,3 +1,14 @@
+CHANGES IN VERSION 1.1.12
+--------------------------
+
+NEW FEATURES:
+
+    o Summarisation function of scores and rank from feature-level to
+    ontology-level also affects the calculation of P-values by pValue_GO. The
+    default behaviour is to use the same function as used in the call to
+    GO_analyse, stored in the result object.
+
+
 CHANGES IN VERSION 1.1.11
 --------------------------
 
@@ -7,6 +18,7 @@ NEW FEATURES:
     ontology-level can be overriden from the default "mean" to any function
     specified by the user. The function need to support a list of numeric
     values as an input, and return a unique numeric value as an output.
+
 
 CHANGES IN VERSION 1.1.10
 --------------------------

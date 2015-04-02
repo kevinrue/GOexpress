@@ -898,7 +898,9 @@ plot_design <- function(
     plot.design(df, main=main, ...)
 }
 
-pValue_GO = function(result, N=1000, ranked.by=result$rank.by, rank.by='P')
+pValue_GO = function(
+    result, N=1000, ranked.by=result$rank.by, rank.by='P',
+    FUN.GO=result$FUN.GO)
     {
     if(length(ranked.by) != 1){
         stop('Invalid ranked.by argument. Choose one ranking mathod.')
@@ -968,7 +970,7 @@ pValue_GO = function(result, N=1000, ranked.by=result$rank.by, rank.by='P')
                 max(random.genes2GO$Rank, na.rm = T) + 1
             # Calculate the randomised average rank
             random.aveRank <- aggregate(
-                Rank ~ go_id, data = random.genes2GO, FUN = mean
+                Rank ~ go_id, data = random.genes2GO, FUN = FUN.GO
                 )
             # Combine the real and randomised results for comparison
             # (ignore ontologies with 0 terms,
@@ -989,7 +991,7 @@ pValue_GO = function(result, N=1000, ranked.by=result$rank.by, rank.by='P')
             random.genes2GO$Score[is.na(random.genes2GO$Score)] <- 0
             # Calculate the randomised average rank
             random.aveScore <- aggregate(
-                Score ~ go_id, data = random.genes2GO, FUN = mean
+                Score ~ go_id, data = random.genes2GO, FUN = FUN.GO
                 )
             # Combine the real and randomised results for comparison
             # (ignore ontologies with 0 terms,
