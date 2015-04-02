@@ -3,7 +3,7 @@ GO_analyse <- function(
     eSet, f, subset=NULL, biomart_dataset="", microarray="",
     method="randomForest", rank.by="rank", do.trace=100, ntree=1000,
     mtry=ceiling(2*sqrt(nrow(eSet))), GO_genes=NULL, all_GO=NULL,
-    all_genes=NULL, ...){
+    all_genes=NULL, FUN.GO=mean, ...){
     if (class(eSet) != "ExpressionSet"){
         stop("eSet must be an ExpressionSet of the Biobase package.")
     }
@@ -550,7 +550,7 @@ GO_analyse <- function(
         x=aggregate(
             Score~go_id,
             data=GO_gene_score_all,
-            FUN=mean
+            FUN=FUN.GO
             ),
         y=GO_scores,
         by="go_id",
@@ -565,7 +565,7 @@ GO_analyse <- function(
         x=aggregate(
             Rank~go_id,
             data=GO_gene_score_all,
-            FUN=mean
+            FUN=FUN.GO
             ),
         y=GO_scores,
         by="go_id",
@@ -608,6 +608,7 @@ GO_analyse <- function(
                 method=method,
                 subset=subset,
                 rank.by=rank.by,
+                FUN.GO=FUN.GO,
                 ntree=ntree,
                 mtry=mtry
                 )
@@ -622,7 +623,8 @@ GO_analyse <- function(
                 factor=f,
                 method=method,
                 subset=subset,
-                rank.by=rank.by
+                rank.by=rank.by,
+                FUN.GO=FUN.GO
                 )
             )
     }

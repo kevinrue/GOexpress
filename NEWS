@@ -1,3 +1,13 @@
+CHANGES IN VERSION 1.1.11
+--------------------------
+
+NEW FEATURES:
+
+    o Summarisation function of scores and rank from feature-level to
+    ontology-level can be overriden from the default "mean" to any function
+    specified by the user. The function need to support a list of numeric
+    values as an input, and return a unique numeric value as an output.
+
 CHANGES IN VERSION 1.1.10
 --------------------------
 

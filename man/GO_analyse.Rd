@@ -34,7 +34,7 @@ GO_analyse(
     eSet, f, subset=NULL, biomart_dataset="", microarray="",
     method="randomForest", rank.by="rank", do.trace=100, ntree=1000,
     mtry=ceiling(2*sqrt(nrow(eSet))), GO_genes=NULL, all_GO=NULL,
-    all_genes=NULL, ...)
+    all_genes=NULL, FUN.GO=mean, ...)
 }
 
 \arguments{
@@ -140,6 +140,12 @@ GO_analyse(
     is only displayed for readability of result tables.
     An example is provided in \code{data(AlvMac_allgenes)}.
     }
+    \item{FUN.GO}{
+    Function to summarise the score and rank of all feature associated with
+    each gene ontology. Default is \code{mean} function. If using
+    "lambda-like" (anonymous) functions, these must take a list of numeric
+    values as an input, and return a single numeric value as an output.
+    }
     \item{\dots}{
     Additional arguments passed on to the randomForest() method, if
     applicable.
@@ -165,6 +171,8 @@ Core elements:
     samples. NULL if no filter was applied.}
     \item{rank.by}{The metric used to rank order the genes and gene
     ontologies.}
+    \item{FUN.GO}{The function used to summarise the score and rank of all
+    gene features associated with each gene ontology.}
 
 Random Forest additional elements:
     \item{ntree}{Number of trees grown.}
@@ -175,7 +183,7 @@ One-way ANOVA does not have additional arguments.
 }
 
 \details{
-    The current scoring functions strongly favor GO terms associated with
+    The default scoring functions strongly favor GO terms associated with
     fewer genes at the top of the ranking. This bias may actually be seen as
     a valuable feature which enables the user to browse through GO terms of
     increasing "granularity", i.e. associated with increasingly large sets of
@@ -244,10 +252,19 @@ data(microarray2dataset)
 # Other valid but time-consuming examples:
 
 # Run the analysis on factor "Treatment" including all samples
-AlvMac_results <- GO_analyse(eSet=AlvMac, f="Treatment")
+GO_analyse(eSet=AlvMac, f="Treatment")
 
 # Run the analysis on factor "Treatment" using ANOVA method
-AlvMac_results <- GO_analyse(eSet=AlvMac, f="Treatment", method="anova")
+GO_analyse(eSet=AlvMac, f="Treatment", method="anova")
+
+
+# Use alternative GO scoring/summarisation functions (Default is: average)
+
+# Named functions
+GO_analyse(eSet=AlvMac, f="Treatment", FUN.GO = median)
+
+# Anonymous functions (simple example without scientific value)
+GO_analyse(eSet=AlvMac, f="Treatment", FUN.GO = function(x){median(x)/100})
 
 
 # Syntax examples without actual data:
