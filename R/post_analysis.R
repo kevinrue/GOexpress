@@ -726,17 +726,15 @@ heatmap_GO <- function(
     # Columns are features, label them by identifier or name
     if (gene_names){
         gene_labels <- result$genes[gene_ids, "external_gene_name"]
-        # Default: if sopme feature identifiers have no associated gene name
+        # Default: if some feature identifiers have no associated gene name
         # fill the blanks with the feature identifier
         if (any(gene_labels == '') & !NA.names){
             gene_labels[gene_labels == ''] <- gene_ids[gene_labels == '']
-            margins=c(13,5)
         }
         # if the user prefers to leave blank gene names, do nothing
     }
     else{
         gene_labels <- gene_ids
-        margins=c(13,5)
     }
     # If requested, split the main title to lines with fewer than a given
     # count of characters, while respecting space-separated words

@@ -66,9 +66,8 @@ heatmap_GO(
     \item{margins}{
     A numeric vector of length 2 specifying the number of lines of margins to
     apply for the bottom and right margins, respectively.
-    Defaults are 7 (bottom) and 5 (right), if only gene names are present,
-    or 13 (bottom) and 5 (right) if any gene feature identifier is present.
-    See \code{heatmap.2()}.
+    Defaults are 7 (bottom) and 5 (right). For Ensembl gene identifiers, we
+    suggest setting manually a bottom margin of 13. See \code{heatmap.2()}.
     }
     \item{scale}{
     Character indicating if the values should be centered and scaled in either
