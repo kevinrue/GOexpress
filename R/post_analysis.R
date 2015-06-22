@@ -158,6 +158,10 @@ expression_plot_symbol <- function(
     if (!is.null(subset)){
         eSet <- subEset(eSet=eSet, subset=subset)
     }
+    # If the gene name provided is empty
+    if (gene_symbol == ''){
+        stop("Empty gene name given.")
+    }
     # the GO_analyse result provided contains the annotation of each feature
     # identifier
     # present in the dataset to a gene name, if any
@@ -490,6 +494,10 @@ expression_profiles_symbol <- function(
     # Subset the data to the given values of the given factors, if existing
     if (!is.null(subset)){
         eSet <- subEset(eSet=eSet, subset=subset)
+    }
+    # If the gene name provided is empty
+    if (gene_symbol == ''){
+        stop("Empty gene name given.")
     }
     # the GO_analyse result provided contains the annotation of each feature
     # identifier present in the dataset to a gene name, if any
