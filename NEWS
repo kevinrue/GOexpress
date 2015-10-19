@@ -1,3 +1,11 @@
+CHANGES IN VERSION 1.5.2
+--------------------------
+
+BUG FIX:
+
+    o Rename "namespace column"" to "namespace_1003"", not "namespace_1006".
+
+
 CHANGES IN VERSION 1.5.1
 --------------------------
 

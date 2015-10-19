@@ -347,7 +347,7 @@ GO_analyse <- function(
             if ("namespace" %in% colnames(all_GO)){
                 colnames(all_GO)[
                     colnames(all_GO) == "namespace"
-                    ] <- "namespace_1006"
+                    ] <- "namespace_1003"
             }
             # else if could allow more headers
             else {
