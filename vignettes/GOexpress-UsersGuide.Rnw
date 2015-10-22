@@ -10,7 +10,7 @@ BiocStyle::latex()
 
 \bioctitle[GOexpress: Visualise gene expression data using gene ontology
 annotations]{GOexpress: identify and visualise robust gene ontology
-signatures through supervised clustering of gene expression data}
+signatures through supervised classification of gene expression data}
 
 \author{Kévin Rue-Albrecht, Paul A. McGettigan, Belinda Hernández,\\
 David A. Magee, Nicolas C. Nalpas, Andrew C. Parnell,\\
@@ -39,9 +39,10 @@ plotting functions I regularly copy-pasted across various complex
 multifactorial transcriptomics studies from both microarray and RNA-seq
 platforms. Those functions were repeatedly used to visualise the expression
 profile of genes across groups of samples, to annotate technical gene
-identifiers from both microarray and RNA-seq platforms (i.e. probesets,
+identifiers from both microarray and RNA-seq platforms (\emph{i.e.},
+probesets,
 Ensembl gene identifiers) with their associated gene name, and to evaluate the
-clustering of samples based on genes participating in a common cellular
+classification of samples based on genes participating in a common cellular
 function or location (i.e. gene ontology). While developing the
 \Biocpkg{GOexpress} package and discussing its features with colleagues and
 potential users, a few more features were added, to enhance and complement the
@@ -77,7 +78,8 @@ to support and annotate gene expression identifiers from any species and any
 microarray platform present in the Ensembl BioMart server
 (\url{http://www.ensembl.org/biomart/martview}), while custom
 annotations may also be provided for the analysis of species or platforms
-not supported yet, the clustering of non-transcriptomics datasets (e.g.
+not supported yet, the classification of non-transcriptomics datasets
+(\emph{e.g.},
 proteomics), or the comparison of panels of biomarkers independent from
 gene ontology annotations.
 
@@ -242,8 +244,12 @@ factor as the variable of the X-axis.}
 \subsubsection[Preparing the grouping factor to analyse]{Preparing the
 grouping factor to analyse}
 
-In this example, we search for GO terms enriched in genes that cluster best
-the samples according their \Robject{Treatment} level. But first, let us make
+In this example, we search for GO terms containing genes that best classify
+samples according their \Robject{Treatment} level. In other words, after
+estimating the capacity of each gene to classify the different experimental
+groups, the algorithm will use this gene ranking to rank GO terms based on
+the average rank (alternatively, score) of their annotated genes. 
+But first, let us make
 sure that the \Robject{Treatment} column of \Rcode{pData(targets)} is indeed
 an \R{} factor:
 
@@ -268,7 +274,7 @@ Running the random forest algorithm using local annotations}
 
 Now, we use the random forest statistical framework to score each gene
 feature on its
-ability to cluster samples from different treatments separately,
+ability to classify samples from different treatments separately,
 before summarising this information at the ontology level. The 
 ensuing analysis therefore considers the \Robject{Treatment} factor,
 irrespective of the
@@ -487,8 +493,9 @@ GO terms, as opposed to the full result object returned by the
 terms}
 
 Once the GO terms are ranked (and filtered), the top-ranking GO
-terms in the filtered object are those most enriched in genes with expression
-levels that best cluster the predefined groups of samples, based on the levels
+terms in the filtered object are those containing the largest proportion of
+top-ranking genes with expression
+levels that best classify the predefined groups of samples, based on the levels
 of the factor considered (\Rcode{raw\_results\$factor}).
 
 In this example, we list the top filtered ``Biological Process'' GO terms
@@ -503,8 +510,9 @@ head(BP.5$GO)
 associated with a GO term]{Hierarchical clustering of samples based on gene
 expression associated with a GO term}
 
-In the previous section, we identified the GO terms most enriched for genes
-clustering samples according to their treatment. We will now generate for the
+In the previous section, we identified the GO terms containing the largest
+proportion of top-ranking genes that best classify
+samples according to their treatment. We will now generate for the
 top-ranked GO term (``\texttt{toll-like receptor 4 signaling pathway}'') a
 heatmap to visualise simulatenously the clustering of samples and the
 expression level of each gene in each sample:
@@ -517,7 +525,8 @@ heatmap_GO(
 @
 \end{center}
 
-In this example, we can observe a group of ``Control'' (i.e. untreated; green
+In this example, we can observe a group of ``Control'' (\emph{i.e.},
+untreated; green
 color) samples clustering together at the bottom of the heatmap.
 
 Re-labelling of samples by \Robject{Group} (i.e. combination of treatment
@@ -545,7 +554,7 @@ heatmap_GO(
 @
 \end{center}
 
-Alternatively, it is possible to focus only on the hirearchical clustering of
+Alternatively, it is possible to focus only on the hierarchical clustering of
 samples. The following code will build a dendrogram clustering samples using
 the expression data of the subset of genes associated with the
 ``\texttt{toll-like receptor 4 signaling pathway}'' gene ontology, considering
@@ -605,8 +614,9 @@ identifier}
 
 In the above section, we listed the genes associated with a particular gene
 ontology. In our example, the respective score and rank of each gene estimates
-the capacity of the gene to cluster the samples according to the treatment
-factor. The genes that best cluster the samples will have the highest scores
+the capacity of the gene to classify the samples according to the treatment
+factor. The genes that most improve the classification of samples will have
+the highest scores
 and the lowest ranks. Those genes will likely produce the expression profiles
 with the most consistent differential expression between the treatment groups
 over time. Here is one example:
@@ -905,7 +915,7 @@ scoring of gene ontologies, even if they are absent from the
 \label{sec:subsetArgument}
 
 It may be desirable to rank genes and gene ontologies according to their
-capacity to cluster only specific subsets of samples, while visualising the
+capacity to classify only specific subsets of samples, while visualising the
 expression data of all samples. Instead of creating two separate
 \Rclass{ExpressionSet} objects (one containing all the samples to visualise,
 another one containing only the samples to analyse), a \Robject{subset}
@@ -1077,12 +1087,12 @@ subEset(
 ontology-based, visualisation functions. Following the integration of those
 various plotting functions at the core of the \Biocpkg{GOexpress} package, the
 need for a ranking of genes and GO terms soon became apparent in order to
-rapidly identify those with gene expression data best clustering the samples
+rapidly identify those with gene expression data best classify samples
 according to the experimental factor studied.
 A two-fold procedure was implemented:
 \begin{enumerate}
     \item Using the available expression data, each gene present in the
-    dataset is scored, evaluating its ability to cluster the predefined
+    dataset is scored, evaluating its ability to classify the predefined
     groups of samples. Genes are ranked according to their respective score;
     ties are resolved by assigning the lowest rank R to all G genes, giving
     the rank G+n to the next gene(s). The genewise scoring functions
@@ -1121,7 +1131,7 @@ in section \ref{sec:Filtering}.
 \subsection[Random Forest]{Random Forest}
 
 We implemented the Random Forest framework to answer the question: ``How well
-does each gene in the dataset cluster predefined groups of samples?''. The
+does each gene in the dataset classify predefined groups of samples?''. The
 random forest consists of multiple decision trees. Each tree is built based on
 a bootstrap sample (sample with replacement) of observations and a random
 sample of variables. The \CRANpkg{randomForest} package first calculates the
