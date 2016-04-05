@@ -846,7 +846,7 @@ overlap_GO <- function(go_ids, result, filename=NULL, mar=rep(0.1, 4), ...){
 }
 
 plot_design <- function(
-    go_id, result, eSet,
+    go_id, result, eSet, subset=NULL,
     factors=colnames(pData(eSet)), main="", main.Lsplit=NULL, ...){
     # if the result provided does not contain the slots required for this
     # function
@@ -868,7 +868,11 @@ plot_design <- function(
                 # factor name
                 stop(f, " is not an existing column in pData(eSet).")
             }
-        } 
+        }
+    }
+    # Subset the data to the given values of the given factors, if existing
+    if (!is.null(subset)){
+        eSet <- subEset(eSet=eSet, subset=subset)
     }
     # Fetch the list of genes associated with the go_id
     # If the user gave the output of a GO_analyse command as result=

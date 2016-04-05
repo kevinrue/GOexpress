@@ -149,9 +149,10 @@ Kevin Rue-Albrecht
 }
 
 \seealso{
-    Packages \code{\link[Biobase]{Biobase}} and \code{\link[ggplot2]{ggplot2}}
-    , methods \code{\link[GOexpress:expression_plot]{expression_plot}} and
-    \code{\link[GOexpress:GO_analyse]{GO_analyse}}.
+    Package \code{\link[Biobase]{Biobase}}, methods
+    \code{\link[GOexpress:expression_plot]{expression_plot}}, 
+    \code{\link[GOexpress:GO_analyse]{GO_analyse}} and
+    \code{\link[ggplot2:ggplot]{ggplot}}.
 }
 
 \examples{

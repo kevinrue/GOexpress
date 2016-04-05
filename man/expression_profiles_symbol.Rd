@@ -158,13 +158,12 @@ that plotted on the X-axis. See below for an example on the training dataset.
 }
 
 \seealso{
-    Packages \code{\link[Biobase]{Biobase}} and \code{\link[ggplot2]{ggplot2}}
-    , methods
+    Package \code{\link[Biobase]{Biobase}}, methods
     \code{\link[GOexpress:expression_plot_symbol]{
-    expression_plot_symbol}}
-    and
+    expression_plot_symbol}},
     \code{\link[GOexpress:expression_plot_symbol]{
-    expression_plot_symbol}}.
+    expression_plot_symbol}} and
+    \code{\link[ggplot2:ggplot]{ggplot}}.
 }
 
 \examples{

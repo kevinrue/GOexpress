@@ -14,7 +14,7 @@ as analyzed by \code{\link[stats:aov]{aov}}().
 
 \usage{
 plot_design(
-    go_id, result, eSet,
+    go_id, result, eSet, subset=NULL,
     factors=colnames(pData(eSet)), main="", main.Lsplit=NULL, ...)
 }
 
@@ -35,6 +35,11 @@ plot_design(
     identifiers, and column names are sample identifiers. In the phentypic
     data-frame, row names are sample idenfifiers, column names are grouping
     factors and phenotypic traits usable for the one-way ANOVA. 
+    }
+    \item{subset}{
+    A named list to subset \code{eSet}. Names must be column names existing
+    in colnames(pData(eSet)). Values must be vectors of values existing in
+    the corresponding column of pData(eSet).
     }
     \item{factors}{
     A set of column names from \code{phenodata}. Each of these values will be

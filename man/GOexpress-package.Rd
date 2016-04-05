@@ -27,8 +27,8 @@ allowing to visualise the statistics on a gene- and ontology-basis.
     \tabular{ll}{
     Package: \tab GOexpress\cr
     Type: \tab Package\cr
-    Version: \tab 1.5.3\cr
-    Date: \tab 2014-10-22\cr
+    Version: \tab 1.5.4\cr
+    Date: \tab 2016-02-05\cr
     License: \tab  GPL (>= 3)\cr
     }
     This package requires only two input variables
@@ -98,17 +98,17 @@ data(prefix2dataset)
     
     Packages
     \code{\link[Biobase]{Biobase}},
-    \code{\link[ggplot2]{ggplot2}},
     \code{\link[randomForest]{randomForest}},
     \code{\link[RColorBrewer]{RColorBrewer}},
     \code{\link[VennDiagram]{VennDiagram}}.
     
     Methods
-    \code{\link[biomaRt:getBM]{getBM}},
-    \code{\link[gplots:heatmap.2]{heatmap.2}},
-    \code{\link[gplots:bluered]{bluered}},
-    \code{\link[gplots:greenred]{greenred}},
-    \code{\link[grid:grid.newpage]{grid.newpage}},
-    \code{\link[grid:grid.layout]{grid.layout}},
-    \code{\link[stringr:str_extract]{str_extract}}.
+    \code{\link[biomaRt:getBM]{biomaRt:getBM}},
+    \code{\link[ggplot2:ggplot]{ggplot2:ggplot}},
+    \code{\link[gplots:heatmap.2]{gplots:heatmap.2}},
+    \code{\link[gplots:bluered]{gplots:bluered}},
+    \code{\link[gplots:greenred]{gplots:greenred}},
+    \code{\link[grid:grid.newpage]{grid:grid.newpage}},
+    \code{\link[grid:grid.layout]{grid:grid.layout}},
+    \code{\link[stringr:str_extract]{stringr:str_extract}}.
 }
