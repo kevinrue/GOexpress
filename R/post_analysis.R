@@ -1131,9 +1131,12 @@ subEset <- function(eSet, subset=list()){
             # at this stage, column and values exist
             # Subset the eSet to the
             eSet <- eSet[,pData(eSet)[,f_filter] %in% subset[[f_filter]]]
+        }
+        # Clean possible empty levels in factors not used for subsetting
+        for (name in colnames(pData(eSet))){
             # Update the factor levels
-            if ("factor" %in% class(pData(eSet)[,f_filter])){
-                pData(eSet)[,f_filter] <- factor(pData(eSet)[,f_filter])
+            if ("factor" %in% class(pData(eSet)[,name])){
+                pData(eSet)[,name] <- droplevels(pData(eSet)[,name])
             }
         }
     }
