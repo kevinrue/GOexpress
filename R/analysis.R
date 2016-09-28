@@ -1,6 +1,7 @@
 
 GO_analyse <- function(
-    eSet, f, subset=NULL, biomart_dataset="", microarray="",
+    eSet, f, subset=NULL, biomart_name = "ENSEMBL_MART_ENSEMBL",
+    biomart_dataset="", microarray="",
     method="randomForest", rank.by="rank", do.trace=100, ntree=1000,
     mtry=ceiling(2*sqrt(nrow(eSet))), GO_genes=NULL, all_GO=NULL,
     all_genes=NULL, FUN.GO=mean, ...){
@@ -59,7 +60,7 @@ GO_analyse <- function(
                     )
                 # Try to find an appropriate biomaRt Ensembl dataset from the
                 # gene prefix
-                mart <- mart_from_ensembl(sample_gene)
+                mart <- mart_from_ensembl(sample_gene, biomart_name)
                 # if the gene id has not an identifiable Ensembl id prefix
                 if (!class(mart) == "Mart"){
                     # Try to find an appropriate biomaRt microarray dataset
@@ -80,8 +81,9 @@ GO_analyse <- function(
                         microarray <- microarray_match$microarray
                         biomart_dataset <- microarray_match$dataset
                         mart <- useMart(
-                            biomart="ensembl",
-                            dataset=biomart_dataset
+                            biomart=biomart_name,
+                            dataset=biomart_dataset,
+                            ...
                             )
                     }
                     # if the gene id does not have an identifiable microarray
@@ -120,8 +122,9 @@ GO_analyse <- function(
                         fill=TRUE
                         )
                     mart <- useMart(
-                        biomart="ensembl",
-                        dataset=biomart_dataset)
+                        biomart=biomart_name,
+                        dataset=biomart_dataset,
+                        ...)
                     # Leave microarray to the current valid value
                 }
                 # if the microarray does not exist in the dataset
@@ -186,8 +189,9 @@ GO_analyse <- function(
                             fill=TRUE
                             )
                         mart <- useMart(
-                            biomart="ensembl",
-                            dataset=biomart_dataset
+                            biomart=biomart_name,
+                            dataset=biomart_dataset,
+                            ...
                             )
                         microarray <- microarray_match$microarray
                     }
@@ -221,7 +225,10 @@ GO_analyse <- function(
                     "Loading requested dataset", biomart_dataset, "...",
                     fill=TRUE
                     )
-                mart <- useMart(biomart="ensembl", dataset=biomart_dataset)
+                mart <- useMart(
+                    biomart=biomart_name,
+                    dataset=biomart_dataset,
+                    ...)
                 }
             # if the user gave a microarray name
             else{
@@ -239,7 +246,10 @@ GO_analyse <- function(
                     "from requested biomart dataset", biomart_dataset,
                     fill=TRUE
                     )
-                mart <- useMart(biomart="ensembl", dataset=biomart_dataset)
+                mart <- useMart(
+                    biomart=biomart_name,
+                    dataset=biomart_dataset,
+                    ...)
             }
         }
         print(mart)
@@ -292,7 +302,7 @@ GO_analyse <- function(
     # Remove over 1,000 rows where the go_id is ""
     GO_genes <- GO_genes[GO_genes$go_id != "",]
     # Remove rows where the gene_id is "" (happens)
-    GO_genes <- GO_genes[GO_genes$gene_id != "",]    
+    GO_genes <- GO_genes[GO_genes$gene_id != "",]
     # Print how many features are present in the map
     cat(
         length(intersect(rownames(eSet), unique(GO_genes$gene_id))),
@@ -631,13 +641,13 @@ GO_analyse <- function(
 }
 
 
-mart_from_ensembl <- function(sample_gene){
+mart_from_ensembl <- function(sample_gene, biomart_name){
     # If the gene id starts by "ENS" (most cases, except 3 handled separately
     # below)
     if (length(grep(pattern="^ENS", x=sample_gene))){
         # Extract the full prefix
         prefix <- str_extract(sample_gene, "ENS[[:upper:]]+")
-        # If the ENS* prefix is in the table 
+        # If the ENS* prefix is in the table
         if (prefix %in% prefix2dataset$prefix){
             # load the corresponding biomart dataset
             cat("Looks like Ensembl gene identifier.", fill=TRUE)
@@ -647,7 +657,8 @@ mart_from_ensembl <- function(sample_gene){
                 "...", fill=TRUE
                 )
             return(useMart(
-                biomart="ensembl",
+                biomart=biomart_name,
+                host="www.ensembl.org",
                 dataset=prefix2dataset[
                     prefix2dataset$prefix == prefix,]$dataset
             ))
@@ -669,7 +680,7 @@ mart_from_ensembl <- function(sample_gene){
             fill=TRUE)
         return(
             useMart(
-                biomart="ensembl",
+                biomart=biomart_name,
                 dataset="scerevisiae_gene_ensembl"
                 )
             )
@@ -689,7 +700,7 @@ microarray_from_probeset <- function(sample_gene, microarray2dataset.clean){
         microarray2dataset.clean$unique]){
         # if the pattern matches the sample gene
         if (length(which(grep(pattern=pattern, x=sample_gene) == 1))){
-            # add the pattern to a vector 
+            # add the pattern to a vector
             matches <- c(matches, pattern)
         }
     }
@@ -726,7 +737,7 @@ microarray_from_probeset <- function(sample_gene, microarray2dataset.clean){
             )
         print(
             microarray2dataset.clean[
-                microarray2dataset.clean$pattern == matches[1], 
+                microarray2dataset.clean$pattern == matches[1],
                 c("dataset","microarray")
                 ],
             row.names=FALSE)

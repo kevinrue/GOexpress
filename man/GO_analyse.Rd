@@ -9,7 +9,7 @@ Identifies gene ontologies clustering samples according to predefined factor.
 \description{
 Combines gene expression data with Gene Ontology (GO) annotations to rank and
 visualise genes and GO terms enriched for genes best clustering predefined
-groups of samples based on gene expression levels. 
+groups of samples based on gene expression levels.
 
 This methods semi-automatically retrieves the latest information from Ensembl
 using the \code{biomaRt} package, except if custom GO annotations are
@@ -31,7 +31,8 @@ with tools allowing to visualise the statistics on a gene- and ontology-basis.
 
 \usage{
 GO_analyse(
-    eSet, f, subset=NULL, biomart_dataset="", microarray="",
+    eSet, f, subset=NULL, biomart_name = "ENSEMBL_MART_ENSEMBL",
+    biomart_dataset="", microarray="",
     method="randomForest", rank.by="rank", do.trace=100, ntree=1000,
     mtry=ceiling(2*sqrt(nrow(eSet))), GO_genes=NULL, all_GO=NULL,
     all_genes=NULL, FUN.GO=mean, ...)
@@ -46,7 +47,7 @@ GO_analyse(
     column names are identifiers of the individual samples.
     In the phenotypic data-frame, row names are sample idenfifiers, column
     names are grouping factors and phenotypic traits usable for
-    statistical tests and visualisation methods. 
+    statistical tests and visualisation methods.
     }
     \item{f}{
     A column name in \code{phenodata} used as the grouping factor for the
@@ -58,20 +59,23 @@ GO_analyse(
     values existing in the corresponding column of pData(eSet). The original
     ExpressionSet will be left unchanged.
     }
+    \item{biomart_name}{
+    The Ensembl BioMart database to which connect to.
+    }
     \item{biomart_dataset}{
     The Ensembl BioMart dataset identifier corresponding to the species
-    studied. 
+    studied.
     If not specified and no custom annotations were provided, the method will
     attempt to automatically identify the
     adequate dataset from the first feature identifier in the dataset.
-    Use data(prefix2dataset) to access a table listing valid choices.    
+    Use data(prefix2dataset) to access a table listing valid choices.
     }
     \item{microarray}{
     The identifier in the Ensembl BioMart corresponding to the microarray
     platform used. If not specified and no custom annotations were provided,
     the method will attempt to
     automatically identify the platform used from the first feature identifier
-    in the dataset. 
+    in the dataset.
     Use \code{data(microarray2dataset)} to access a table listing valid
     choices.
     }
@@ -147,8 +151,8 @@ GO_analyse(
     values as an input, and return a single numeric value as an output.
     }
     \item{\dots}{
-    Additional arguments passed on to the randomForest() method, if
-    applicable.
+    Additional arguments passed on to the \code{randomForest} and
+    \code{useMart} methods, if applicable.
     }
 }
 
@@ -178,7 +182,7 @@ Random Forest additional elements:
     \item{ntree}{Number of trees grown.}
     \item{mtry}{Number of variables randomly sampled as candidates at each
     split.}
-    
+
 One-way ANOVA does not have additional arguments.
 }
 
@@ -189,12 +193,12 @@ One-way ANOVA does not have additional arguments.
     increasing "granularity", i.e. associated with increasingly large sets of
     genes, although consequently being increasingly vague and blurry (e.g.
     "protein binding" molecular function associated with over 6,000 genes).
-    
+
     It is suggested to use the \code{subset_scores()} function to subsequently
     filter out GO terms with fewer than 5+ genes associated with it. Indeed,
     those GO terms are more sensitive to outlier genes as they were scored on
     the average of a handful of genes.
-    
+
     Additionally, the \code{pValue_GO} function may be used to generate
     a permutation-based P-value indicating the chance of seeing each GO term
     reaching an equal or higher rank -- or score -- by chance.
@@ -208,9 +212,9 @@ One-way ANOVA does not have additional arguments.
     Make sure that the factor \code{f} is an actual factor in the R language
     meaning. This is important for the underlying statistical framework to
     identify the groups of samples defined by their level of this factor.
-    
+
     If the column defining the factor (e.g. "Treatment") in \code{phenodata}
-    is not an R factor, use 
+    is not an R factor, use
     \code{pData(targets)$Treatment = factor(pData(targets)$Treatment)}
     to convert the character values into an actual R factor with appropriate
     levels.
@@ -221,7 +225,7 @@ One-way ANOVA does not have additional arguments.
     \code{\link[GOexpress:subset_scores]{subset_scores}},
     \code{\link[GOexpress:pValue_GO]{pValue_GO}},
     \code{\link[biomaRt:getBM]{getBM}},
-    \code{\link[randomForest:randomForest]{randomForest}}, 
+    \code{\link[randomForest:randomForest]{randomForest}},
     and \code{\link[stats:oneway.test]{oneway.test}}.
 }
 
@@ -236,7 +240,7 @@ data(AlvMac_allGO)
 # Run the analysis on factor "Treatment",
 # considering only treatments "MB" and "TB" at time-point "48H"
 # using a local copy of annotations obtained from the Ensembl BioMart server
-AlvMac_results <- GO_analyse(  
+AlvMac_results <- GO_analyse(
     eSet=AlvMac, f="Treatment",
     subset=list(Time=c("48H"), Treatment=c("MB", "TB")),
     GO_genes=AlvMac_GOgenes, all_genes=AlvMac_allgenes, all_GO=AlvMac_allGO
