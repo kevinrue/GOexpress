@@ -29,8 +29,8 @@ cluster_GO <- function(
     # If requested, split the main title to lines with fewer than a given
     # count of characters, while respecting space-separated words
     if (!is.null(main.Lsplit)){
-        if (is.numeric(main.Lsplit)){ 
-            main <- string_Lsplit(string=main, line.length=main.Lsplit)
+        if (is.numeric(main.Lsplit)){
+            main <- string_Lsplit(string = main, line.length = main.Lsplit)
         }
         else{
             stop("main.Lsplit should be a numeric value or NULL.")
@@ -52,7 +52,7 @@ expression_plot <- function(
     xlab=x_var, ylab="log2(cpm)", ylim=range(exprs(eSet)),
     col.palette="Accent",
     col=brewer.pal(n=length(levels(pData(eSet)[,f])), name=col.palette),
-    level=0.95, title=NULL, title.size=2, axis.title.size=20, 
+    level=0.95, title=NULL, title.size=2, axis.title.size=20,
     axis.text.size=15, axis.text.angle=0,
     legend.title.size=20, legend.text.size=15, legend.key.size=30){
     # if the feature identifier is absent from the dataset
@@ -108,24 +108,27 @@ expression_plot <- function(
     # Generate the plot
     gg <- ggplot(df) +
         geom_smooth(
-            aes(x=X, y=Expression, group=Factor, color=Factor, fill=Factor),
-            level=level
-            ) +
-        labs(title=title, x=xlab, y=ylab) +
+            aes_string(
+                x = "X", y = "Expression",
+                group = "Factor", color = "Factor", fill = "Factor"
+            ),
+            level = level
+        ) +
+        labs(title = title, x = xlab, y = ylab) +
         theme(
-            plot.title=element_text(size=rel(title.size)),
-            axis.title=element_text(size=axis.title.size),
-            axis.text=element_text(size=axis.text.size),
-            axis.text.x=element_text(angle=axis.text.angle),
-            legend.text=element_text(size=legend.text.size),
-            legend.title=element_text(size=legend.title.size),
-            legend.key.size=unit(legend.key.size, "points")
+            plot.title=element_text(size = rel(title.size)),
+            axis.title=element_text(size = axis.title.size),
+            axis.text=element_text(size = axis.text.size),
+            axis.text.x=element_text(angle = axis.text.angle),
+            legend.text=element_text(size = legend.text.size),
+            legend.title=element_text(size = legend.title.size),
+            legend.key.size = unit(legend.key.size, "points")
             ) +
-        scale_colour_manual(values=col, name=f) + 
-        scale_fill_manual(values=col, name=f)
+        scale_colour_manual(values = col, name = f) +
+        scale_fill_manual(values = col, name = f)
     # If a non-default ylim was given, apply it
     if (!is.null(ylim)){
-        gg <- gg + scale_y_continuous(limits=ylim)
+        gg <- gg + scale_y_continuous(limits = ylim)
     }
     # Return the plot
     return(gg)
@@ -133,7 +136,7 @@ expression_plot <- function(
 
 expression_plot_symbol <- function(
     gene_symbol, result, eSet, x_var, f=result$factor, subset=NULL,
-    index=0, xlab=x_var, ylab="log2(cpm)", ylim=range(exprs(eSet)), 
+    index=0, xlab=x_var, ylab="log2(cpm)", ylim=range(exprs(eSet)),
     col.palette="Accent",
     col=brewer.pal(n=length(levels(pData(eSet)[,f])), name=col.palette),
     level=0.95, titles=c(), title.size=2, axis.title.size=20,
@@ -145,7 +148,7 @@ expression_plot_symbol <- function(
         stop("'result=' argument misses required slots.
     Is it a GO_analyse() output?")
     }
-    # 
+    #
     # If the X variable requested does not exist in the sample annotations
     if (! x_var %in% colnames(pData(eSet))){
         stop("x_var: ", x_var, " is not an existing column in pData(eSet).")
@@ -170,7 +173,7 @@ expression_plot_symbol <- function(
         fill=TRUE
         )
     mapping <- data.frame(
-        gene_id=rownames(result$genes), 
+        gene_id=rownames(result$genes),
         external_gene_name=result$genes$external_gene_name,
         stringsAsFactors=FALSE
         )
@@ -414,29 +417,27 @@ expression_profiles <- function(
     # Generate the plot
     gg <- ggplot(data=df) +
         geom_line(
-            aes(x=X,
-                y=Expression,
-                group=Profile,
-                linetype=LineType,
-                colour=Colour
+            aes_string(
+                x = "X", y = "Expression",
+                group = "Profile", linetype = "LineType", colour = "Colour"
                 ),
-            size=line.size) +
-        labs(title=title, x=xlab, y=ylab) +
+            size = line.size
+        ) +
+        labs(title = title, x = xlab, y = ylab) +
         theme(
-            plot.title=element_text(size=rel(title.size)),
-            axis.title=element_text(size=axis.title.size),
-            axis.text=element_text(size=axis.text.size),
-            axis.text.x=element_text(angle=axis.text.angle),
-            legend.text=element_text(size=legend.text.size), 
-            legend.title=element_text(size=legend.title.size),
-            plot.title=element_text(size=rel(2)),
-            legend.key.size=unit(legend.key.size, "points")
+            plot.title=element_text(size = rel(title.size)),
+            axis.title=element_text(size = axis.title.size),
+            axis.text=element_text(size = axis.text.size),
+            axis.text.x=element_text(angle = axis.text.angle),
+            legend.text=element_text(size = legend.text.size),
+            legend.title=element_text(size = legend.title.size),
+            legend.key.size = unit(legend.key.size, "points")
             ) +
-        scale_colour_manual(values=col, name=colourF) + 
-        scale_linetype_manual(values=lty, name=linetypeF)
+        scale_colour_manual(values = col, name = colourF) +
+        scale_linetype_manual(values = lty, name = linetypeF)
     # If a non-default ylim was given, apply it
     if (!is.null(ylim)){
-        gg <- gg + scale_y_continuous(limits=ylim)
+        gg <- gg + scale_y_continuous(limits = ylim)
     }
     # Return the plot
     return(gg)
@@ -670,9 +671,9 @@ expression_profiles_symbol <- function(
 heatmap_GO <- function(
     go_id, result, eSet, f=result$factor, subset=NULL, gene_names=TRUE,
     NA.names=FALSE, margins=c(7 ,5),
-    scale="none", cexCol=1.2, cexRow=0.5, 
+    scale="none", cexCol=1.2, cexRow=0.5,
     labRow=NULL,
-    cex.main=1, trace="none", expr.col=bluered(75), 
+    cex.main=1, trace="none", expr.col=bluered(75),
     row.col.palette="Accent",
     row.col=c(),
     main=paste(
@@ -699,7 +700,7 @@ heatmap_GO <- function(
     # because the number of samples has been reduced
     # NOTE: if the user wants to provide his own color array he should
     # either give the exact number of colors as he expects in the
-    # subsetted ExpressionSet, or rather use the row.col.palette 
+    # subsetted ExpressionSet, or rather use the row.col.palette
     # argument to provide the palette, rather than the array of colors
     if (length(row.col) != ncol(eSet)){
         row.col <- brewer.pal(
@@ -747,7 +748,7 @@ heatmap_GO <- function(
     # If requested, split the main title to lines with fewer than a given
     # count of characters, while respecting space-separated words
     if (!is.null(main.Lsplit)){
-        if (is.numeric(main.Lsplit)){ 
+        if (is.numeric(main.Lsplit)){
             main <- string_Lsplit(string=main, line.length=main.Lsplit)
         }
         else{
@@ -895,7 +896,7 @@ plot_design <- function(
         # If requested, split the main title to lines with fewer than a given
         # count of characters, while respecting space-separated words
         if (!is.null(main.Lsplit)){
-            if (is.numeric(main.Lsplit)){ 
+            if (is.numeric(main.Lsplit)){
                 main <- string_Lsplit(string=main, line.length=main.Lsplit)
             }
             else{
@@ -995,7 +996,7 @@ pValue_GO = function(
                 ]
             # for all the above, add 1 to the p.count
             real.go$p.count[real.go$go_id %in% worst.GO] <-
-                real.go$p.count[real.go$go_id %in% worst.GO] + 1     
+                real.go$p.count[real.go$go_id %in% worst.GO] + 1
         } else if(ranked.by == 'Score'){
             # Replace NAs (annotated genes without expression data) by score 0
             random.genes2GO$Score[is.na(random.genes2GO$Score)] <- 0
@@ -1016,7 +1017,7 @@ pValue_GO = function(
                 ]
             # for all the above, add 1 to the p.count
             real.go$p.count[real.go$go_id %in% worst.GO] <-
-                real.go$p.count[real.go$go_id %in% worst.GO] + 1     
+                real.go$p.count[real.go$go_id %in% worst.GO] + 1
         }
     }
     # Divide the total p.count by the number of iterations (1)
@@ -1118,7 +1119,7 @@ subEset <- function(eSet, subset=list()){
                 stop("No value provided for filter ", f_filter)
             }
             for (v_filter in subset[[f_filter]]){
-                # Check that the value is an existing value 
+                # Check that the value is an existing value
                 # in the phenodata
                 if(!v_filter %in% pData(eSet)[,f_filter]){
                     stop(
@@ -1251,7 +1252,7 @@ subset_scores <- function(result, ...){
             else{
                 # if filtering for the same ontology
                 if (result$filters.GO[[filter]] == filters[[filter]]){
-                    # ignore the 
+                    # ignore the
                     note(
                         'result object was already filter for the same',
                         'namespace.'

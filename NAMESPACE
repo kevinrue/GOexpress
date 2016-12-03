@@ -1,3 +1,48 @@
+# Package required for the features of GOexpress to work
+import(Biobase)
+import(biomaRt)
+import(ggplot2)
+import(grid)
+import(RColorBrewer)
+import(graphics)
+import(stats)
+
+#importFrom(
+#    "graphics",
+#    "hist", "par", "plot", "plot.design"
+#)
+
+#importFrom(
+#    "aggregate", "dist", "hclust", "oneway.test", "quantile"
+#    "stats",
+#)
+
+importFrom(
+    "gplots",
+    "heatmap.2", "bluered", "greenred"
+)
+
+importFrom(
+    "stringr",
+    "str_extract"
+)
+
+importFrom(
+    "randomForest",
+    "randomForest", "importance"
+)
+
+importFrom(
+    "VennDiagram",
+    "venn.diagram"
+)
+
+importFrom(
+    "RCurl",
+    "getCurlHandle"
+)
+
+
 #export("^[[:alpha:]]+")
 
 # Functions available to the user (API)
@@ -18,14 +63,3 @@ export("rerank")
 export("subEset")
 export("subset_scores")
 export("table_genes")
-
-# Package required for the features of GOexpress to work
-import(Biobase)
-import(biomaRt)
-import(ggplot2)
-importFrom(gplots, heatmap.2, bluered, greenred)
-import(grid)
-importFrom(stringr, str_extract)
-importFrom(randomForest, randomForest, importance)
-import(RColorBrewer)
-importFrom(VennDiagram, venn.diagram)

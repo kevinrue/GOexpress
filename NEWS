@@ -1,3 +1,14 @@
+CHANGES IN VERSION 1.9.1
+--------------------------
+
+BUG FIXES:
+
+    o Remove duplicated plot.title argument in ggplot call.
+
+GENERAL UPDATES:
+
+    o Minor code cleaning.
+
 CHANGES IN VERSION 1.7.1
 --------------------------
 
