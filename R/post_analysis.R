@@ -810,42 +810,6 @@ list_genes <- function(go_id, result, data.only=TRUE){
     return(gene_ids)
 }
 
-overlap_GO <- function(go_ids, result, filename=NULL, mar=rep(0.1, 4), ...){
-    # if the result provided does not contain the slots required for this
-    # function
-    if (! all(c("GO") %in% names(result))){
-        stop("'result=' argument misses required slots.
-    Is it a GO_analyse() output?")
-    }
-    # Check that all GO terms are present in the result variable
-    if (!all(go_ids %in% result$GO$go_id)){
-        stop("Some go_id(s) do not exist in result$GO$go_id.")
-    }
-    # Check that 2-5 GO terms are given, otherwise venn.diagram would crash
-    if (length(go_ids) > 5){
-        stop("venn.diagram() supports at most 5 groups: Too many given.")
-    }
-    if (length(go_ids) < 2){
-        stop("venn.diagram() requires at least 2 groups: Too few given.")
-    }
-    # Creates a list of 2-5 gene lists to compare
-    gene_sets <- list()
-    for (index in 1:length(go_ids)){
-        gene_sets[[index]] <- list_genes(go_id=go_ids[[index]], result=result)
-    }
-    # generate the venn diagram (potentially to a file)
-    venn <- venn.diagram(
-        x=gene_sets, filename=filename, category.names=go_ids, mar=mar,
-        ...)
-    # If no filename was given
-    if (is.null(filename)){
-        # Erases the current window if any
-        grid.newpage()
-        # Print the venn diagram to the screen
-        grid.draw(venn)
-    }
-}
-
 plot_design <- function(
     go_id, result, eSet, subset=NULL,
     factors=colnames(pData(eSet)), main="", main.Lsplit=NULL, ...){
@@ -967,18 +931,18 @@ pValue_GO = function(
         rownames(random.genes) <- sample(
             x = rownames(random.genes),
             size = nrow(random.genes),
-            replace = F) # replace = F is default, but let's be clear
+            replace = FALSE) # replace = F is default, but let's be clear
         # Merge the randomised genes with the table of ontologies
         random.genes2GO <- merge(
             x = random.genes, y = result[['mapping']],
             by.x = 'row.names', by.y = 'gene_id',
-            all.y = T, sort = F)
+            all.y = TRUE, sort = FALSE)
         # compute the new average rank/score
         if(ranked.by == 'Rank'){
             # Replace NAs (annotated genes without expression data)
             # by max rank + 1
             random.genes2GO$Rank[is.na(random.genes2GO$Rank)] <-
-                max(random.genes2GO$Rank, na.rm = T) + 1
+                max(random.genes2GO$Rank, na.rm = TRUE) + 1
             # Calculate the randomised average rank
             random.aveRank <- aggregate(
                 Rank ~ go_id, data = random.genes2GO, FUN = FUN.GO
@@ -988,8 +952,8 @@ pValue_GO = function(
             # these will be given p-value of 1 later)
             compare.aveRanks <- merge(
                 x = real.go, y = random.aveRank,
-                by = 'go_id', sort = F,
-                all = F) # all=F is default, but let's be clear
+                by = 'go_id', sort = FALSE,
+                all = FALSE) # all=F is default, but let's be clear
             # get the list of genes where random is better than real
             worst.GO <- compare.aveRanks$go_id[
                 compare.aveRanks$Rank <= compare.aveRanks$ave_rank
@@ -1009,8 +973,8 @@ pValue_GO = function(
             # these will be given p-value of 1 later)
             compare.aveScore <- merge(
                 x = real.go, y = random.aveScore,
-                by = 'go_id', sort = F,
-                all = F) # all=F is default, but let's be clear
+                by = 'go_id', sort = FALSE,
+                all = FALSE) # all=F is default, but let's be clear
             # get the list of ontologies where random is better than real
             worst.GO <- compare.aveScore$go_id[
                 compare.aveScore$Score <= random.aveScore$ave_score
@@ -1027,7 +991,7 @@ pValue_GO = function(
     # Merge the p.val column with the GO table of the GO_analyse output
     GO.new <- merge(
         x = result$GO, y = real.go,
-        by = 'go_id', all.x = T, sort = F)
+        by = 'go_id', all.x = TRUE, sort = FALSE)
     # Set the p-value to 1 for ontologies not annotated with any gene
     GO.new$p.val[!GO.new$go_id %in% unique(result$mapping$go_id)] <- 1
     # reorder columns

@@ -33,11 +33,6 @@ importFrom(
 )
 
 importFrom(
-    "VennDiagram",
-    "venn.diagram"
-)
-
-importFrom(
     "RCurl",
     "getCurlHandle"
 )
@@ -55,7 +50,6 @@ export("GO_analyse")
 export("heatmap_GO")
 export("hist_scores")
 export("list_genes")
-export("overlap_GO")
 export("plot_design")
 export("pValue_GO")
 export("quantiles_scores")

@@ -1,3 +1,12 @@
+CHANGES IN VERSION 1.9.2
+--------------------------
+
+BUG FIXES:
+
+    o Remove function overlap_GO because the VennDiagram package has issues
+    with condition tests on vectors with length greater than 1
+
+
 CHANGES IN VERSION 1.9.1
 --------------------------
 

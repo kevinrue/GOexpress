@@ -166,7 +166,7 @@ replicates; N being the number of replicates for a given set of experimental
 conditions); and genes lowly expressed are removed to limit the False
 Discovery
 Rate (FDR) of differentially expressed genes induced by the larger variability
-of expression at the lower end of the dynamic range. 
+of expression at the lower end of the dynamic range.
 
 \Biocpkg{GOexpress} requires this filtered normalised expression matrix to
 be accompanied by an \Rclass{AnnotatedDataFrame} object of the
@@ -177,7 +177,7 @@ expects those two variables in an \Rclass{ExpressionSet} container of the
 most importantly, ensuring interoperatibility with other packages that handle
 \Bioconductor{} \Rclass{ExpressionSet} objects. The other fields of the
 \Rclass{ExpressionSet} container may be left empty as \Biocpkg{GOexpress}
-does not currently access them. Instructions to create 
+does not currently access them. Instructions to create
 \Rclass{AnnotatedDataFrame} and \Rclass{ExpressionSet}
 objects are detailed in the vignettes of the \Biocpkg{Biobase} package.
 
@@ -248,7 +248,7 @@ In this example, we search for GO terms containing genes that best classify
 samples according their \Robject{Treatment} level. In other words, after
 estimating the capacity of each gene to classify the different experimental
 groups, the algorithm will use this gene ranking to rank GO terms based on
-the average rank (alternatively, score) of their annotated genes. 
+the average rank (alternatively, score) of their annotated genes.
 But first, let us make
 sure that the \Robject{Treatment} column of \Rcode{pData(targets)} is indeed
 an \R{} factor:
@@ -275,7 +275,7 @@ Running the random forest algorithm using local annotations}
 Now, we use the random forest statistical framework to score each gene
 feature on its
 ability to classify samples from different treatments separately,
-before summarising this information at the ontology level. The 
+before summarising this information at the ontology level. The
 ensuing analysis therefore considers the \Robject{Treatment} factor,
 irrespective of the
 \Robject{Time} and \Robject{Animal} factors (we search for time- and
@@ -295,7 +295,7 @@ AlvMac_results <- GO_analyse(
     GO_genes=AlvMac_GOgenes, all_GO=AlvMac_allGO, all_genes=AlvMac_allgenes)
 @
 
-At this stage, it is a good idea to save the result variable into an \R{} 
+At this stage, it is a good idea to save the result variable into an \R{}
 data-file using the \Rfunction{save} function. Mostly because the stochastic
 aspect of the sampling approach implemented by the \CRANpkg{randomForest}
 package may return slightly different scores in each run (as opposed to the
@@ -322,9 +322,9 @@ Important notes in the absence of local annotations}
 If no annotations mapping gene features identifiers to gene ontology
 identifiers are provided, \Rfunction{GO\_analyse} will
 connect to the Ensembl server to fetch appropriate annotations in a
-semi-automated procedure 
-(See arguments \Robject{dataset} and \Robject{microarray} of the 
-\Rfunction{GO\_analyse} function). 
+semi-automated procedure
+(See arguments \Robject{dataset} and \Robject{microarray} of the
+\Rfunction{GO\_analyse} function).
 Typically, the first feature identifier in the
 \Robject{ExpressionSet} is used to determine the corresponding species and
 type of
@@ -431,7 +431,7 @@ BP.5 <- subset_scores(
     result = AlvMac_results.pVal,
     namespace = "biological_process",
     total = 5, # requires 5 or more associated genes
-    p.val=0.05) 
+    p.val=0.05)
 MF.10 <- subset_scores(
     result = AlvMac_results.pVal,
     namespace = "molecular_function",
@@ -457,7 +457,7 @@ approach is obviously more data-dependent and less robust.
 To optimise the use of memory space, after removing all ontologies not passing
 the criteria, the function will also discard from the filtered result object
 all gene features not associated with the remaining gene ontologies, and the
-mapping information related to gene ontologies absent from the filtered data. 
+mapping information related to gene ontologies absent from the filtered data.
 However, those data will still be left in the original object containing
 unfiltered raw results.}
 
@@ -472,7 +472,7 @@ gene or the gene ontology scoring tables using the \Rfunction{subset}
 function.
 
 An example of filtering the gene ontology result table for the top
-ontologies of the `Biological Process' type, associated with at least 5 
+ontologies of the `Biological Process' type, associated with at least 5
 genes, and a P-value lower than 0.05:
 
 <<eval=FALSE>>=
@@ -565,7 +565,7 @@ only samples obtained 24 and 48 hours post-infection, and labelling samples by
 <<fig=TRUE>>=
 cluster_GO(
     go_id = "GO:0034142", result = BP.5, eSet=AlvMac,
-    cex.main=1, cex=0.6, main.Lsplit=30, 
+    cex.main=1, cex=0.6, main.Lsplit=30,
     subset=list(Time=c("24H", "48H")), f="Group")
 @
 \end{center}
@@ -758,7 +758,7 @@ implemented to use gene names instead of feature identifiers. An example:
 expression_profiles_symbol(
     gene_symbol="TNIP3", result = AlvMac_results,
     x_var = "Timepoint", linetypeF="Animal", line.size=1,
-    eSet=AlvMac, lty=rep(1,10), seriesF="Animal.Treatment", 
+    eSet=AlvMac, lty=rep(1,10), seriesF="Animal.Treatment",
     title.size=1.5, legend.title.size=10, legend.text.size=10,
     legend.key.size=15)
 @
@@ -770,7 +770,7 @@ univariate effects on gene expression}
 While the analysis is restricted to the evaluation of a single factor, it can
 be helpful to compare the relative impact of all known factors present in the
 the accompanying \Robject{phenoData} on the gene expression in the different
-groups of samples. 
+groups of samples.
 
 In other words, given a GO term identifier this feature will generate a plot
 for each associated gene, where the mean (default; can be changed) expression
@@ -821,7 +821,7 @@ annotations allows to work independently from any web-service.
 \item \textbf{Alternative annotations:} Users working with gene feature
 identifiers not supported in the Ensembl annotations (e.g. species, or
 platforms), or comparing panels of biomarkers instead of GO terms for
-instance, may provide their own custom annotations to 
+instance, may provide their own custom annotations to
 enable the ranking and visualisation of their data using \Biocpkg{GOexpress}.
 \end{itemize}
 
@@ -866,7 +866,7 @@ GOgenes.Ensembl = GOgenes.Ensembl[GOgenes.Ensembl$gene_id != '',]
 The automated retrieval procedure retrieves all gene ontology annotations
 from the Ensembl server, inclusive of annotations not Inferred from Experiment
 (EXP). Users may consider filtering local annotations for desired GO Evidence
-code(s). 
+code(s).
 }
 
 \subsubsection[Using custom annotations]{Using custom annotations}
@@ -946,35 +946,6 @@ expression_plot(
 @
 \end{center}
 
-\subsection[Overlapping genes between GO terms]{Overlapping genes between GO
-terms}
-
-Often, the top-ranked cellular functions identified by pathway analysis and
-gene-set enrichment analysis tools may significantly overlap each other in
-terms of genes, which limits the number of genes identified by those
-approaches and blurrs the precise cellular function represented by the core
-gene-set among a list of closely related yet different functions.
-
-Typically, overlapping sets are representated as Venn diagrams. The example
-below will produce a Venn diagram of the gene-sets associated with the five
-top-ranked ``Biological Process'' ontologies, and display it on screen, as the
-filename argument is left to the default \Rcode{NULL} value (if a filename is
-given, the diagram will be printed to a TIFF file , no matter the extension
-specified):
-
-\begin{center}
-<<fig=TRUE>>=
-overlap_GO(go_ids = head(BP.5$GO$go_id, n=5), result = BP.5, filename=NULL)
-@
-\end{center}
-
-
-This function calls the \Rfunction{venn.diagram} function of the
-\CRANpkg{VennDiagram}
-package, offering a high level of control on the resulting Venn diagram. A
-detailed description of the available arguments are accessible in the
-corresponding \R{} documentation file.
-
 \subsection[Distribution of scores]{Distribution of scores}
 
 Users might be interested in the general distribution of score and rank
@@ -1016,7 +987,7 @@ BP.5.byScore <- rerank(result = BP.5, rank.by = "score")
 
 \subsubsection[Reordering by P-value]{Reordering by P-value}
 
-Additionally, it is possible to reorder GO terms by increasing P-value, 
+Additionally, it is possible to reorder GO terms by increasing P-value,
 provided those values were were computed using the \Rfunction{pValue\_GO}
 function.
 
@@ -1120,7 +1091,7 @@ functions}
 Importantly, the statistics performed to rank GO terms and genes do \emph{not}
 influence the behaviour of the subsequent plotting functions; heatmaps,
 dendrograms and gene expression profiles are purely driven by the
-expression data, sample phenotype annotations provided and GO terms 
+expression data, sample phenotype annotations provided and GO terms
 annotations, without any transformation or normalisation applied
 to the data. Therefore, users are encouraged to use and suggest alternative
 relevant scoring and ranking strategies, which could prioritise GO terms and
@@ -1213,10 +1184,10 @@ ACP, SVG, and DEM.
 Since the early beginning, \Biocpkg{GOexpress} has grown from constructive
 feedback, and I would like to thank a number of colleagues and scientists from
 all backgrounds who contributed each in their own way to the present version
-and features of the package. 
+and features of the package.
 Special thanks to Dr. Paul Cormican, Simone Coughlan, Dr. Karsten Hokamp,
-and an unknown reviewer for feedback leading to some features. 
-Sincere thanks to Dr. Kate Killick for testing on human data and feedback. 
+and an unknown reviewer for feedback leading to some features.
+Sincere thanks to Dr. Kate Killick for testing on human data and feedback.
 My thanks to the \Bioconductor{} staff and in particular to Hervé Pagès for
 the helpful feedback which improved the standards of the code and
 documentation.
