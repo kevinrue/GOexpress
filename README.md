@@ -1,7 +1,7 @@
 GOexpress
 =======
 
-<img src="inst/img/GOexpress.png" height="100">
+<img src="inst/img/GOexpress.png" height="200">
 
 Visualise microarray and RNAseq data with gene ontology annotations.
 
