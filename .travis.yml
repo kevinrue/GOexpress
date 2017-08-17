@@ -1,0 +1,35 @@
+language: r
+r: devel
+#use_bioc: true
+#bioc_required: true
+#r: bioc-devel
+
+os:
+  - linux
+#  - osx
+# Problem with osx that requires a lot of LaTeX packages
+# including authblk "not present in repository" Travis CI #75.2
+
+# safelist
+branches:
+  only:
+  - master
+
+sudo: false
+cache: packages
+
+before_install:
+    - Rscript -e 'source(file = "http://bioconductor.org/biocLite.R");tryCatch(useDevel(devel = TRUE), error = function(err){message(err)})'
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tlmgr install bera nowidow parnotes marginfix; fi
+    #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo tlmgr install authblk beramono caption changepage color enumitem etoolbox fancyhdr fontenc footmisc framed geometry graphicx hyperref ifthen marginfix mathtools nowidow parnotes parskip placeins ragged2e soul titlesec titletoc xstring; fi
+
+warnings_are_errors: false
+
+r_github_packages:
+    - jimhester/covr
+
+r_build_args: --keep-empty-dirs --no-resave-data
+r_check_args: --no-vignettes --timings
+
+after_success:
+    - Rscript -e 'covr::codecov()'
