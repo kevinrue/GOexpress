@@ -27,11 +27,12 @@ Description: The package contains methods to visualise the expression profile
     term ranking. Visualisation function include gene expression profile,
     gene ontology-based heatmaps, and hierarchical clustering of
     experimental samples using gene expression data.
-Depends: R (>= 3.4), grid, stats, graphics, Biobase (>= 2.22.0)
+Depends: R (>= 3.4), Biobase (>= 2.22.0), SummarizedExperiment
 Imports: biomaRt (>= 2.18.0), stringr (>= 0.6.2),
     ggplot2 (>= 0.9.0), RColorBrewer (>= 1.0), gplots (>= 2.13.0),
-    randomForest (>= 4.6), RCurl (>= 1.95)
-Suggests: BiocStyle
+    randomForest (>= 4.6), RCurl (>= 1.95),
+    grid, stats, graphics
+Suggests: BiocStyle, testthat
 License: GPL (>= 3)
 biocViews: Software, GeneExpression, Transcription, DifferentialExpression,
     GeneSetEnrichment, DataRepresentation, Clustering,

@@ -15,6 +15,7 @@ branches:
   only:
   - master
   - 2xx
+  - RF
 
 sudo: false
 cache: packages

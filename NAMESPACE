@@ -1,20 +1,41 @@
-# Package required for the features of GOexpress to work
+
+# 2xx ----
+
 import(Biobase)
+import(SummarizedExperiment)
+
+S3method(randomForest, ExpressionSet)
+S3method(randomForest, SummarizedExperiment)
+export("randomForest")
+
+importFrom(
+    "SummarizedExperiment",
+    "assays","colData"
+)
+
+importFrom(
+    "randomForest",
+    "randomForest", "importance"
+)
+
+#import(stats)
+importFrom(
+    "stats",
+    "aggregate", "dist", "hclust", "oneway.test", "quantile"
+)
+
+# Pending transition from 1xx to 2xx ----
+
+# Package required for the features of GOexpress to work
 import(biomaRt)
 import(ggplot2)
 import(grid)
 import(RColorBrewer)
 import(graphics)
-import(stats)
 
 #importFrom(
 #    "graphics",
 #    "hist", "par", "plot", "plot.design"
-#)
-
-#importFrom(
-#    "aggregate", "dist", "hclust", "oneway.test", "quantile"
-#    "stats",
 #)
 
 importFrom(
@@ -25,11 +46,6 @@ importFrom(
 importFrom(
     "stringr",
     "str_extract"
-)
-
-importFrom(
-    "randomForest",
-    "randomForest", "importance"
 )
 
 importFrom(
