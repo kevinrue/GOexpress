@@ -18,8 +18,8 @@ In addition, the semi-automated support for annotation through the Ensembl
 classes will be favoured (e.g., `org.Hs.eg.db`, `GSEABase::GOCollection`).
 
 Please be mindful of messages and warnings emitted by the various functions.
-Current functions will only be marked as 'Defunct' when appropriate
-replacement methods are available.
+Current functions will only be marked as 'Deprecated'--and subsequently
+'Defunct'--when appropriate replacement methods are available.
 "
     )
 }
