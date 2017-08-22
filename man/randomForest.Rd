@@ -2,6 +2,8 @@
 \alias{randomForest}
 \alias{randomForest.ExpressionSet}
 \alias{randomForest.SummarizedExperiment}
+\alias{randomForest.DESeqDataSet}
+\alias{randomForest.DESeqTransform}
 
 \title{
 Adaptation of \code{randomForest} for common \emph{Bioconductor} classes
@@ -20,10 +22,16 @@ appropriate data slots. Refer to the individual methods for details.
 
 \usage{
 \method{randomForest}{ExpressionSet}(
-    x, pheno, assay = "exprs", ..., do.trace = 100
+    x, pheno, assay="exprs", ..., do.trace=100
 )
 \method{randomForest}{SummarizedExperiment}(
-    x, pheno, assay = "exprs", ..., do.trace = 100
+    x, pheno, assay="exprs", ..., do.trace=100
+)
+\method{randomForest}{DESeqDataSet}(
+    x, pheno, normalized=TRUE, ..., do.trace=100
+)
+\method{randomForest}{DESeqTransform}(
+    x, pheno, ..., do.trace=100
 )
 }
 
@@ -31,7 +39,11 @@ appropriate data slots. Refer to the individual methods for details.
     \item{x}{
 An object that inherits from
 \code{\linkS4class{ExpressionSet}}
-or \code{\linkS4class{RangedSummarizedExperiment}}.
+or \code{\linkS4class{RangedSummarizedExperiment}}
+(\emph{e.g.},
+    \code{\linkS4class{DESeqDataSet}},
+    \code{\linkS4class{DESeqTransform}}
+).
 }
     \item{pheno}{
 A valid phenotype column name in
@@ -51,6 +63,12 @@ Optional parameters to be passed to the original
 Running output is printed for every \code{do.trace} trees.
 See \code{\link[randomForest:randomForest]{randomForest::randomForest}}
 for details.
+}
+    \item{normalized}{
+\code{DESeqDataSet}:
+Logical indicating whether or not to divide the counts by the size factors or
+normalization factors before returning (normalization factors always preempt
+size factors).
 }
 }
 
@@ -78,11 +96,11 @@ featureIds <- sprintf("F\%03d", 1:100)
 sampleIds <- sprintf("Sample\%02d", 1:10)
 mat <- matrix(
     runif(nrows * ncols), nrow=nrows, ncol=ncols,
-    dimnames = list(featureIds, sampleIds)
+    dimnames=list(featureIds, sampleIds)
 )
 pdata <- data.frame(
-    group = rep(LETTERS[1:2], each = ncols/2),
-    row.names = sampleIds
+    group=rep(LETTERS[1:2], each=ncols/2),
+    row.names=sampleIds
 )
 rRanges <- GRanges(
     rep(c("chr1", "chr2"), c(75, 25)),
@@ -92,7 +110,7 @@ rRanges <- GRanges(
 
 eset <- ExpressionSet(
     assayData=mat,
-    phenoData = AnnotatedDataFrame(pdata)
+    phenoData=AnnotatedDataFrame(pdata)
 )
 
 rse <- SummarizedExperiment(

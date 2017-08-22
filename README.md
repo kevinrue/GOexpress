@@ -16,4 +16,7 @@ Visualise gene expression data with Gene Ontology annotations.
 <sup>1</sup>Latest _successful_ build
 <sup>2</sup>Bleeding edge development GitHub [repository](https://github.com/kevinrue/GOexpress).
 
+# Notes
 
+The package is progessively transitioning to the _S4_ system of classes and
+methods. Please take note of messages and warnings.

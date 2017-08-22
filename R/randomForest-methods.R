@@ -1,6 +1,6 @@
 
 randomForest.ExpressionSet <- function(
-    x, pheno, assay = "exprs", ..., do.trace = 100
+    x, pheno, assay="exprs", ..., do.trace=100
 ){
     stopifnot(pheno %in% colnames(pData(x)))
     stopifnot(assay %in% names(assayData(x)))
@@ -8,7 +8,7 @@ randomForest.ExpressionSet <- function(
         t(assayData(x)[[assay]]),
         pData(x)[,pheno],
         ...,
-        do.trace = do.trace
+        do.trace=do.trace
     )
     rf$call$x <- substitute(x)
     rf$call$y <- substitute(pheno)
@@ -16,7 +16,7 @@ randomForest.ExpressionSet <- function(
 }
 
 randomForest.SummarizedExperiment <- function(
-    x, pheno, assay = "exprs", ..., do.trace = 100
+    x, pheno, assay="exprs", ..., do.trace=100
 ){
     stopifnot(pheno %in% colnames(colData(x)))
     stopifnot(assay %in% names(assays(x)))
@@ -24,7 +24,38 @@ randomForest.SummarizedExperiment <- function(
         t(assay(x, assay)),
         colData(x)[,pheno],
         ...,
-        do.trace = do.trace
+        do.trace=do.trace
+    )
+    rf$call$x <- substitute(x)
+    rf$call$y <- substitute(pheno)
+    return(rf)
+}
+
+randomForest.DESeqDataSet <- function(
+    x, pheno, normalized=TRUE, ..., do.trace=100
+){
+    stopifnot(requireNamespace("DESeq2"))
+    stopifnot(pheno %in% colnames(colData(x)))
+    rf <- .randomForest(
+        t(DESeq2::counts(x, normalized=normalized)),
+        colData(x)[,pheno],
+        ...,
+        do.trace=do.trace
+    )
+    rf$call$x <- substitute(x)
+    rf$call$y <- substitute(pheno)
+    return(rf)
+}
+
+randomForest.DESeqTransform <- function(
+    x, pheno, ..., do.trace=100
+){
+    stopifnot(pheno %in% colnames(colData(x)))
+    rf <- .randomForest(
+        t(assays(x)[[1]]),
+        colData(x)[,pheno],
+        ...,
+        do.trace=do.trace
     )
     rf$call$x <- substitute(x)
     rf$call$y <- substitute(pheno)
@@ -34,7 +65,7 @@ randomForest.SummarizedExperiment <- function(
 # Default method
 # x: matrix (predictor = features as columns)
 # pdata: factor (length(pdata) == nrow(x))
-.randomForest <- function(x, pheno, ..., do.trace = 100){
+.randomForest <- function(x, pheno, ..., do.trace=100){
     stopifnot(nrow(x) >= 4)
     stopifnot(is.factor(pheno))
 
@@ -49,6 +80,6 @@ randomForest.SummarizedExperiment <- function(
     message("")
 
     return(randomForest(
-        x, y = pheno, importance = TRUE, do.trace = do.trace, ...
+        x, y=pheno, importance=TRUE, do.trace=do.trace, ...
     ))
 }
