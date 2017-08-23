@@ -2,6 +2,7 @@
 \alias{randomForest}
 \alias{randomForest.ExpressionSet}
 \alias{randomForest.SummarizedExperiment}
+\alias{randomForest.DGEList}
 \alias{randomForest.DESeqDataSet}
 \alias{randomForest.DESeqTransform}
 
@@ -27,6 +28,9 @@ appropriate data slots. Refer to the individual methods for details.
 \method{randomForest}{SummarizedExperiment}(
     x, pheno, assay="exprs", ..., do.trace=100
 )
+\method{randomForest}{DGEList}(
+    x, pheno, normalized.lib.sizes=TRUE, ..., do.trace=100
+)
 \method{randomForest}{DESeqDataSet}(
     x, pheno, normalized=TRUE, ..., do.trace=100
 )
@@ -38,7 +42,8 @@ appropriate data slots. Refer to the individual methods for details.
 \arguments{
     \item{x}{
 An object that inherits from
-\code{\linkS4class{ExpressionSet}}
+\code{\linkS4class{ExpressionSet}},
+\code{\linkS4class{DGEList}},
 or \code{\linkS4class{RangedSummarizedExperiment}}
 (\emph{e.g.},
     \code{\linkS4class{DESeqDataSet}},
@@ -63,6 +68,10 @@ Optional parameters to be passed to the original
 Running output is printed for every \code{do.trace} trees.
 See \code{\link[randomForest:randomForest]{randomForest::randomForest}}
 for details.
+}
+    \item{normalized.lib.sizes}{
+\code{DGEList}:
+logical, use normalized library sizes?
 }
     \item{normalized}{
 \code{DESeqDataSet}:

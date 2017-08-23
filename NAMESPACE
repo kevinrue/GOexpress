@@ -6,6 +6,7 @@ import(SummarizedExperiment)
 
 S3method(randomForest, ExpressionSet)
 S3method(randomForest, SummarizedExperiment)
+S3method(randomForest, DGEList)
 S3method(randomForest, DESeqDataSet)
 S3method(randomForest, DESeqTransform)
 export("randomForest")
@@ -22,13 +23,18 @@ importFrom(
 
 importClassesFrom(
     "DESeq2",
-    "DESeqDataSet"
+    "DESeqDataSet", "DESeqTransform"
 )
 #importFrom(
 #    "DESeq2",
 #    "makeExampleDESeqDataSet", "estimateSizeFactors",
 #    "rlog", "varianceStabilizingTransformation"
 #)
+
+importClassesFrom(
+    "edgeR",
+    "DGEList"
+)
 
 #import(stats)
 importFrom(

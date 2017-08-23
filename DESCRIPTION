@@ -28,7 +28,7 @@ Description: The package contains methods to visualise the expression profile
     gene ontology-based heatmaps, and hierarchical clustering of
     experimental samples using gene expression data.
 Depends: R (>= 3.4), Biobase (>= 2.22.0), SummarizedExperiment
-Imports: randomForest (>= 4.6), DESeq2,
+Imports: randomForest (>= 4.6), DESeq2, edgeR,
     biomaRt (>= 2.18.0), stringr (>= 0.6.2),
     ggplot2 (>= 0.9.0), RColorBrewer (>= 1.0), gplots (>= 2.13.0),
     RCurl (>= 1.95), grid, stats, graphics

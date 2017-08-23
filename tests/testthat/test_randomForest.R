@@ -25,7 +25,6 @@ eset <- ExpressionSet(
     assayData=mat,
     phenoData = AnnotatedDataFrame(pdata)
 )
-
 ## SummarizedExperiment
 rse <- SummarizedExperiment(
     assays=SimpleList(exprs=mat),
@@ -34,6 +33,10 @@ rse <- SummarizedExperiment(
 ## DESeqDataSet
 dds <- DESeq2::makeExampleDESeqDataSet(m=10, betaSD=1)
 dds <- DESeq2::estimateSizeFactors(dds)
+## DGEList
+dgel <- edgeR::DGEList(counts=dds@assays[["counts"]], group=pdata$group)
+rownames(dgel) <- rownames(dds)
+dgel <- edgeR::calcNormFactors(dgel)
 
 # Tests ----
 
@@ -76,5 +79,13 @@ test_that("randomForest works on DESeqTransform",{
 
     expect_s3_class(rf_drlog, "randomForest")
     expect_s3_class(rf_dvst, "randomForest")
+
+})
+
+test_that("randomForest works on DGEList",{
+
+    rf_dgel <- randomForest(dgel, "group")
+
+    expect_s3_class(rf_dgel, "randomForest")
 
 })

@@ -62,6 +62,22 @@ randomForest.DESeqTransform <- function(
     return(rf)
 }
 
+randomForest.DGEList <- function(
+    x, pheno, normalized.lib.sizes=TRUE, ..., do.trace=100
+){
+    stopifnot(requireNamespace("edgeR"))
+    stopifnot(pheno %in% colnames(x[["samples"]]))
+    rf <- .randomForest(
+        t(edgeR::cpm(x, normalized.lib.sizes=normalized.lib.sizes)),
+        x[["samples"]][,pheno],
+        ...,
+        do.trace=do.trace
+    )
+    rf$call$x <- substitute(x)
+    rf$call$y <- substitute(pheno)
+    return(rf)
+}
+
 # Default method
 # x: matrix (predictor = features as columns)
 # pdata: factor (length(pdata) == nrow(x))
