@@ -1,0 +1,173 @@
+---
+title: "GOexpress version **2.x.x** - User Guide"
+author:
+    -   name: Kévin Rue-Albrecht
+        email: kevinrue67@gmail.com
+        affiliation:
+            - School of Veterinary Medicine, University College Dublin, Ireland
+            - Nuffield Department of Medicine, University of Oxford, UK
+date: "`r doc_date()`"
+package: "`r pkg_ver('GOexpress')`"
+abstract:
+    This package contains methods to visualise gene expression data, typically
+    microarray or RNA-sequencing, and offers a supervised approach to identify
+    Gene Ontology (GO) categories of genes that best classify two or more
+    predefined groups of samples.
+    This vignette presents version **2.x.x** of the `r Biocpkg("GOexpress")`
+    package, that introduces classes and methods (_S3_ and _S4_) for better
+    interoperability with other _Bioconductor_ packages.
+vignette: >
+    %\VignetteIndexEntry{GOexpress version **2.x.x** - User Guide}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+output:
+    BiocStyle::pdf_document
+bibliography:
+    GOexpress.bib
+nocite: | 
+  @GOexpress
+---
+
+```{r setup, include=FALSE}
+stopifnot(
+    requireNamespace("pander")
+)
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+optChunkDefault <- opts_chunk$get()
+```
+
+# Toward version **2.x.x**
+
+This vignette introduces an updated implementation of the original features
+that introduces classes and methods (*S3* and *S4*) for better
+interoperability and integration with other _Bioconductor_ packages.
+
+The motivation for this transition was initially prompted by user feedback
+(thanks!) pointing out how existing functions
+were restricted to objects of the `ExpressionSet` class,
+in contrast to several classes derived from the more recent
+`SummarizedExperiment` class.
+
+# Demonstration environment
+
+To set up the environment for this vignette, let us first load
+the `r Biocpkg("GOexpress")` package:
+
+```{r require_GOexpress, message=FALSE}
+stopifnot(require(GOexpress))
+```
+
+We can then import the demonstration data set:
+
+```{r data_AlvMac}
+data("AlvMac")
+```
+
+This data set is an `ExpressionSet` subset of
+`r as.numeric(nrow(AlvMac))` features (_i.e._, genes) and
+`r as.numeric(ncol(AlvMac))` samples,
+from a larger data set:
+
+```{r AlvMac}
+AlvMac
+```
+
+The data set includes phenotype metadata for each sample:
+
+```{r varLabels}
+varLabels(AlvMac)
+```
+
+**Note:**
+The `Time` field is a _factor_,
+while the `Timepoint` field stores the _numeric_ value (in hours).
+
+# Random forest
+
+A random forest (RF) is a powerful supervised  machine learning (ML) approach
+that builds many classification trees (hence, 'forest')
+using random subsamples of predictors (here, genes or other features
+such as microarray probe sets) to score those predictors according to their
+capacity to classify samples from different predefined groups
+(*e.g.*, experimental treatment).
+
+The _S3_ method dispatch introduced for versions **2.x.x** of
+`r Biocpkg("GOexpress")` now enable seamless support of a wider range
+of common _Bioconductor_ classes (and classes that inherits from them):
+
+* `r Biocpkg("DESeq2")` `DESeqDataSet` and `DESeqTransform` classes,
+* the `r Biocpkg("edgeR")` `DGEList` class,
+* the `r Biocpkg("SummarizedExperiment")` class of the eponym package,
+    widely extended by other _Bioconductor_ packages
+    (*e.g.*, `SingleCellExperiment`)
+* the `r Biocpkg("Biobase")` `ExpressionSet` class originally supported.
+
+Notably, the only additional argument absolutely required
+is the name of a phenotype factor in `varLabels(AlvMac)`,
+that will be used as a response vector to run the _randomForest_ algorithm
+in _supervised mode_:
+
+```{r randomForest}
+rf <- randomForest(AlvMac, pheno="Treatment", do.trace = 100, verbose=TRUE)
+```
+
+**Note:**
+The `GOexpress::randomForest` implementation can display informative messages
+to indicate the count of samples within each phenotype factor level;
+while the underlying `randomForest::randomForest` implementation
+can display 'out-of-bag' error rates every `do.trace` trees.
+The former is disabled by default with `verbose=FALSE`,
+while the latter is enabled by default (`do.trace=100`)
+and can be disabled with `do.trace=FALSE`.
+
+Notably,
+the `GOexpress::randomForest` call returns _exactly_ the output of the
+underlying `randomForest::randomForest` method. This means that the same
+downstream methods may be applied; for instance the `plot` method:
+
+```{r plot_rf, results='hold'}
+op <- par(no.readonly = TRUE)
+layout(matrix(c(1,2),nrow=1), width=c(4,1)) 
+par(mar=c(5,4,4,0)) # No margin on the right side
+plot(rf, ylim = c(0,1), main = "OOB error by iteration - AlvMac")
+par(mar=c(5,0,4,2)) # No margin on the left side
+plot(c(0,1),type="n", axes=F, xlab="", ylab="")
+legend("top", colnames(rf$err.rate),col=1:4,cex=0.8,fill=1:4)
+par(op)
+```
+
+**Reference**:
+This StackOverflow [thread](http://stackoverflow.com/q/20328452)
+entitled _Legend for Random Forest Plot in R_.
+
+From a biological interpretation perspective, in the above figure,
+the higher out-of-bag (OOB) error rate for classification of
+_M. tuberculosis_ and _M. bovis_ samples can be largely attribued
+to the similar host macrophage response to the closely
+related bacterial species.
+Specifically, those error rates and the associated confusion matrix (below)
+indicate that the supervised machine learning classification
+often mistakes one infection for the other;
+in contrast, control (*i.e.*, uninfected) samples are much more
+accurately classified:
+
+```{r confusion, results='asis', echo=FALSE}
+pander::pandoc.table(rf$confusion)
+```
+
+# Citation
+
+```{r citation}
+citation(package="GOexpress")
+```
+
+# Session info
+
+This vignette was built in the following environment:
+
+```{r sessionInfo}
+sessionInfo()
+```
+
+# References {#References}

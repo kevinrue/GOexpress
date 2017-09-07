@@ -10,6 +10,8 @@
 Adaptation of \code{randomForest} for common \emph{Bioconductor} classes
 }
 \description{
+\strong{=== Feature 2.x.x ===}
+
 Wrappers around the
 \code{\link[randomForest:randomForest]{randomForest::randomForest}} method
 for common \emph{Bioconductor} classes including
@@ -23,19 +25,19 @@ appropriate data slots. Refer to the individual methods for details.
 
 \usage{
 \method{randomForest}{ExpressionSet}(
-    x, pheno, assay="exprs", ..., do.trace=100
+    x, pheno, assay="exprs", ..., do.trace=100, verbose=FALSE
 )
 \method{randomForest}{SummarizedExperiment}(
-    x, pheno, assay="exprs", ..., do.trace=100
+    x, pheno, assay="exprs", ..., do.trace=100, verbose=FALSE
 )
 \method{randomForest}{DGEList}(
-    x, pheno, normalized.lib.sizes=TRUE, ..., do.trace=100
+    x, pheno, normalized.lib.sizes=TRUE, ..., do.trace=100, verbose=FALSE
 )
 \method{randomForest}{DESeqDataSet}(
-    x, pheno, normalized=TRUE, ..., do.trace=100
+    x, pheno, normalized=TRUE, ..., do.trace=100, verbose=FALSE
 )
 \method{randomForest}{DESeqTransform}(
-    x, pheno, ..., do.trace=100
+    x, pheno, ..., do.trace=100, verbose=FALSE
 )
 }
 
@@ -68,6 +70,10 @@ Optional parameters to be passed to the original
 Running output is printed for every \code{do.trace} trees.
 See \code{\link[randomForest:randomForest]{randomForest::randomForest}}
 for details.
+}
+    \item{verbose}{
+Displays additional information, such as the count of samples
+within each phenotype level if \code{pheno} is a \code{factor}.
 }
     \item{normalized.lib.sizes}{
 \code{DGEList}:

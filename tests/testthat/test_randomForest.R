@@ -56,7 +56,7 @@ test_that("randomForest works on ExpressionSet",{
 
 test_that("randomForest works on (Ranged)SummarizedExperiment",{
 
-    rf_rse <- randomForest(rse, "group")
+    rf_rse <- randomForest(rse, "group", verbose=TRUE)
 
     expect_s3_class(rf_rse, "randomForest")
 

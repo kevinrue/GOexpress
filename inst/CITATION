@@ -1,0 +1,29 @@
+citHeader("To cite the GOexpress package in publications use:")
+
+bibentry(
+    bibtype = "Article",
+    title = paste(
+        "GOexpress: an R/Bioconductor package for the identification and",
+        "visualisation of robust gene ontology signatures through supervised",
+        "learning of gene expression data"
+    ),
+    author = c(
+        person(given="Kevin", family="Rue-Albrecht",
+        role = c("aut", "cre"), email = "kevinrue67@gmail.com"),
+        person(give=c("Tharvesh", "M.L."), family="Ali", role = c("ctb")),
+        person(given=c("Paul", "A."), family="McGettigan", role = c("ctb")),
+        person(given="Belinda", family="Hernandez", role = c("ctb")),
+        person(given="David A.", family="Magee", role = c("ctb")),
+        person(given="Nicolas C.", family="Nalpas", role = c("ctb")),
+        person(given="Andrew", family="Parnell", role = c("ctb")),
+        person(given=c("Stephen", "V."), family="Gordon", role = c("ths")),
+        person(given=c("David", "E."), family="MacHugh", role = c("ths"))
+    ),
+    journal = "BMC Bioinformatics",
+    volume = "17",
+    pages = "126",
+    ISSN = paste("1471-2105 (Electronic)", "1471-2105 (Linking)", sep="\n"),
+    doi = "10.1186/s12859-016-0971-3",
+    url = "https://www.ncbi.nlm.nih.gov/pubmed/26968614",
+    year = "2016"
+)

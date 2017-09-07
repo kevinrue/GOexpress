@@ -29,6 +29,24 @@ options(useFancyQuotes="UTF-8")
 
 \tableofcontents
 
+\section[Toward version 2.x.x]{Toward version 2.x.x}
+
+This vignette presents the original implementation of the package
+that uses regular \emph{R} functions.
+
+The package is undergoing
+a progressive transition to \emph{S3} and \emph{S4} classes and methods
+for better interoperability and integration with other
+\emph{Bioconductor} packages.
+
+As replacement methods are implemented,
+the functions presented in this vignette will progressively
+raise deprecation warnings and direct users to appropriate replacement
+methods.
+
+A new workflow based uniquely on the replacement methods is being extended in
+a separate vignette entitled \emph{GOexpress version 2xx - User Guide}.
+
 \section[Introduction]{Introduction}
 
 \subsection[The origin and purpose of \Biocpkg{GOexpress}]{The origin and
@@ -142,16 +160,9 @@ More detailed information is available at:
 
 \subsection[Citing \Biocpkg{GOexpress}]{Citing \Biocpkg{GOexpress}}
 
-The work underlying \Biocpkg{GOexpress} has not been formally published yet. A
-manuscript has been submitted for peer-review. In the meantime, users of the
-\Biocpkg{GOexpress} package are encouraged to cite it using the output of the
-\Rfunction{citation} function in the \Rpackage{utils} package,
-as follows:
-
-<<echo=FALSE>>=
+<<echo=TRUE>>=
 citation(package="GOexpress")
 @
-
 
 \section[Quick start]{Quick start}
 
