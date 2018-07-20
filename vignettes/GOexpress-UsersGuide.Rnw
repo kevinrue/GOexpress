@@ -100,13 +100,7 @@ further details.
 
 \subsection[Installation]{Installation}
 
-Installing \Biocpkg{GOexpress} should be as easy as running the two lines
-below:
-
-<<eval=FALSE>>=
-source("http://bioconductor.org/biocLite.R")
-biocLite("GOexpress")
-@
+Instructions to install the package are available [here](http://bioconductor.org/packages/GOexpress/).
 
 Installation issues should be reported to the \Bioconductor{} mailing list.
 

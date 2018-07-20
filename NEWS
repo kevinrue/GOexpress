@@ -372,9 +372,6 @@ GENERAL UPDATES:
 
     o DESCRIPTION file minor correction.
 
-    o User Guide's chunk about installation using biocLite is not evaluated
-    anymore, as advised by Dan Tenenbaum.
-
 CHANGES IN VERSION 0.99.17
 --------------------------
 
