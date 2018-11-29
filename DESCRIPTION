@@ -1,6 +1,6 @@
 Package: GOexpress
 Title: Visualise microarray and RNAseq data using gene ontology annotations
-Version: 1.17.0
+Version: 1.17.1
 Date: 2017-04-04
 Authors@R: c(
     person(given="Kevin", family="Rue-Albrecht",
@@ -36,6 +36,6 @@ License: GPL (>= 3)
 biocViews: Software, GeneExpression, Transcription, DifferentialExpression,
     GeneSetEnrichment, DataRepresentation, Clustering,
     TimeCourse, Microarray, Sequencing, RNASeq, Annotation,
-    MultipleComparison, Pathways, GO, Visualization
+    MultipleComparison, Pathways, GO, Visualization, ImmunoOncology
 URL: https://github.com/kevinrue/GOexpress
 LazyData: true
