@@ -1,6 +1,6 @@
 Package: GOexpress
 Title: Visualise microarray and RNAseq data using gene ontology annotations
-Version: 1.42.0
+Version: 1.43.0
 Date: 2017-04-04
 Authors@R: c(
     person(given="Kevin", family="Rue-Albrecht",
