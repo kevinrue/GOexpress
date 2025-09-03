@@ -75,12 +75,6 @@ string_Lsplit <- function (string, line.length){
 
 # Funtion to build the prefix2dataset table
 prefix2dataset.build <- function(){
-    # This function requires the libraries biomaRt and RCurl to be preloaded
-    # load the RCurl library (used in a loop later below)
-    #library("RCurl", quietly=TRUE)
-    curlHandle <- getCurlHandle()
-    # load the biomaRt package
-    #library(biomaRt, quietly=TRUE)
     # Connect to the Ensembl mart
     mart <- useMart(biomart="ensembl")
     # Save the list of datasets available 
@@ -101,8 +95,7 @@ prefix2dataset.build <- function(){
     mart.sample <- as.character(
         sapply(
             X=mart.dataset,
-            FUN=sampleEnsemblGeneId,
-            curl=curlHandle
+            FUN=sampleEnsemblGeneId
             )
     )
     # For each sample ensembl_gene_id, identify the prefix defined as the
@@ -143,7 +136,7 @@ progress.bar <- function (x, max = 100) {
 
 # Function called in prefix2dataset.build sapply statement to fetch
 # a sample Ensemblgene identifier given a 
-sampleEnsemblGeneId <- function(dataset, curl=getCurlHandle()){
+sampleEnsemblGeneId <- function(dataset){
     # User message
     cat("Fetching data for dataset:", dataset, fill=TRUE)
     # connect to the specific mart
@@ -159,12 +152,6 @@ sampleEnsemblGeneId <- function(dataset, curl=getCurlHandle()){
 
 # Funtion to build the microarray2dataset table
 microarray2dataset.build <- function(){
-    # This function requires the libraries biomaRt and RCurl to be preloaded
-    # load the RCurl library (used in a loop later below)
-    #library("RCurl", quietly=TRUE)
-    curlHandle <- getCurlHandle()
-    # load the biomaRt package
-    #library(biomaRt, quietly=TRUE)
     # Connect to the Ensembl mart
     mart <- useMart(biomart="ensembl")
     # Save the list of datasets available 
