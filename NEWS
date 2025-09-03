@@ -1,3 +1,11 @@
+CHANGES IN VERSION 1.43.1
+--------------------------
+
+BUG FIXES:
+
+    o Remove now unused argument 'curl' from all calls to biomaRt::getBM().
+
+
 CHANGES IN VERSION 1.9.2
 --------------------------
 
