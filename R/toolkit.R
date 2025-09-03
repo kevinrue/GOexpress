@@ -151,8 +151,7 @@ sampleEnsemblGeneId <- function(dataset, curl=getCurlHandle()){
     # query the first (automatically non-empty) ensembl_gene_id
     ensembl_gene_id <- getBM(
         attributes="ensembl_gene_id",
-        mart=mart.loop,
-        curl=curl
+        mart=mart.loop
         )[1,"ensembl_gene_id"]
     # return the above ensembl_gene_id
     return(ensembl_gene_id)
@@ -211,8 +210,7 @@ microarray2dataset.build <- function(){
             # Query the first (automatically non-empty) ensembl_gene_id
             probe.set = getBM(
                 attributes=microarray.header,
-                mart=mart.loop,
-                curl=curlHandle
+                mart=mart.loop
                 )[1,microarray.header]
             getBM.results <- rbind(
                 getBM.results,
